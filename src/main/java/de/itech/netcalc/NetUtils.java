@@ -1,10 +1,10 @@
 package de.itech.netcalc;
 
 public class NetUtils {
-    public static IpAddress getMaskFromPrefix(int prefix) {
-        if(prefix < 0 || prefix >= 31) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
+    public static IpAddress getMaskFromSuffix(int suffix) {
+        if(suffix < 0 || suffix >= 31) throw new IllegalArgumentException("Illegal suffix '" + suffix + "'");
 
-        int mask = prefix == 0 ? 0 : -1 << (32 - prefix);
+        int mask = suffix == 0 ? 0 : -1 << (32 - suffix);
 
         return new IpAddress(mask);
     }
@@ -16,7 +16,7 @@ public class NetUtils {
         return (valip & valsub) == (valnet & valsub);
     }
 
-    public static int getPrefixFromMask(IpAddress mask) {
+    public static int getSuffixFromMask(IpAddress mask) {
         return mask.toBinary().indexOf("0");
     }
 }

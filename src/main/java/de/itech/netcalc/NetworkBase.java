@@ -14,9 +14,7 @@ public abstract class NetworkBase {
         this.name = name;
     }
 
-    public int getLength() {
-        return ~getMask().getValue() + 1;
-    }
+    public int getLength() { return ~getMask().getValue() + 1; }
 
     public IpAddress getAddress() {
         return new IpAddress(address.getValue());

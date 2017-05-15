@@ -13,11 +13,11 @@ public class Main {
         basenet.addSubnet(new Subnet(new IpAddress(10,5,1,0), new IpAddress(255,255,255,128)));
         basenet.addSubnet(new Subnet(new IpAddress(10,5,1,128), new IpAddress(255,255,255,128)));
 
-        IpAddress add = NetUtils.getMaskFromPrefix(29);
+        IpAddress add = NetUtils.getMaskFromSuffix(29);
 
         System.out.println(add);
 
-        System.out.println(NetUtils.getPrefixFromMask(add));
+        System.out.println(NetUtils.getSuffixFromMask(add));
 
 
         return;

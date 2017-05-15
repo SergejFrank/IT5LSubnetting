@@ -64,10 +64,10 @@ public class IpAddress {
     public String toBinary(){
         String bin = "";
         String zeroPad = "00000000";
-        String oct1Bin =Integer.toBinaryString(getOct1());
-        String oct2Bin =Integer.toBinaryString(getOct2());
-        String oct3Bin =Integer.toBinaryString(getOct3());
-        String oct4Bin =Integer.toBinaryString(getOct4());
+        String oct1Bin = Integer.toBinaryString(getOct1());
+        String oct2Bin = Integer.toBinaryString(getOct2());
+        String oct3Bin = Integer.toBinaryString(getOct3());
+        String oct4Bin = Integer.toBinaryString(getOct4());
 
         bin += zeroPad.substring(oct1Bin.length()) + oct1Bin;
         bin += zeroPad.substring(oct2Bin.length()) + oct2Bin;
