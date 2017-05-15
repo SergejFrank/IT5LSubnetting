@@ -50,7 +50,9 @@ public class Network extends NetworkBase{
         for (int i=0;i < count; i++) {
             IpAddress nAddress = new IpAddress(getAddress().getValue() + i * realSize);
 
-            Subnet subnet = new Subnet(nAddress,new IpAddress(getMask().getValue() + realSize));
+
+            // TODO: 15.05.17 propperly calc the subnet
+            Subnet subnet = new Subnet(nAddress,getMask());
             subnets.add(subnet);
         }
     }
