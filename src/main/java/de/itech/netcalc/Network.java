@@ -1,6 +1,5 @@
 package de.itech.netcalc;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,11 +48,9 @@ public class Network extends NetworkBase{
         int count = length / size;
         subnets.clear();
         for (int i=0;i < count; i++) {
-            IpAddress nAddress = new IpAddress(getAddress().getValue() + i * size);
+            IpAddress nAddress = new IpAddress(getAddress().getValue() + i * realSize);
 
-            
-            // TODO: 15.05.17
-            Subnet subnet = new Subnet(nAddress,getMask());
+            Subnet subnet = new Subnet(nAddress,new IpAddress(getMask().getValue() + realSize));
             subnets.add(subnet);
         }
     }
