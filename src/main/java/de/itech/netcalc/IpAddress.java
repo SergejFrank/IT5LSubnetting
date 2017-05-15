@@ -69,12 +69,17 @@ public class IpAddress {
         String oct3Bin =Integer.toBinaryString(getOct3());
         String oct4Bin =Integer.toBinaryString(getOct4());
 
-        bin += zeroPad.substring(oct1Bin.length()) + oct1Bin+".";
-        bin += zeroPad.substring(oct2Bin.length()) + oct2Bin+".";
-        bin += zeroPad.substring(oct3Bin.length()) + oct3Bin+".";
+        bin += zeroPad.substring(oct1Bin.length()) + oct1Bin;
+        bin += zeroPad.substring(oct2Bin.length()) + oct2Bin;
+        bin += zeroPad.substring(oct3Bin.length()) + oct3Bin;
         bin += zeroPad.substring(oct4Bin.length()) + oct4Bin;
 
         return bin;
+    }
+
+    public String toBinary(String seperator){
+        String[] elems = toBinary().split("(?<=\\G.{8})");
+        return String.join(seperator, elems);
     }
 
     private void checkRange(int val){
@@ -83,12 +88,7 @@ public class IpAddress {
     }
 
 
-    public boolean isInSubnet(IpAddress network, IpAddress subnet) {
-        int valip = getValue();
-        int valsub = subnet.getValue();
-        int valnet = network.getValue();
-        return (valip & valsub) == (valnet & valsub);
-    }
+
 
     @Override
     public String toString(){

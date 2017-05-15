@@ -13,14 +13,20 @@ public class Main {
         basenet.addSubnet(new Subnet(new IpAddress(10,5,1,0), new IpAddress(255,255,255,128)));
         basenet.addSubnet(new Subnet(new IpAddress(10,5,1,128), new IpAddress(255,255,255,128)));
 
+        IpAddress add = NetUtils.getMaskFromPrefix(29);
+
+        System.out.println(add);
+
+        System.out.println(NetUtils.getPrefixFromMask(add));
 
 
-        basenet.getSubnets().forEach(subnet -> {
-            System.out.println("Netzid: " + subnet.getAddress());
-            for(Host host : subnet.getHosts()){
-                System.out.println(host);
-            }
-            System.out.println("Broadcast: " + subnet.getBroadcastAddress());
-        });
+        return;
+        //basenet.getSubnets().forEach(subnet -> {
+        //    System.out.println("Netzid: " + subnet.getAddress());
+        //    for(Host host : subnet.getHosts()){
+        //        System.out.println(host);
+        //    }
+        //    System.out.println("Broadcast: " + subnet.getBroadcastAddress());
+        //});
     }
 }

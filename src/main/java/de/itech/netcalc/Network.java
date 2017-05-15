@@ -31,7 +31,7 @@ public class Network extends NetworkBase{
         for (int i=0;i < count; i++) {
             IpAddress nAddress = new IpAddress(getAddress().getValue() + i * size);
 
-            Subnet subnet = new Subnet()
+            //Subnet subnet = new Subnet()
         }
     }
 }
