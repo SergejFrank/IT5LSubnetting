@@ -84,6 +84,13 @@ public class IpAdress {
 
     }
 
+    public boolean isInSubnet(IpAdress network,IpAdress subnet) {
+        int valip = getValue();
+        int valsub = subnet.getValue();
+        int valnet = network.getValue();
+        return (valip & valsub) == (valnet & valsub);
+    }
+
     @Override
     public String toString(){
         return getOct1()+"."+getOct2()+"."+getOct3()+"."+getOct4();
