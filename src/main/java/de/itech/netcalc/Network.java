@@ -9,7 +9,7 @@ public class Network extends NetworkBase{
     private ArrayList<Subnet> subnets = new ArrayList<>();
 
     public Network(IpAddress address, IpAddress mask) {
-        this.setAddress(address);
+        this.setAddress(new IpAddress(address.getValue() & mask.getValue()));
         this.setMask(mask);
     }
 
