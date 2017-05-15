@@ -1,20 +1,20 @@
 package de.itech.netcalc;
 
-public class IpAdress {
+public class IpAddress {
 
     private int oct1;
     private int oct2;
     private int oct3;
     private int oct4;
 
-    public IpAdress(int oct1, int oct2, int oct3, int oct4) {
+    public IpAddress(int oct1, int oct2, int oct3, int oct4) {
         setOct1(oct1);
         setOct2(oct2);
         setOct3(oct3);
         setOct4(oct4);
     }
 
-    public IpAdress(int val){
+    public IpAddress(int val){
         setOct1(val >> 24 & 0xFF);
         setOct2(val >> 16 & 0xFF);
         setOct3(val >> 8 & 0xFF);
@@ -78,13 +78,12 @@ public class IpAdress {
     }
 
     private void checkRange(int val){
-        if(val < 0 || val > 255){
+        if(val < 0 || val > 255)
             throw new IllegalArgumentException("Out of range: "+val);
-        }
-
     }
 
-    public boolean isInSubnet(IpAdress network,IpAdress subnet) {
+
+    public boolean isInSubnet(IpAddress network, IpAddress subnet) {
         int valip = getValue();
         int valsub = subnet.getValue();
         int valnet = network.getValue();
