@@ -9,7 +9,7 @@ public class Main {
         baseNet.addSubnet(new Subnet(new IpAddress(10,0,1,96),new IpAddress(255,255,255,224)));
         baseNet.addSubnet(new Subnet(new IpAddress(10,0,1,96),new IpAddress(255,255,255,224)));*/
 
-        Network basenet = new Network(new IpAddress(10,5,1,11), new IpAddress(255,255,255,224));
+        Network basenet = new Network(new IpAddress(10,5,1,11), new IpAddress(255,255,255,0));
         basenet.splitEqualy(14);
 
 

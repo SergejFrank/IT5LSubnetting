@@ -1,6 +1,8 @@
 package de.itech.netcalc;
 
 
+import sun.security.krb5.internal.crypto.NullEType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -42,17 +44,17 @@ public class Network extends NetworkBase{
     public void splitEqualy(int size) {
         int length = getLength();
         int realSize = size + 2;
-        if(getLength() % realSize != 0) {
+        if(length % realSize != 0) {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+deviders());
         }
-        int count = length / size;
+        int count = length / realSize;
         subnets.clear();
         for (int i=0;i < count; i++) {
             IpAddress nAddress = new IpAddress(getAddress().getValue() + i * realSize);
+            int suffixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
+            IpAddress mask = NetUtils.addSuffixToMask(getMask(), suffixLength);
 
-
-            // TODO: 15.05.17 propperly calc the subnet
-            Subnet subnet = new Subnet(nAddress,getMask());
+            Subnet subnet = new Subnet(nAddress,mask);
             subnets.add(subnet);
         }
     }

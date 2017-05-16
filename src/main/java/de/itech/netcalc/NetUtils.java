@@ -9,11 +9,15 @@ public class NetUtils {
         return new IpAddress(mask);
     }
 
-    public boolean isInSubnet(IpAddress network, IpAddress subnet, IpAddress host) {
-        int valip = host.getValue();
-        int valsub = subnet.getValue();
-        int valnet = network.getValue();
-        return (valip & valsub) == (valnet & valsub);
+    public static boolean isInSubnet(IpAddress network, IpAddress subnet, IpAddress host) {
+        int valIp = host.getValue();
+        int valSub = subnet.getValue();
+        int valNet = network.getValue();
+        return (valIp & valSub) == (valNet & valSub);
+    }
+
+    public static IpAddress addSuffixToMask(IpAddress mask, int suffix) {
+        return getMaskFromSuffix(getSuffixFromMask(mask) + suffix);
     }
 
     public static int getSuffixFromMask(IpAddress mask) {
