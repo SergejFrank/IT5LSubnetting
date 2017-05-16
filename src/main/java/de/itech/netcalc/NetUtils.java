@@ -24,18 +24,16 @@ public class NetUtils {
         return mask.toBinary().indexOf("0");
     }
 
+    public static long getLengthBetweenNetworks(NetworkBase n1 , NetworkBase n2){
+        return getLengthBetweenIpAddresses(n1.getBroadcastAddress(), n2.getAddress());
+    }
 
-
-    public static long getLengthBetweenSubnets(Subnet s1 , Subnet s2){
-        if(s1.isColliding(s2)) return 0;
-
-        if(s1.getAddress().isGreaterThan(s2.getAddress())){
-            Subnet temp = s1;
-            s1 = s2;
-            s2 = temp;
+    public static long getLengthBetweenIpAddresses(IpAddress ip1, IpAddress ip2){
+        if(ip1.isGreaterThan(ip2)){
+            IpAddress temp = ip1;
+            ip1 = ip2;
+            ip2 = temp;
         }
-
-        return s2.getAddress().getLValue() - s1.getBroadcastAddress().getLValue();
-
+        return ip2.getLValue() - ip1.getLValue();
     }
 }

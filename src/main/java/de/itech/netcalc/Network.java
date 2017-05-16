@@ -3,6 +3,7 @@ package de.itech.netcalc;
 
 import sun.security.krb5.internal.crypto.NullEType;
 
+import java.nio.charset.CoderMalfunctionError;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,24 +20,40 @@ public class Network extends NetworkBase{
         return subnets;
     }
 
-    public Subnet addSubnet(Subnet subnet) throws IllegalAccessException {
+    public Subnet addSubnet(Subnet subnet) throws IllegalArgumentException {
         if(subnets.stream().anyMatch(sub -> sub.getAddress().equals(subnet.getAddress())))
-            throw new IllegalAccessException("Subnet already exists.");
+            throw new IllegalArgumentException("Subnet already exists.");
 
         subnets.add(subnet);
         return subnet;
     }
 
-    public Subnet addSubnet(int size) {
-        IpAddress mask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
+    public Subnet addSubnet(int size) throws Exception {
+        IpAddress smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
         sortSubnets();
 
-        
-        for(int i=0;i<=subnets.size();i++) {
+        if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
+            return addSubnet(new Subnet(getAddress(), smask));
+        }
+
+        for(int i=0;i<subnets.size()-1;i++) {
             Subnet curr = subnets.get(i);
             Subnet next = subnets.get(i + 1);
-             curr.getBroadcastAddress()
+            if (NetUtils.getLengthBetweenNetworks(curr, next) >= size)
+                return addSubnet(new Subnet(new IpAddress(curr.getBroadcastAddress().getValue() + 1), smask));
         }
+
+        Subnet last = subnets.get(subnets.size()-1);
+        if(NetUtils.getLengthBetweenIpAddresses(last.getBroadcastAddress(), this.getBroadcastAddress()) >= size) {
+            return addSubnet(new Subnet(new IpAddress(last.getBroadcastAddress().getValue() + 1), smask));
+        }
+
+        return null;
+    }
+
+    public boolean isColliding(NetworkBase network) {
+        return NetUtils.isInSubnet(getAddress(), getMask(), network.getAddress())
+                || NetUtils.isInSubnet(network.getAddress(), network.getMask(), getAddress());
     }
 
     private void sortSubnets(){

@@ -13,13 +13,6 @@ public class Subnet extends NetworkBase {
         }
     }
 
-    public boolean isColliding(Subnet subnet) {
-        return NetUtils.isInSubnet(getAddress(), getMask(), subnet.getAddress())
-                || NetUtils.isInSubnet(subnet.getAddress(), subnet.getMask(), getAddress());
-    }
-
-
-
     public Host[] getHosts(){
         return hosts;
     }

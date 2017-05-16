@@ -84,7 +84,7 @@ public class IpAddress {
     }
 
     public boolean isGreaterThan(IpAddress ipAddress) {
-        return ipAddress.toString().compareTo(toString()) < 0;
+        return getLValue() > ipAddress.getLValue();
     }
 
     public String toBinary(String seperator){
