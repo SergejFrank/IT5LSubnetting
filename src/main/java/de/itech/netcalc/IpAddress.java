@@ -63,6 +63,10 @@ public class IpAddress {
         return (oct1 << 24) + (oct2 << 16) + (oct3 << 8) + oct4;
     }
 
+    public long getLValue() {
+        return ((long)oct1 << 24) + ((long)oct2 << 16) + ((long)oct3 << 8) + ((long)oct4);
+    }
+
     public String toBinary(){
         String bin = "";
         String zeroPad = "00000000";
