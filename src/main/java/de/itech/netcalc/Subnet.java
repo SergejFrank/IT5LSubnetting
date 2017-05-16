@@ -4,7 +4,7 @@ public class Subnet extends NetworkBase {
     private Host[] hosts;
 
     public Subnet(IpAddress address, IpAddress mask){
-        this.setAddress(address);
+        this.setAddress(new IpAddress(address.getValue() & mask.getValue()));
         this.setMask(mask);
         hosts = new Host[getMaxHosts()];
         for(int i = 1; i <= getMaxHosts(); i++) {
