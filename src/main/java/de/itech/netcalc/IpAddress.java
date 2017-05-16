@@ -1,7 +1,5 @@
 package de.itech.netcalc;
 
-import java.util.Comparator;
-
 public class IpAddress {
 
     private int oct1;
@@ -9,65 +7,65 @@ public class IpAddress {
     private int oct3;
     private int oct4;
 
-    public IpAddress(int oct1, int oct2, int oct3, int oct4) {
+    IpAddress(int oct1, int oct2, int oct3, int oct4) {
         setOct1(oct1);
         setOct2(oct2);
         setOct3(oct3);
         setOct4(oct4);
     }
 
-    public IpAddress(int val){
+    IpAddress(int val){
         setOct1(val >> 24 & 0xFF);
         setOct2(val >> 16 & 0xFF);
         setOct3(val >> 8 & 0xFF);
         setOct4(val & 0xFF);
     }
 
-    public int getOct1() {
+    private int getOct1() {
         return oct1;
     }
 
-    public void setOct1(int oct1) {
+    private void setOct1(int oct1) {
         checkRange(oct1);
         this.oct1 = oct1;
     }
 
-    public int getOct2() {
+    private int getOct2() {
         return oct2;
     }
 
-    public void setOct2(int oct2) {
+    private void setOct2(int oct2) {
         checkRange(oct2);
         this.oct2 = oct2;
     }
 
-    public int getOct3() {
+    private int getOct3() {
         return oct3;
     }
 
-    public void setOct3(int oct3) {
+    private void setOct3(int oct3) {
         checkRange(oct3);
         this.oct3 = oct3;
     }
 
-    public int getOct4() {
+    private int getOct4() {
         return oct4;
     }
 
-    public void setOct4(int oct4) {
+    private void setOct4(int oct4) {
         checkRange(oct4);
         this.oct4 = oct4;
     }
 
-    public int getValue(){
+    int getValue(){
         return (oct1 << 24) + (oct2 << 16) + (oct3 << 8) + oct4;
     }
 
-    public long getLValue() {
+    long getLValue() {
         return ((long)oct1 << 24) + ((long)oct2 << 16) + ((long)oct3 << 8) + ((long)oct4);
     }
 
-    public String toBinary(){
+    String toBinary(){
         String bin = "";
         String zeroPad = "00000000";
         String oct1Bin = Integer.toBinaryString(getOct1());
@@ -83,7 +81,7 @@ public class IpAddress {
         return bin;
     }
 
-    public boolean isGreaterThan(IpAddress ipAddress) {
+    boolean isGreaterThan(IpAddress ipAddress) {
         return getLValue() > ipAddress.getLValue();
     }
 

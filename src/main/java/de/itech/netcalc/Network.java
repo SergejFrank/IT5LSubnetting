@@ -1,9 +1,5 @@
 package de.itech.netcalc;
 
-
-import sun.security.krb5.internal.crypto.NullEType;
-
-import java.nio.charset.CoderMalfunctionError;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,12 +21,12 @@ public class Network extends NetworkBase{
             throw new IllegalArgumentException("Subnet already exists.");
 
         subnets.add(subnet);
+        sortSubnets();
         return subnet;
     }
 
     public Subnet addSubnet(int size) throws Exception {
         IpAddress smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
-        sortSubnets();
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
             return addSubnet(new Subnet(getAddress(), smask));
