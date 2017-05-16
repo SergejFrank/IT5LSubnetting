@@ -18,13 +18,7 @@ public class Subnet extends NetworkBase {
                 || NetUtils.isInSubnet(subnet.getAddress(), subnet.getMask(), getAddress());
     }
 
-    public int getMaxHosts(){
-        return getLength() - 2;
-    }
 
-    public IpAddress getBroadcastAddress(){
-        return new IpAddress(getAddress().getValue() + getMaxHosts() + 1);
-    }
 
     public Host[] getHosts(){
         return hosts;
