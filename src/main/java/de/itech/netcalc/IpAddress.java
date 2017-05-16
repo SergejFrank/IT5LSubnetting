@@ -1,5 +1,7 @@
 package de.itech.netcalc;
 
+import java.util.Comparator;
+
 public class IpAddress {
 
     private int oct1;
@@ -75,6 +77,10 @@ public class IpAddress {
         bin += zeroPad.substring(oct4Bin.length()) + oct4Bin;
 
         return bin;
+    }
+
+    public boolean isGreaterThan(IpAddress ipAddress) {
+        return ipAddress.toString().compareTo(toString()) < 0;
     }
 
     public String toBinary(String seperator){
