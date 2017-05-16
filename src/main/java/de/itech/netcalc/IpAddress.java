@@ -87,12 +87,30 @@ public class IpAddress {
             throw new IllegalArgumentException("Out of range: "+val);
     }
 
-
-
-
     @Override
     public String toString(){
         return getOct1()+"."+getOct2()+"."+getOct3()+"."+getOct4();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IpAddress ipAddress = (IpAddress) o;
+
+        if (oct1 != ipAddress.oct1) return false;
+        if (oct2 != ipAddress.oct2) return false;
+        if (oct3 != ipAddress.oct3) return false;
+        return oct4 == ipAddress.oct4;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = oct1;
+        result = 31 * result + oct2;
+        result = 31 * result + oct3;
+        result = 31 * result + oct4;
+        return result;
+    }
 }

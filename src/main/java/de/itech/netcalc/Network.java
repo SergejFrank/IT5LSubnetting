@@ -5,6 +5,7 @@ import sun.security.krb5.internal.crypto.NullEType;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class Network extends NetworkBase{
     private ArrayList<Subnet> subnets = new ArrayList<>();
@@ -18,9 +19,28 @@ public class Network extends NetworkBase{
         return subnets;
     }
 
-    public Subnet addSubnet(Subnet subnet){
+    public Subnet addSubnet(Subnet subnet) throws IllegalAccessException {
+        if(subnets.stream().anyMatch(sub -> sub.getAddress().equals(subnet.getAddress())))
+            throw new IllegalAccessException("Subnet already exists.");
+
         subnets.add(subnet);
         return subnet;
+    }
+
+    public Subnet addSubnet(int size) {
+        IpAddress mask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
+        sortSubnets();
+
+        
+        for(int i=0;i<=subnets.size();i++) {
+            Subnet curr = subnets.get(i);
+            Subnet next = subnets.get(i + 1);
+             curr.getBroadcastAddress()
+        }
+    }
+
+    private void sortSubnets(){
+        Collections.sort(subnets, Comparator.comparing(o -> o.getAddress().toString()));
     }
 
     private ArrayList<Integer> deviders(){
