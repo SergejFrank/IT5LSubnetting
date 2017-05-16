@@ -26,7 +26,10 @@ public class Network extends NetworkBase{
     }
 
     public Subnet addSubnet(int size) throws Exception {
-        IpAddress smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
+        int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
+        int realSize = (int)Math.pow(2, maskLength);
+        IpAddress smask = NetUtils.getMaskFromSuffix(32 - maskLength);
+        //IpAddress smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
             return addSubnet(new Subnet(getAddress(), smask));
@@ -36,15 +39,19 @@ public class Network extends NetworkBase{
             Subnet curr = subnets.get(i);
             Subnet next = subnets.get(i + 1);
             if (NetUtils.getLengthBetweenNetworks(curr, next) >= size)
-                return addSubnet(new Subnet(new IpAddress(curr.getBroadcastAddress().getValue() + 1), smask));
+                return addSubnet(new Subnet(new IpAddress(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), smask));
         }
 
         Subnet last = subnets.get(subnets.size()-1);
         if(NetUtils.getLengthBetweenIpAddresses(last.getBroadcastAddress(), this.getBroadcastAddress()) >= size) {
-            return addSubnet(new Subnet(new IpAddress(last.getBroadcastAddress().getValue() + 1), smask));
+            return addSubnet(new Subnet(new IpAddress(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), smask));
         }
 
         return null;
+    }
+
+    private int getOffset(int position, int count) {
+        return (int)Math.ceil((double)position / (double)count) * count;
     }
 
     public boolean isColliding(NetworkBase network) {
@@ -53,7 +60,7 @@ public class Network extends NetworkBase{
     }
 
     private void sortSubnets(){
-        Collections.sort(subnets, Comparator.comparing(o -> o.getAddress().toString()));
+        Collections.sort(subnets, Comparator.comparing(o -> o.getAddress().getLValue()));
     }
 
     private ArrayList<Integer> deviders(){
