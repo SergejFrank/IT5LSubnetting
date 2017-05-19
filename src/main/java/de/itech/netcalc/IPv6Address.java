@@ -1,5 +1,7 @@
 package de.itech.netcalc;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,11 +70,28 @@ public class IPv6Address {
 
     @Override
     public String toString() {
-        ArrayList<String> values = new ArrayList<>();
-        for(int s : segments) {
-            values.add(Integer.toString(s, 16));
+        return toString(false);
+    }
+
+    public String toString(Boolean shorthand)
+    {
+        if(shorthand) {
+            ArrayList<String> values = new ArrayList<>();
+            for(int s : segments) {
+                values.add( s == 0
+                        ? ""
+                        : Integer.toString(s, 16));
+            }
+            return String.join(":",values);
         }
-        return String.join(":",values);
+        else{
+            ArrayList<String> values = new ArrayList<>();
+            for(int s : segments) {
+                //values.add(Integer.toString(s, 16));
+                values.add(String.format("%04X", s & 0xFFFF));
+            }
+            return String.join(":",values);
+        }
     }
 
     private static boolean isDelimiter(String value) {
