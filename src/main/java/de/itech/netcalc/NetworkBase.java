@@ -28,9 +28,7 @@ public abstract class NetworkBase {
         return new IpAddress(mask.getValue());
     }
 
-    public int getMaxHosts(){
-        return getLength() - 2;
-    }
+    public int getMaxHosts(){ return getLength() - 2; }
 
     public IpAddress getBroadcastAddress(){
         return new IpAddress(getAddress().getValue() + getMaxHosts() + 1);
