@@ -37,6 +37,8 @@ public class IPv6Address {
             int missingSegments = 0;
             if (splitted.length != 15)
                 missingSegments = (15 - splitted.length - 1) / 2;
+            if(splitted.length == 3)
+                missingSegments = 6;
 
             String currSegment;
             for (int i = 0; i < splitted.length; i++) {
@@ -50,7 +52,10 @@ public class IPv6Address {
                     parsedSegments.add(0);
                 else if(!isDelimiter(currSegment)) //normales Segment
                 {
-                    parsedSegments.add(Integer.parseInt(currSegment, 16));
+                    if((i != 0 && splitted[i-1] == ".") || (i != splitted.length -1 && splitted[i+1] == "."))
+                        parsedSegments.add(Integer.parseInt(currSegment));
+                    else
+                        parsedSegments.add(Integer.parseInt(currSegment, 16));
                 }
             }
             return new IPv6Address(parsedSegments.stream().mapToInt(i -> i).toArray());
@@ -63,11 +68,11 @@ public class IPv6Address {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        ArrayList<String> values = new ArrayList<>();
         for(int s : segments) {
-            builder.append(Integer.toString(s, 16));
+            values.add(Integer.toString(s, 16));
         }
-        return builder.toString();
+        return String.join(":",values);
     }
 
     private static boolean isDelimiter(String value) {
