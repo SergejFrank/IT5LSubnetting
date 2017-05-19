@@ -36,16 +36,18 @@ public class IPv6Address {
             String[] splitted = value.split("((?<=[:.])|(?=[:.]))");
             int missingSegments = 0;
             if (splitted.length != 15)
-                missingSegments = (15 - splitted.length - 1) / 2;
+                missingSegments = (15 - splitted.length + 1) / 2;
             if(splitted.length == 3)
-                missingSegments = 6;
+                missingSegments = 7;
+            if(splitted.length == 2)
+                missingSegments = 8;
 
             String currSegment;
             for (int i = 0; i < splitted.length; i++) {
                 currSegment = splitted[i];
                 if (isDelimiter(currSegment) && i != (splitted.length - 1) && isDelimiter(splitted[i+1])) { //Evtl nächstes Zeichen noch ein Trennzeichen?
                     i++;
-                    for (int j = 0; j <= missingSegments; j++) {
+                    for (int j = 0; j < missingSegments; j++) {
                         parsedSegments.add(0);
                     }
                 } else if (isDelimiter(currSegment) && i == (splitted.length - 1)) //Spezialfall letzter Block ist Trennzeichen
@@ -75,12 +77,17 @@ public class IPv6Address {
     {
         if(shorthand) {
             ArrayList<String> values = new ArrayList<>();
+            boolean shorted = false;
             for(int s : segments) {
-                values.add( s == 0
-                        ? ""
-                        : Integer.toString(s, 16));
+                if(s == 0 && !shorted)
+                {
+                    values.add("");
+                    shorted = true;
+                }
+                else
+                    values.add(Integer.toString(s, 16));
             }
-            return String.join(":",values);
+            return String.join(":",values).toLowerCase();
         }
         else{
             ArrayList<String> values = new ArrayList<>();
@@ -88,7 +95,7 @@ public class IPv6Address {
                 //values.add(Integer.toString(s, 16));
                 values.add(String.format("%04X", s & 0xFFFF));
             }
-            return String.join(":",values);
+            return String.join(":",values).toLowerCase();
         }
     }
 
