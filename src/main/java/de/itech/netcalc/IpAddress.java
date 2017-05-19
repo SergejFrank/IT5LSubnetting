@@ -121,4 +121,15 @@ public class IpAddress {
         result = 31 * result + oct4;
         return result;
     }
+
+    public static boolean isValid(String value) {
+        return value != null && value.matches("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+    }
+
+    public static IpAddress parse(String value) {
+        if(!isValid(value))
+            throw new IllegalArgumentException("'value' is not a valid IPv4 Address.");
+        String[] segments = value.split("\\.");
+        return new IpAddress(Integer.parseInt(segments[0]),Integer.parseInt(segments[1]),Integer.parseInt(segments[2]),Integer.parseInt(segments[3]));
+    }
 }
