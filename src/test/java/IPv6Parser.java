@@ -29,6 +29,8 @@ public class IPv6Parser {
             return Arrays.asList(new Object[][]{
                     {null, false},
                     {"fe80:0:0:0:5b9e:86db:8874:6456", true},
+                    {"::255.255.255.255", true},
+                    {"2001:db8:3:4::192.0.2.33", true},
                     //// TODO: 19.05.17 add more Testcases
             });
         }
