@@ -37,4 +37,9 @@ public abstract class NetworkBase {
     protected void setMask(IpAddress mask) {
         this.mask = mask;
     }
+
+    @Override
+    public String toString(){
+        return this.getAddress().toString()+"/"+NetUtils.getSuffixFromMask(this.getMask());
+    }
 }

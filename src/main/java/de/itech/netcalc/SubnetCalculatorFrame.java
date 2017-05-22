@@ -29,7 +29,7 @@ public class SubnetCalculatorFrame extends JFrame {
         this.network = network;
 
         listModel = new DefaultListModel();
-        listModel.addElement(network.getAddress().toString());
+        listModel.addElement(network);
         listModel.addElement("test");
         listModel.addElement("eins");
         listModel.addElement("zwei");
