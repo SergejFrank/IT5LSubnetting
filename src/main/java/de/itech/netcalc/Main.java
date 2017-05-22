@@ -1,8 +1,5 @@
 package de.itech.netcalc;
 
-
-import javax.swing.*;
-
 public class Main {
     public static void main(String[] args) throws Exception {
 
@@ -22,33 +19,8 @@ public class Main {
             System.out.println("Broadcast: " + subnet.getBroadcastAddress());
         });
 
-
-
         // GUI
-
-        JFrame calcFrame = new JFrame("SubnetCalculator");
-
-        JPanel networksPanel = new JPanel();
-        JPanel subnetsPanel = new JPanel();
-        JPanel hostsPanel = new JPanel();
-
-        JLabel networksLabel = new JLabel("Networks");
-        JLabel subnetsLabel = new JLabel("Subnets");
-        JLabel hostsLabel = new JLabel("Hosts");
-
-        networksPanel.add(networksLabel);
-        subnetsPanel.add(subnetsLabel);
-        hostsPanel.add(hostsLabel);
-
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add("Networks", networksPanel);
-        tabbedPane.add("Subnets", subnetsPanel);
-        tabbedPane.add("Hosts", hostsPanel);
-
-        calcFrame.add(tabbedPane);
-        calcFrame.setSize(600, 400);
-        calcFrame.setVisible(true);
-
+        SubnetCalculatorFrame calcFrame = new SubnetCalculatorFrame("SubnetCalculator", baseNet);
 
     }
 }
