@@ -76,7 +76,7 @@ public class IpAddress {
         bin += zeroPad.substring(oct1Bin.length()) + oct1Bin;
         bin += zeroPad.substring(oct2Bin.length()) + oct2Bin;
         bin += zeroPad.substring(oct3Bin.length()) + oct3Bin;
-        bin += zeroPad.substring(oct4Bin.length()) + oct4Bin;
+        bin += zeroPad.substring(oct4Bin.length()) + oct4Bin; 
 
         return bin;
     }
