@@ -11,18 +11,24 @@ public class SubnetCalculatorFrame extends JFrame {
 
     private Network network;
 
-    private JPanel networksPanel = new JPanel(new BorderLayout());
+    // Panels
+    private JPanel networksPanel = new JPanel(new BorderLayout(5, 5));
+    private JPanel networksBottomPanel = new JPanel();
     private JPanel subnetsPanel = new JPanel();
     private JPanel hostsPanel = new JPanel();
-
     private JLabel networksLabel = new JLabel("Networks");
     private JLabel subnetsLabel = new JLabel("Subnets");
     private JLabel hostsLabel = new JLabel("Hosts");
-
     private JTabbedPane tabbedPane = new JTabbedPane();
 
+    // Network List
     private JList list;
     private DefaultListModel listModel;
+
+    // Buttons
+    JButton test1 = new JButton("Test1");
+    JButton test2 = new JButton("Test2");
+    JButton test3 = new JButton("Test3");
 
     public SubnetCalculatorFrame(String title, Network network){
         super(title);
@@ -41,11 +47,15 @@ public class SubnetCalculatorFrame extends JFrame {
         list.setVisibleRowCount(-1);
         list.setSelectedIndex(0);
         list.setVisibleRowCount(5);
+        list.setPreferredSize(new Dimension(200, 200));
         JScrollPane listScrollPane = new JScrollPane(list);
 
-
-        networksPanel.add(networksLabel);
+        networksPanel.add(networksLabel, BorderLayout.LINE_START);
         networksPanel.add(list);
+        networksBottomPanel.add(test1);
+        networksBottomPanel.add(test2);
+        networksBottomPanel.add(test3);
+        networksPanel.add(networksBottomPanel, BorderLayout.PAGE_END);
         subnetsPanel.add(subnetsLabel);
         hostsPanel.add(hostsLabel);
 
@@ -53,14 +63,15 @@ public class SubnetCalculatorFrame extends JFrame {
         tabbedPane.add("Subnets", subnetsPanel);
         tabbedPane.add("Hosts", hostsPanel);
 
-        this.add(tabbedPane);
+        add(tabbedPane);
 
-        this.setSize(800, 600);
+        //this.setSize(800, 600);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 
-        //this.pack();
-        this.setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
 
     }
 
