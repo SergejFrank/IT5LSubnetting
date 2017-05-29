@@ -4,14 +4,15 @@ public class Host {
     private String name;
     private IPv4Address ipv4Address;
     private IPv6Address ipv6Address;
-    private Subnet subnet;
+    private Subnet ipv4Subnet;
+    private int ipv6Prefix;
 
-    Host(Subnet subnet, IPv4Address ipv4Address, IPv6Address ipv6Address, String name) throws Exception {
-        if(subnet == null)
+    Host(Subnet ipv4Subnet, IPv4Address ipv4Address, IPv6Address ipv6Address, String name) throws Exception {
+        if(ipv4Subnet == null)
             throw new IllegalArgumentException("Subnet can not be null.");
         if(ipv4Address == null)
             throw new Exception("Host must contain a valid IPv4Address.");
-        this.subnet = subnet;
+        this.ipv4Subnet = ipv4Subnet;
         this.ipv4Address = ipv4Address;
         this.ipv6Address = ipv6Address;
         this.name = name;
@@ -31,8 +32,8 @@ public class Host {
         return name;
     }
 
-    public Subnet getSubnet() {
-        return subnet;
+    public Subnet getIpv4Subnet() {
+        return ipv4Subnet;
     }
 
     public IPv6Address getIpv6Address() {
@@ -41,5 +42,9 @@ public class Host {
 
     public IPv4Address getIpv4Address() {
         return ipv4Address;
+    }
+
+    public int getIpv6Prefix() {
+        return ipv6Prefix;
     }
 }
