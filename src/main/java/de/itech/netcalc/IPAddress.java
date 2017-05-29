@@ -9,11 +9,6 @@ public abstract class IPAddress {
     private static final String validV6Regex ="(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))";
     private static final String validV4Regex = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
 
-    public static IPAddress parse(String host) throws UnknownHostException {
-        InetAddress address = InetAddress.getByName(host);
-        return null;
-    }
-
     public static boolean isValidIPv4(String value) {
         return value != null && value.matches(validV4Regex);
     }
@@ -58,7 +53,7 @@ public abstract class IPAddress {
                     parsedSegments.add(0);
                 else if(!isDelimiter(currSegment)) //normales Segment
                 {
-                    if((i != 0 && splitted[i-1] == ".") || (i != splitted.length -1 && splitted[i+1] == "."))
+                    if((i != 0 && Objects.equals(splitted[i - 1], ".")) || (i != splitted.length -1 && Objects.equals(splitted[i + 1], ".")))
                         parsedSegments.add(Integer.parseInt(currSegment));
                     else
                         parsedSegments.add(Integer.parseInt(currSegment, 16));

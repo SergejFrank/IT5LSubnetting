@@ -37,22 +37,22 @@ public class Network extends NetworkBase{
     public Subnet addSubnet(int size) throws Exception {
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
-        IPv4Address smask = NetUtils.getMaskFromPrefix(32 - maskLength);
+        IPv4Address subnetMask = NetUtils.getMaskFromPrefix(32 - maskLength);
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getNetworkIdV4(), subnets.get(0).getNetworkIdV4()) >= size) {
-            return addSubnet(new Subnet(getNetworkIdV4(), smask));
+            return addSubnet(new Subnet(getNetworkIdV4(), subnetMask));
         }
 
         for(int i=0;i<subnets.size()-1;i++) {
             Subnet curr = subnets.get(i);
             Subnet next = subnets.get(i + 1);
             if (NetUtils.getLengthBetweenNetworks(curr, next) >= size)
-                return addSubnet(new Subnet(new IPv4Address(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), smask));
+                return addSubnet(new Subnet(new IPv4Address(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), subnetMask));
         }
 
         Subnet last = subnets.get(subnets.size()-1);
         if(NetUtils.getLengthBetweenIpAddresses(last.getBroadcastAddress(), this.getBroadcastAddress()) >= size) {
-            return addSubnet(new Subnet(new IPv4Address(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), smask));
+            return addSubnet(new Subnet(new IPv4Address(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), subnetMask));
         }
 
         return null;
@@ -61,13 +61,6 @@ public class Network extends NetworkBase{
     private int getOffset(int position, int count) {
         return (int)Math.ceil((double)position / (double)count) * count;
     }
-
-    /*
-    public boolean isColliding(NetworkBase network) {
-        return NetUtils.isInSubnet(getNetworkIdV4(), getNetworkMaskV4(), network.getNetworkIdV4())
-                || NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), getNetworkIdV4());
-    }
-    */
 
     private void sortSubnets(){
         Collections.sort(subnets, Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));

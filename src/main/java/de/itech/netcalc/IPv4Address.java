@@ -86,8 +86,8 @@ public class IPv4Address extends IPAddress {
     }
 
     public String toBinary(String seperator){
-        String[] elems = toBinary().split("(?<=\\G.{8})");
-        return String.join(seperator, elems);
+        String[] elements = toBinary().split("(?<=\\G.{8})");
+        return String.join(seperator, elements);
     }
 
     private void checkRange(int val){
@@ -107,10 +107,7 @@ public class IPv4Address extends IPAddress {
 
         IPv4Address ipAddress = (IPv4Address) o;
 
-        if (oct1 != ipAddress.oct1) return false;
-        if (oct2 != ipAddress.oct2) return false;
-        if (oct3 != ipAddress.oct3) return false;
-        return oct4 == ipAddress.oct4;
+        return oct1 == ipAddress.oct1 && oct2 == ipAddress.oct2 && oct3 == ipAddress.oct3 && oct4 == ipAddress.oct4;
     }
 
     @Override

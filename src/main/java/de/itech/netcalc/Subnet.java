@@ -3,12 +3,12 @@ package de.itech.netcalc;
 public class Subnet extends NetworkBase{
     private Host[] hosts;
 
-    public Subnet(IPv4Address netwotkIdV4, IPv4Address networkMaskV4) throws Exception {
-        this.setNetworkIdV4(new IPv4Address(netwotkIdV4.getValue() & networkMaskV4.getValue()));
+    public Subnet(IPv4Address networkIdV4, IPv4Address networkMaskV4) throws Exception {
+        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
         hosts = new Host[getMaxHosts()];
         for(int i = 1; i <= getMaxHosts(); i++) {
-            Host host = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + i), null, null);
+            Host host = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + i), null);
             hosts[i-1] = host;
         }
     }
@@ -21,20 +21,12 @@ public class Subnet extends NetworkBase{
         this.setPrefixV6(prefixV6);
         hosts = new Host[getMaxHosts()];
         for(int i = 1; i <= getMaxHosts(); i++) {
-            Host host = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + i), null, null);
+            Host host = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + i), null);
             hosts[i-1] = host;
         }
     }
 
     public Host[] getHosts(){
         return hosts;
-    }
-
-    public IPv6Address getNetworkIdV6() {
-        return getNetworkIdV6();
-    }
-
-    public int getPrefixV6() {
-        return getPrefixV6();
     }
 }

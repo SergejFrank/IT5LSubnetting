@@ -1,14 +1,10 @@
 package de.itech.netcalc;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class IPv6Address extends IPAddress {
-    public int[] segments;
+    private int[] segments;
 
     public int[] getSegments(){
         return segments.clone();
