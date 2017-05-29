@@ -1,4 +1,5 @@
 package de.itech.netcalc;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class SubnetPanel extends JPanel {
 
     GridBagConstraints c = new GridBagConstraints();
 
-
+    JProgressBar progressBar = new JProgressBar();
     JLabel NetworkLabel = new JLabel();
     JTextField NetworkField = new JTextField();
     JLabel NetclassLabel = new JLabel();
@@ -22,14 +23,14 @@ public class SubnetPanel extends JPanel {
     JTextArea SubnetTextArea = new JTextArea();
     public SubnetPanel()
     {
+        c.weightx =1;
+        c.weighty =1;
         this.setLayout(new GridBagLayout());
-        this.setBackground(Color.blue);
         SubnetLabel.setText("Subnet");
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx =1;
-        c.weighty =1;
+        c.gridwidth=1;
         this.add(SubnetLabel, c);
 
         NetclassLabel.setText("Netclass");
@@ -37,6 +38,7 @@ public class SubnetPanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 1;
+
         this.add(NetclassLabel, c);
 
         NetworkLabel.setText("Network");
@@ -53,18 +55,27 @@ public class SubnetPanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
+        c.gridwidth=2;
         this.add(NetworkField, c);
 
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 1;
+
         this.add(NetclassField, c);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 2;
+
         this.add(SubnetTextArea, c);
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridwidth=3;
+        this.add(progressBar, c);
 
 
     }
