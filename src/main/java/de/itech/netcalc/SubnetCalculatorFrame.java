@@ -12,11 +12,10 @@ public class SubnetCalculatorFrame extends JFrame {
     private Network network;
 
     private JPanel networksPanel = new JPanel(new BorderLayout());
-    private JPanel subnetsPanel = new JPanel();
+    private JPanel subnetsPanel = new SubnetPanel();
     private JPanel hostsPanel = new JPanel();
 
     private JLabel networksLabel = new JLabel("Networks");
-    private JLabel subnetsLabel = new JLabel("Subnets");
     private JLabel hostsLabel = new JLabel("Hosts");
 
     private JTabbedPane tabbedPane = new JTabbedPane();
@@ -46,11 +45,11 @@ public class SubnetCalculatorFrame extends JFrame {
 
         networksPanel.add(networksLabel);
         networksPanel.add(list);
-        subnetsPanel.add(subnetsLabel);
+
         hostsPanel.add(hostsLabel);
 
         tabbedPane.add("Networks", networksPanel);
-        tabbedPane.add("Subnets", subnetsPanel);
+        tabbedPane.add("Subnets", new SubnetPanel());
         tabbedPane.add("Hosts", hostsPanel);
 
         this.add(tabbedPane);
