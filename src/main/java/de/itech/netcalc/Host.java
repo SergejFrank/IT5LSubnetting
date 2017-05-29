@@ -3,7 +3,6 @@ package de.itech.netcalc;
 public class Host {
     private String name;
     private IPv4Address ip;
-    private IPv4Address ip;
 
     Host(IPv4Address address, String name) {
         this.ip = address;
