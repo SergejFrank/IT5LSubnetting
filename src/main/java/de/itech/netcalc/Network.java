@@ -83,7 +83,7 @@ public class Network extends NetworkBase{
         return deviders;
     }
 
-    public void splitEqualy(int size) {
+    public void splitEqualy(int size) throws Exception {
         int length = getLength();
         int realSize = size + 2;
         if(length % realSize != 0) {
