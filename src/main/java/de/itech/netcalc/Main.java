@@ -3,7 +3,7 @@ package de.itech.netcalc;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        Network baseNet = new Network(new IpAddress(10,5,1,0), new IpAddress(255,255,255,0));
+        Network baseNet = new Network(new Ipv4Address(10,5,1,0), new Ipv4Address(255,255,255,0));
         baseNet.addSubnet(40);
         baseNet.addSubnet(14);
         baseNet.addSubnet(14);

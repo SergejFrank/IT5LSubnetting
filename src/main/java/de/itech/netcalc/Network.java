@@ -7,8 +7,8 @@ import java.util.Comparator;
 public class Network extends NetworkBase{
     private ArrayList<Subnet> subnets = new ArrayList<>();
 
-    public Network(IpAddress address, IpAddress mask) {
-        this.setAddress(new IpAddress(address.getValue() & mask.getValue()));
+    public Network(Ipv4Address address, Ipv4Address mask) {
+        this.setAddress(new Ipv4Address(address.getValue() & mask.getValue()));
         this.setMask(mask);
     }
 
@@ -28,8 +28,8 @@ public class Network extends NetworkBase{
     public Subnet addSubnet(int size) throws Exception {
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
-        IpAddress smask = NetUtils.getMaskFromSuffix(32 - maskLength);
-        //IpAddress smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
+        Ipv4Address smask = NetUtils.getMaskFromSuffix(32 - maskLength);
+        //Ipv4Address smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
             return addSubnet(new Subnet(getAddress(), smask));
@@ -39,12 +39,12 @@ public class Network extends NetworkBase{
             Subnet curr = subnets.get(i);
             Subnet next = subnets.get(i + 1);
             if (NetUtils.getLengthBetweenNetworks(curr, next) >= size)
-                return addSubnet(new Subnet(new IpAddress(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), smask));
+                return addSubnet(new Subnet(new Ipv4Address(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), smask));
         }
 
         Subnet last = subnets.get(subnets.size()-1);
         if(NetUtils.getLengthBetweenIpAddresses(last.getBroadcastAddress(), this.getBroadcastAddress()) >= size) {
-            return addSubnet(new Subnet(new IpAddress(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), smask));
+            return addSubnet(new Subnet(new Ipv4Address(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), smask));
         }
 
         return null;
@@ -90,9 +90,9 @@ public class Network extends NetworkBase{
         int count = length / realSize;
         subnets.clear();
         for (int i=0;i < count; i++) {
-            IpAddress nAddress = new IpAddress(getAddress().getValue() + i * realSize);
+            Ipv4Address nAddress = new Ipv4Address(getAddress().getValue() + i * realSize);
             int suffixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
-            IpAddress mask = NetUtils.addSuffixToMask(getMask(), suffixLength);
+            Ipv4Address mask = NetUtils.addSuffixToMask(getMask(), suffixLength);
 
             Subnet subnet = new Subnet(nAddress,mask);
             subnets.add(subnet);

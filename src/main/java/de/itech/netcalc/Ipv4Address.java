@@ -1,20 +1,20 @@
 package de.itech.netcalc;
 
-public class IpAddress {
+public class Ipv4Address {
 
     private int oct1;
     private int oct2;
     private int oct3;
     private int oct4;
 
-    IpAddress(int oct1, int oct2, int oct3, int oct4) {
+    Ipv4Address(int oct1, int oct2, int oct3, int oct4) {
         setOct1(oct1);
         setOct2(oct2);
         setOct3(oct3);
         setOct4(oct4);
     }
 
-    IpAddress(int val){
+    Ipv4Address(int val){
         setOct1(val >> 24 & 0xFF);
         setOct2(val >> 16 & 0xFF);
         setOct3(val >> 8 & 0xFF);
@@ -81,7 +81,7 @@ public class IpAddress {
         return bin;
     }
 
-    boolean isGreaterThan(IpAddress ipAddress) {
+    boolean isGreaterThan(Ipv4Address ipAddress) {
         return getLValue() > ipAddress.getLValue();
     }
 
@@ -105,7 +105,7 @@ public class IpAddress {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        IpAddress ipAddress = (IpAddress) o;
+        Ipv4Address ipAddress = (Ipv4Address) o;
 
         if (oct1 != ipAddress.oct1) return false;
         if (oct2 != ipAddress.oct2) return false;
@@ -126,10 +126,10 @@ public class IpAddress {
         return value != null && value.matches("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
     }
 
-    public static IpAddress parse(String value) {
+    public static Ipv4Address parse(String value) {
         if(!isValid(value))
             throw new IllegalArgumentException("'value' is not a valid IPv4 Address.");
         String[] segments = value.split("\\.");
-        return new IpAddress(Integer.parseInt(segments[0]),Integer.parseInt(segments[1]),Integer.parseInt(segments[2]),Integer.parseInt(segments[3]));
+        return new Ipv4Address(Integer.parseInt(segments[0]),Integer.parseInt(segments[1]),Integer.parseInt(segments[2]),Integer.parseInt(segments[3]));
     }
 }
