@@ -1,4 +1,5 @@
 
+import de.itech.netcalc.IPAddress;
 import de.itech.netcalc.IPv6Address;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -7,6 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -39,7 +41,7 @@ public class IPv6Parser {
 
         @Test
         public void shouldValidate(){
-            assertEquals(expected,IPv6Address.isValid(in));
+            assertEquals(expected, IPAddress.isValidIPv6(in));
         }
     }
 
@@ -68,8 +70,8 @@ public class IPv6Parser {
         }
 
         @Test
-        public void convert(){
-            IPv6Address ip = IPv6Address.parse(in);
+        public void convert() {
+            IPv6Address ip = IPAddress.parseIPv6(in);
             assertEquals(expected, ip.toString());
         }
     }

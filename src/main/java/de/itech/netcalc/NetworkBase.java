@@ -45,6 +45,6 @@ public abstract class NetworkBase {
 
     @Override
     public String toString(){
-        return this.getAddress().toString()+"/"+NetUtils.getSuffixFromMask(this.getMask());
+        return this.getAddress().toString()+"/"+NetUtils.getPrefixFromMask(this.getMask());
     }
 }

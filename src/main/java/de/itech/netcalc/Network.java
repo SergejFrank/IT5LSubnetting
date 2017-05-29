@@ -28,8 +28,8 @@ public class Network extends NetworkBase{
     public Subnet addSubnet(int size) throws Exception {
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
-        IPv4Address smask = NetUtils.getMaskFromSuffix(32 - maskLength);
-        //IPv4Address smask = NetUtils.addSuffixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
+        IPv4Address smask = NetUtils.getMaskFromPrefix(32 - maskLength);
+        //IPv4Address smask = NetUtils.addPrefixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
             return addSubnet(new Subnet(getAddress(), smask));
@@ -93,8 +93,8 @@ public class Network extends NetworkBase{
         subnets.clear();
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getAddress().getValue() + i * realSize);
-            int suffixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
-            IPv4Address mask = NetUtils.addSuffixToMask(getMask(), suffixLength);
+            int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
+            IPv4Address mask = NetUtils.addPrefixToMask(getMask(), prefixLength);
 
             Subnet subnet = new Subnet(nAddress,mask);
             subnets.add(subnet);
