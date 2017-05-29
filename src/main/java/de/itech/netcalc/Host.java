@@ -2,9 +2,10 @@ package de.itech.netcalc;
 
 public class Host {
     private String name;
-    private Ipv4Address ip;
+    private IPv4Address ip;
+    private IPv4Address ip;
 
-    Host(Ipv4Address address, String name) {
+    Host(IPv4Address address, String name) {
         this.ip = address;
         this.name = name;
     }

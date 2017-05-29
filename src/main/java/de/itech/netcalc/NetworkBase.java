@@ -3,8 +3,8 @@ package de.itech.netcalc;
 public abstract class NetworkBase {
 
     private String name;
-    private Ipv4Address address;
-    private Ipv4Address mask;
+    private IPv4Address address;
+    private IPv4Address mask;
 
     public boolean isColliding(NetworkBase network) {
         return NetUtils.isInSubnet(getAddress(), getMask(), network.getAddress())
@@ -21,25 +21,25 @@ public abstract class NetworkBase {
 
     public int getLength() { return ~getMask().getValue() + 1; }
 
-    public Ipv4Address getAddress() {
-        return new Ipv4Address(address.getValue());
+    public IPv4Address getAddress() {
+        return new IPv4Address(address.getValue());
     }
 
-    protected void setAddress(Ipv4Address address) {
+    protected void setAddress(IPv4Address address) {
         this.address = address;
     }
 
-    public Ipv4Address getMask() {
-        return new Ipv4Address(mask.getValue());
+    public IPv4Address getMask() {
+        return new IPv4Address(mask.getValue());
     }
 
     public int getMaxHosts(){ return getLength() - 2; }
 
-    public Ipv4Address getBroadcastAddress(){
-        return new Ipv4Address(getAddress().getValue() + getMaxHosts() + 1);
+    public IPv4Address getBroadcastAddress(){
+        return new IPv4Address(getAddress().getValue() + getMaxHosts() + 1);
     }
 
-    protected void setMask(Ipv4Address mask) {
+    protected void setMask(IPv4Address mask) {
         this.mask = mask;
     }
 
