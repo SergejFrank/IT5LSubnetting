@@ -7,9 +7,18 @@ import java.util.Comparator;
 public class Network extends NetworkBase{
     private ArrayList<Subnet> subnets = new ArrayList<>();
 
-    public Network(IPv4Address address, IPv4Address mask) {
-        this.setAddress(new IPv4Address(address.getValue() & mask.getValue()));
-        this.setMask(mask);
+    public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4) {
+        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
+        this.setNetworkMaskV4(networkMaskV4);
+    }
+
+    public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
+        if(prefixV6 < 0 || prefixV6 > 128)
+            throw new IllegalArgumentException(prefixV6 + " is not a valid IPv6 Prefix");
+        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
+        this.setNetworkMaskV4(networkMaskV4.clone());
+        this.setNetworkIdV6(networkIdV6.clone());
+        this.setPrefixV6(prefixV6);
     }
 
     public ArrayList<Subnet> getSubnets(){
@@ -17,7 +26,7 @@ public class Network extends NetworkBase{
     }
 
     public Subnet addSubnet(Subnet subnet) throws IllegalArgumentException {
-        if(subnets.stream().anyMatch(sub -> sub.getAddress().equals(subnet.getAddress()) || sub.isColliding(subnet)))
+        if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new IllegalArgumentException("Subnet already exists.");
 
         subnets.add(subnet);
@@ -30,8 +39,8 @@ public class Network extends NetworkBase{
         int realSize = (int)Math.pow(2, maskLength);
         IPv4Address smask = NetUtils.getMaskFromPrefix(32 - maskLength);
 
-        if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
-            return addSubnet(new Subnet(getAddress(), smask));
+        if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getNetworkIdV4(), subnets.get(0).getNetworkIdV4()) >= size) {
+            return addSubnet(new Subnet(getNetworkIdV4(), smask));
         }
 
         for(int i=0;i<subnets.size()-1;i++) {
@@ -55,13 +64,13 @@ public class Network extends NetworkBase{
 
     /*
     public boolean isColliding(NetworkBase network) {
-        return NetUtils.isInSubnet(getAddress(), getMask(), network.getAddress())
-                || NetUtils.isInSubnet(network.getAddress(), network.getMask(), getAddress());
+        return NetUtils.isInSubnet(getNetworkIdV4(), getNetworkMaskV4(), network.getNetworkIdV4())
+                || NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), getNetworkIdV4());
     }
     */
 
     private void sortSubnets(){
-        Collections.sort(subnets, Comparator.comparing(o -> o.getAddress().getLValue()));
+        Collections.sort(subnets, Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));
     }
 
     private ArrayList<Integer> deviders(){
@@ -91,9 +100,9 @@ public class Network extends NetworkBase{
         int count = length / realSize;
         subnets.clear();
         for (int i=0;i < count; i++) {
-            IPv4Address nAddress = new IPv4Address(getAddress().getValue() + i * realSize);
+            IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
-            IPv4Address mask = NetUtils.addPrefixToMask(getMask(), prefixLength);
+            IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
 
             Subnet subnet = new Subnet(nAddress,mask);
             subnets.add(subnet);

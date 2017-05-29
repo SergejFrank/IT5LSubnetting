@@ -15,7 +15,7 @@ public class Main {
 
 
         baseNet.getSubnets().forEach(subnet -> {
-            System.out.println("Netzid: " + subnet.getAddress());
+            System.out.println("Netzid: " + subnet.getNetworkIdV4());
             System.out.println("Broadcast: " + subnet.getBroadcastAddress());
             System.out.println("Mask: " + subnet.getMask()+"\n");
         });

@@ -25,7 +25,7 @@ public class NetUtils {
     }
 
     public static long getLengthBetweenNetworks(NetworkBase n1 , NetworkBase n2){
-        return getLengthBetweenIpAddresses(n1.getBroadcastAddress(), n2.getAddress());
+        return getLengthBetweenIpAddresses(n1.getBroadcastAddress(), n2.getNetworkIdV4());
     }
 
     public static long getLengthBetweenIpAddresses(IPv4Address ip1, IPv4Address ip2){
