@@ -17,7 +17,7 @@ public class IPv6Address {
     public IPv6Address(int[] segments){
         if(segments.length != 8) throw new IllegalArgumentException("Wrong number of segments");
         if(Arrays.stream(segments).anyMatch(s -> s < 0 || s > 65535)) throw new IllegalArgumentException("Invalid segment");
-        this.segments = segments;
+        this.segments = segments.clone();
     }
 
     @Override
@@ -49,5 +49,10 @@ public class IPv6Address {
             }
             return String.join(":",values).toLowerCase();
         }
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new IPv6Address(segments);
     }
 }
