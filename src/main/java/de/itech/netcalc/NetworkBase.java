@@ -15,15 +15,18 @@ public abstract class NetworkBase {
 
         NetworkBase that = (NetworkBase) o;
 
-        if (!address.equals(that.address)) return false;
-        return mask.equals(that.mask);
-
+        if (prefixV6 != that.prefixV6) return false;
+        if (!networkIdV4.equals(that.networkIdV4)) return false;
+        if (!networkMaskV4.equals(that.networkMaskV4)) return false;
+        return networkIdV6 != null ? networkIdV6.equals(that.networkIdV6) : that.networkIdV6 == null;
     }
 
     @Override
     public int hashCode() {
-        int result = address.hashCode();
-        result = 31 * result + mask.hashCode();
+        int result = networkIdV4.hashCode();
+        result = 31 * result + networkMaskV4.hashCode();
+        result = 31 * result + (networkIdV6 != null ? networkIdV6.hashCode() : 0);
+        result = 31 * result + prefixV6;
         return result;
     }
 
