@@ -52,7 +52,7 @@ public class IPv6Address {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected IPv6Address clone() {
         return new IPv6Address(segments);
     }
 }

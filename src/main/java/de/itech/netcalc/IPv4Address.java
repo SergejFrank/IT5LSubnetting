@@ -123,7 +123,7 @@ public class IPv4Address {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected IPv4Address clone() {
         return new IPv4Address(oct1, oct2, oct3, oct4);
     }
 }

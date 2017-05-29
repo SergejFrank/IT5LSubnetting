@@ -22,7 +22,7 @@ public abstract class NetworkBase {
     public int getLength() { return ~getMask().getValue() + 1; }
 
     public IPv4Address getAddress() {
-        return new IPv4Address(address.getValue());
+        return address.clone();
     }
 
     protected void setAddress(IPv4Address address) {
@@ -30,7 +30,7 @@ public abstract class NetworkBase {
     }
 
     public IPv4Address getMask() {
-        return new IPv4Address(mask.getValue());
+        return mask.clone();
     }
 
     public int getMaxHosts(){ return getLength() - 2; }

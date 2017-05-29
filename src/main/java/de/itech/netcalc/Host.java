@@ -13,8 +13,8 @@ public class Host {
         if(ipv4Address == null)
             throw new Exception("Host must contain a valid IPv4Address.");
         this.ipv4Subnet = ipv4Subnet;
-        this.ipv4Address = ipv4Address;
-        this.ipv6Address = ipv6Address;
+        this.ipv4Address = ipv4Address.clone();
+        this.ipv6Address = ipv6Address.clone();
         this.name = name;
     }
 
@@ -37,11 +37,11 @@ public class Host {
     }
 
     public IPv6Address getIpv6Address() {
-        return ipv6Address;
+        return ipv6Address.clone();
     }
 
     public IPv4Address getIpv4Address() {
-        return ipv4Address;
+        return ipv4Address.clone();
     }
 
     public int getIpv6Prefix() {
