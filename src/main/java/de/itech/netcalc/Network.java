@@ -17,7 +17,7 @@ public class Network extends NetworkBase{
     }
 
     public Subnet addSubnet(Subnet subnet) throws IllegalArgumentException {
-        if(subnets.stream().anyMatch(sub -> sub.getAddress().equals(subnet.getAddress())))
+        if(subnets.stream().anyMatch(sub -> sub.getAddress().equals(subnet.getAddress()) || sub.isColliding(subnet)))
             throw new IllegalArgumentException("Subnet already exists.");
 
         subnets.add(subnet);
@@ -54,10 +54,12 @@ public class Network extends NetworkBase{
         return (int)Math.ceil((double)position / (double)count) * count;
     }
 
+    /*
     public boolean isColliding(NetworkBase network) {
         return NetUtils.isInSubnet(getAddress(), getMask(), network.getAddress())
                 || NetUtils.isInSubnet(network.getAddress(), network.getMask(), getAddress());
     }
+    */
 
     private void sortSubnets(){
         Collections.sort(subnets, Comparator.comparing(o -> o.getAddress().getLValue()));

@@ -6,6 +6,11 @@ public abstract class NetworkBase {
     private Ipv4Address address;
     private Ipv4Address mask;
 
+    public boolean isColliding(NetworkBase network) {
+        return NetUtils.isInSubnet(getAddress(), getMask(), network.getAddress())
+                || NetUtils.isInSubnet(network.getAddress(), network.getMask(), getAddress());
+    }
+
     public String getName() {
         return name;
     }
