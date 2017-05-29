@@ -28,6 +28,8 @@ public class SubnetPanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
+        c.weightx =1;
+        c.weighty =1;
         this.add(SubnetLabel, c);
 
         NetclassLabel.setText("Netclass");
