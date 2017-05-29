@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class IPv6Address {
+public class IPv6Address extends IPAddress {
     public int[] segments;
 
     public int[] getSegments(){

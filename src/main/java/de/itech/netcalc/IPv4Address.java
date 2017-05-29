@@ -1,6 +1,6 @@
 package de.itech.netcalc;
 
-public class IPv4Address {
+public class IPv4Address extends IPAddress {
 
     private int oct1;
     private int oct2;
