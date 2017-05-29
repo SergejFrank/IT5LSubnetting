@@ -6,6 +6,25 @@ public abstract class NetworkBase {
     private IPv4Address address;
     private IPv4Address mask;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NetworkBase that = (NetworkBase) o;
+
+        if (!address.equals(that.address)) return false;
+        return mask.equals(that.mask);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = address.hashCode();
+        result = 31 * result + mask.hashCode();
+        return result;
+    }
+
     public boolean isColliding(NetworkBase network) {
         return NetUtils.isInSubnet(getAddress(), getMask(), network.getAddress())
                 || NetUtils.isInSubnet(network.getAddress(), network.getMask(), getAddress());

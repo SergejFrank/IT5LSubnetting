@@ -29,7 +29,6 @@ public class Network extends NetworkBase{
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
         IPv4Address smask = NetUtils.getMaskFromPrefix(32 - maskLength);
-        //IPv4Address smask = NetUtils.addPrefixToMask (getMask(),(int)(Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ))));
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getAddress(), subnets.get(0).getAddress()) >= size) {
             return addSubnet(new Subnet(getAddress(), smask));
