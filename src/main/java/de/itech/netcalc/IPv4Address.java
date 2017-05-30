@@ -16,7 +16,7 @@ public class IPv4Address extends IPAddress {
     }
 
     private int getOct1() {
-        return (value & 0xFF000000) >> 24;
+        return (value & 0xFF000000) >>> 24;
     }
 
     private int getOct2() {
@@ -36,7 +36,7 @@ public class IPv4Address extends IPAddress {
     }
 
     public long getLValue() {
-        return 0L | value;
+        return Integer.toUnsignedLong(value);
     }
 
     String toBinary(){
@@ -56,7 +56,7 @@ public class IPv4Address extends IPAddress {
     }
 
     boolean isGreaterThan(IPv4Address ipAddress) {
-        return (0L | value) > (0L | ipAddress.value);
+        return getLValue() > ipAddress.getLValue();
     }
 
     public String toBinary(String seperator){
