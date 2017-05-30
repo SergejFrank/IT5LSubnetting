@@ -24,7 +24,7 @@ public class NetworksPanel extends JPanel{
 
     // JList
     private JList netList;
-    private DefaultListModel listModel;
+    private DefaultListModel<Network> listModel;
 
     // Buttons
     private JButton bTest1;
@@ -33,7 +33,7 @@ public class NetworksPanel extends JPanel{
 
     // Border
 
-    public NetworksPanel(Network network){
+    public NetworksPanel(){
         this.setLayout(new GridBagLayout());
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -65,10 +65,9 @@ public class NetworksPanel extends JPanel{
         bTest3.addActionListener(new ButtonListener());
 
         // Configure networks list
-        listModel.addElement(network);
-        listModel.addElement("test");
-        listModel.addElement("eins");
-        listModel.addElement("zwei");
+        listModel.addElement(Network.parse("192.168.254.0/24"));
+        listModel.addElement(Network.parse("10.0.5.0/24"));
+        listModel.addElement(Network.parse("178.34.0.0/16"));
         netList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         netList.setLayoutOrientation(JList.VERTICAL);
         netList.setVisibleRowCount(-1);

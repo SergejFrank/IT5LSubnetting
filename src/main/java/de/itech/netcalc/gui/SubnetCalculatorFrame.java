@@ -7,8 +7,6 @@ import java.awt.*;
 
 public class SubnetCalculatorFrame extends JFrame {
 
-    private Network network;
-
     private JTabbedPane tabbedPane = new JTabbedPane();
 
     // Panels
@@ -20,11 +18,10 @@ public class SubnetCalculatorFrame extends JFrame {
     private JLabel subnetsLabel = new JLabel("Subnets");
     private JLabel hostsLabel = new JLabel("Hosts");
 
-    public SubnetCalculatorFrame(String title, Network network){
+    public SubnetCalculatorFrame(String title){
         super(title);
-        this.network = network;
 
-        netsPan = new NetworksPanel(network);
+        netsPan = new NetworksPanel();
 
         // Add Panels to the tabs
         tabbedPane.add("Networks", netsPan);

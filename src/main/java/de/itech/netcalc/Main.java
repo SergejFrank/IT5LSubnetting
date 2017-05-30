@@ -17,6 +17,6 @@ public class Main {
         baseNet.addSubnet(40);
 
         // GUI
-        SubnetCalculatorFrame calcFrame = new SubnetCalculatorFrame("SubnetCalculator", baseNet);
+        SubnetCalculatorFrame calcFrame = new SubnetCalculatorFrame("SubnetCalculator");
     }
 }
