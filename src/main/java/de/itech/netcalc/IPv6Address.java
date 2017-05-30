@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class IPv6Address extends IPAddress {
-    private static final long EUI_Address_Standard = 0b00000000_00000000_00000000_11111111_11111110_00000000_00000000_0000000L;
     private int[] segments;
 
     public int[] getSegments(){
