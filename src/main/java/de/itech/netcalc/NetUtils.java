@@ -2,7 +2,7 @@ package de.itech.netcalc;
 
 class NetUtils {
     static IPv4Address getMaskFromPrefix(int prefix) {
-        if(prefix < 0 || prefix >= 31) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
+        if(prefix < 0 || prefix > 32) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
 
         int mask = prefix == 0 ? 0 : -1 << (32 - prefix);
 
@@ -21,7 +21,8 @@ class NetUtils {
     }
 
     static int getPrefixFromMask(IPv4Address mask) {
-        return mask.toBinary().indexOf("0");
+        int index = mask.toBinary().indexOf("0");
+        return index == -1 ? 32 : 0;
     }
 
     static long getLengthBetweenNetworks(NetworkBase n1, NetworkBase n2){

@@ -101,4 +101,14 @@ public class Network extends NetworkBase{
             subnets.add(subnet);
         }
     }
+
+    public static Network parse(String value) {
+        if(value == null) throw new IllegalArgumentException("'value' can not be null.");
+        final String v4Regex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$";
+        if(!value.matches(v4Regex)) throw new UnsupportedOperationException("'value' is not a valid network identifier.");
+        String[] splitted = value.split("/");
+        IPv4Address netmask = NetUtils.getMaskFromPrefix(Integer.valueOf(splitted[1]));
+        IPv4Address networkID = IPAddress.parseIPv4(splitted[0]);
+        return new Network(networkID, netmask);
+    }
 }
