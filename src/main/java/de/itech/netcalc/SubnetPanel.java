@@ -8,9 +8,6 @@ import javax.swing.border.EmptyBorder;
 import javax.xml.soap.Text;
 import java.awt.*;
 
-/**
- * Created by it5-senkjo on 29.05.2017.
- */
 public class SubnetPanel extends JPanel {
 
 

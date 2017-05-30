@@ -5,9 +5,6 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by Marcel on 22.05.2017.
- */
 public class SubnetCalculatorFrame extends JFrame {
 
     private Network network;

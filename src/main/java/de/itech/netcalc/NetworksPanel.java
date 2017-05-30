@@ -7,9 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Created by Marcel on 29.05.2017.
- */
 public class NetworksPanel extends JPanel{
 
     GridBagConstraints c = new GridBagConstraints();
