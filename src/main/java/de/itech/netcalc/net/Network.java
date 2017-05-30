@@ -34,7 +34,7 @@ public class Network extends NetworkBase{
         return subnet;
     }
 
-    public Subnet addSubnet(int size) throws Exception {
+    public Subnet addSubnet(int size) {
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
         IPv4Address subnetMask = NetUtils.getMaskFromPrefix(32 - maskLength);

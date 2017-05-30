@@ -13,14 +13,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class TreeTabPanel extends JPanel implements TreeSelectionListener {
-
-    private JSplitPane mainPane;
+    private static TreeTabPanel Instance;
+    private NetworkTreeModel networkTreeModel;
     private JSplitPane infoPane;
     private JTree networkTree;
 
     public TreeTabPanel() {
         super(new GridLayout(1,0));
-        mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        Instance = this;
+        JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         infoPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         mainPane.setDividerSize(3);
         infoPane.setDividerSize(3);
@@ -29,7 +30,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         mainPane.setResizeWeight(0.3);
         infoPane.setResizeWeight(0.5);
 
-        NetworkTreeModel networkTreeModel = new NetworkTreeModel();
+        networkTreeModel = new NetworkTreeModel();
         networkTree = new JTree(networkTreeModel);
         networkTree.addTreeSelectionListener(this);
         networkTree.addMouseListener(new MouseAdapter() {
@@ -44,12 +45,15 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
+        Network testNetwork4 = Network.parse("1.2.3.4/24");
         testNetwork1.splitEqualy(126);
         testNetwork2.splitEqualy(30);
         testNetwork3.splitEqualy(14);
+        testNetwork3.addSubnet(24);
         networkTreeModel.addNetwork(testNetwork1);
         networkTreeModel.addNetwork(testNetwork2);
         networkTreeModel.addNetwork(testNetwork3);
+        networkTreeModel.addNetwork(testNetwork4);
 
         add(mainPane);
     }
@@ -101,11 +105,11 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             networkTree.setSelectionRow(row);
             JPopupMenu menu = new JPopupMenu();
             Object element = networkTree.getPathForRow(row).getLastPathComponent();
-            if(element instanceof String)
+            if(element == networkTreeModel.getRoot())
             {
                 menu.add(new AbstractAction("Neues Netzwerk") {
                     public void actionPerformed (ActionEvent e) {
-
+                        TreeTabPanel.Instance.handleCreateNetwork();
                     }
                 });
             }
@@ -123,5 +127,14 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             }
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
+    }
+
+    private void handleCreateNetwork() {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Netzwerk Id und Prefix::",
+                "Netzwerk hinzufügen",
+                JOptionPane.PLAIN_MESSAGE);
+        networkTreeModel.addNetwork(Network.parse(input));
     }
 }
