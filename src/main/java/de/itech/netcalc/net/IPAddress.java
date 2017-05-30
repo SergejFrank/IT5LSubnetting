@@ -30,34 +30,46 @@ public abstract class IPAddress {
             ArrayList<Integer> parsedSegments = new ArrayList<>();
 
             int expectedLength = value.contains(".") ? 19 : 15;
-            String[] splitted = value.split("((?<=[:.])|(?=[:.]))");
+            String[] split = value.split("((?<=[:.])|(?=[:.]))");
             int missingSegments = 0;
-            if (splitted.length != expectedLength)
-                missingSegments = (expectedLength - splitted.length + 1) / 2;
-            if(splitted.length == 3)
+            if (split.length != expectedLength)
+                missingSegments = (expectedLength - split.length + 1) / 2;
+            if(split.length == 3)
                 missingSegments = 7;
-            if(splitted.length == 2)
+            if(split.length == 2)
                 missingSegments = 8;
 
             String currSegment;
-            for (int i = 0; i < splitted.length; i++) {
-                currSegment = splitted[i];
-                if (isDelimiter(currSegment) && i != (splitted.length - 1) && isDelimiter(splitted[i+1])) { //Evtl nächstes Zeichen noch ein Trennzeichen?
+            for (int i = 0; i < split.length; i++) {
+                currSegment = split[i];
+                if (isDelimiter(currSegment) && i != (split.length - 1) && isDelimiter(split[i+1])) { //Evtl nächstes Zeichen noch ein Trennzeichen?
                     i++;
                     for (int j = 0; j < missingSegments; j++) {
                         parsedSegments.add(0);
                     }
-                } else if (isDelimiter(currSegment) && i == (splitted.length - 1)) //Spezialfall letzter Block ist Trennzeichen
+                } else if (isDelimiter(currSegment) && i == (split.length - 1)) //Spezialfall letzter Block ist Trennzeichen
                     parsedSegments.add(0);
                 else if(!isDelimiter(currSegment)) //normales Segment
                 {
-                    if((i != 0 && Objects.equals(splitted[i - 1], ".")) || (i != splitted.length -1 && Objects.equals(splitted[i + 1], ".")))
+                    if((i != 0 && Objects.equals(split[i - 1], ".")) || (i != split.length -1 && Objects.equals(split[i + 1], ".")))
                         parsedSegments.add(Integer.parseInt(currSegment));
                     else
                         parsedSegments.add(Integer.parseInt(currSegment, 16));
                 }
             }
-            return new IPv6Address(parsedSegments.stream().mapToInt(i -> i).toArray());
+
+            long networkId = ((long) parsedSegments.get(0) << 48) +
+                    ((long) parsedSegments.get(1) << 32) +
+                    ((long) parsedSegments.get(2) << 16) +
+                    ((long) parsedSegments.get(3));
+
+            long interfaceId = ((long) parsedSegments.get(4) << 48) +
+                    ((long) parsedSegments.get(5) << 32) +
+                    ((long) parsedSegments.get(6) << 16) +
+                    ((long) parsedSegments.get(7));
+
+            return new IPv6Address(networkId, interfaceId);
+
         }
         catch(Exception e) {
             System.out.println("Can not parse IPv6Address (" + e.toString() + ")");

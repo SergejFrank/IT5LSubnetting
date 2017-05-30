@@ -18,22 +18,6 @@ public class IPv6Address extends IPAddress {
         this.interfaceId = interfaceId;
     }
 
-    @Deprecated
-    public IPv6Address(int[] segments){
-        if(segments.length != 8) throw new IllegalArgumentException("Wrong number of segments");
-        if(Arrays.stream(segments).anyMatch(s -> s < 0 || s > 65535)) throw new IllegalArgumentException("Invalid segment");
-
-        networkId = ((long) segments[0] << 48) +
-                ((long) segments[1] << 32) +
-                ((long) segments[2] << 16) +
-                ((long) segments[3]);
-
-        interfaceId = ((long) segments[4] << 48) +
-                ((long) segments[5] << 32) +
-                ((long) segments[6] << 16) +
-                ((long) segments[7]);
-    }
-
     public long getInterfaceId() {
         return interfaceId;
     }
