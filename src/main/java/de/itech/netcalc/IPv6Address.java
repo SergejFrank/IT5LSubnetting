@@ -1,28 +1,48 @@
 package de.itech.netcalc;
 
-import java.util.ArrayList;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Random;
 
 public class IPv6Address extends IPAddress {
-    private int[] segments;
+    private long networkId;
 
-    public int[] getSegments(){
-        return segments.clone();
+    private long interfaceId;
+
+    public IPv6Address(long networkId){
+        this.networkId = networkId;
+        this.interfaceId = getRandomInterfaceAddress();
     }
 
+    public IPv6Address(long networkId, long interfaceId){
+        this.networkId = networkId;
+        this.interfaceId = interfaceId;
+    }
+
+    @Deprecated
     public IPv6Address(int[] segments){
         if(segments.length != 8) throw new IllegalArgumentException("Wrong number of segments");
         if(Arrays.stream(segments).anyMatch(s -> s < 0 || s > 65535)) throw new IllegalArgumentException("Invalid segment");
-        this.segments = segments.clone();
+
+        networkId = ((long) segments[0] << 48) +
+                ((long) segments[1] << 32) +
+                ((long) segments[2] << 16) +
+                ((long) segments[3]);
+
+        interfaceId = ((long) segments[4] << 48) +
+                ((long) segments[5] << 32) +
+                ((long) segments[6] << 16) +
+                ((long) segments[7]);
     }
 
     public long getInterfaceId() {
-        return ((long)segments[4] << 24) + ((long)segments[5] << 16) + ((long)segments[6] << 8) + ((long)segments[7]);
+        return interfaceId;
     }
 
     public long getNetworkId() {
-        return ((long)segments[0] << 24) + ((long)segments[1] << 16) + ((long)segments[2] << 8) + ((long)segments[3]);
+        return networkId;
     }
 
     @Override
@@ -30,46 +50,47 @@ public class IPv6Address extends IPAddress {
         return toString(false);
     }
 
-    public String toString(Boolean shorthand)
-    {
-        if(shorthand) {
-            ArrayList<String> values = new ArrayList<>();
-            boolean shorted = false;
-            for(int s : segments) {
-                if(s == 0 && !shorted)
-                {
-                    values.add("");
-                    shorted = true;
-                }
-                else
-                    values.add(Integer.toString(s, 16));
-            }
-            return String.join(":",values).toLowerCase();
+    public String toString(Boolean shorthand) {
+        short[] segments = new short[8];
+
+
+        for(int i = 0; i < 4; i++){
+            segments[i] = (short) (networkId >> (3-i)*16);
+            segments[i + 4] = (short) (interfaceId >> (3-i)*16);
         }
-        else{
-            ArrayList<String> values = new ArrayList<>();
-            for(int s : segments) {
-                //values.add(Integer.toString(s, 16));
-                values.add(String.format("%04X", s & 0xFFFF));
-            }
-            return String.join(":",values).toLowerCase();
+
+        String address = Long.toString(Short.toUnsignedLong(segments[0]), 16);
+
+        for(int i = 1; i < segments.length; i++){
+            address += ":" + Long.toString(Short.toUnsignedLong(segments[i]), 16);
         }
+
+        if(shorthand){
+            address = address.replaceAll("((?::0\\b){2,}):?(?!\\S*\\b\\1:0\\b)(\\S*)", "::$2");
+            if(address.equals("0::")) address = "::";
+        }
+
+        return address;
     }
 
-    public static IPv6Address getRandomInterfaceAddress(){
-        Random r = new Random();
-        int[] newSegments = new int[8];
+    public static long getRandomInterfaceAddress(){
+        //due to EUI Standards the 25th bit from the right always has to be 0
+        //https://supportforums.cisco.com/document/100566/understanding-ipv6-eui-64-bit-address
+        return (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24;
+    }
 
-        newSegments[4] = r.nextInt(65025);
-        newSegments[5] = r.nextInt(65025) | 0x0F;
-        newSegments[6] = r.nextInt(255) | 0xE0;
-        newSegments[7] = r.nextInt(65025);
+    public static IPv6Address getRandomInterfaceAddress(long networkId){
+        //for explanation see other method implementation of getRandomInterfaceAddress
+        return new IPv6Address(networkId, (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24);
+    }
 
-        return new IPv6Address(newSegments);
+    public static IPv6Address getRandomInterfaceAddress(IPv6Address address){
+        //for explanation see other method implementation of getRandomInterfaceAddress
+        return new IPv6Address(address.networkId, (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24);
     }
 
     @Override
     protected IPv6Address clone() {
-        return new IPv6Address(segments);
+        return new IPv6Address(networkId, interfaceId);
     }
 }
