@@ -2,6 +2,7 @@ package de.itech.netcalc.net;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class IPv6Address extends IPAddress {
     private long networkId;
@@ -32,7 +33,7 @@ public class IPv6Address extends IPAddress {
     }
 
     public String toString(Boolean shorthand) {
-        short[] segments = new short[8];
+        Short[] segments = new Short[8];
 
 
         for(int i = 0; i < 4; i++){
@@ -40,10 +41,14 @@ public class IPv6Address extends IPAddress {
             segments[i + 4] = (short) (interfaceId >> (3-i)*16);
         }
 
-        String address = Long.toString(Short.toUnsignedLong(segments[0]), 16);
+        String address = shorthand
+                ? Long.toString(Short.toUnsignedLong(segments[0]), 16)
+                : String.format("%04X", Short.toUnsignedLong(segments[0]));
 
         for(int i = 1; i < segments.length; i++){
-            address += ":" + Long.toString(Short.toUnsignedLong(segments[i]), 16);
+            address += shorthand
+                    ? ":" + Long.toString(Short.toUnsignedLong(segments[i]), 16)
+                    : ":" + String.format("%04X", Short.toUnsignedLong(segments[i]));
         }
 
         if(shorthand){
@@ -51,7 +56,7 @@ public class IPv6Address extends IPAddress {
             if(address.equals("0::")) address = "::";
         }
 
-        return address;
+        return address.toLowerCase();
     }
 
     public static long getRandomInterfaceAddress(){
