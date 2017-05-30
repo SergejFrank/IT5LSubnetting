@@ -1,9 +1,9 @@
-package de.itech.netcalc;
+package de.itech.netcalc.gui;
+
+import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class SubnetCalculatorFrame extends JFrame {
 

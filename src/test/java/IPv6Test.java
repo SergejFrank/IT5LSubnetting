@@ -1,4 +1,4 @@
-import de.itech.netcalc.IPv6Address;
+import de.itech.netcalc.net.IPv6Address;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

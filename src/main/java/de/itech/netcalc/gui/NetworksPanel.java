@@ -1,4 +1,6 @@
-package de.itech.netcalc;
+package de.itech.netcalc.gui;
+
+import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

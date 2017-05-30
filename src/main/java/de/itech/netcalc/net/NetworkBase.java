@@ -1,4 +1,4 @@
-package de.itech.netcalc;
+package de.itech.netcalc.net;
 
 public abstract class NetworkBase {
 

@@ -1,5 +1,5 @@
-import de.itech.netcalc.IPAddress;
-import de.itech.netcalc.IPv4Address;
+import de.itech.netcalc.net.IPAddress;
+import de.itech.netcalc.net.IPv4Address;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

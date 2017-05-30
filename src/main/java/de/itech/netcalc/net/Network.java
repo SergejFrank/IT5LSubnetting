@@ -1,4 +1,4 @@
-package de.itech.netcalc;
+package de.itech.netcalc.net;
 
 import java.util.ArrayList;
 import java.util.Collections;

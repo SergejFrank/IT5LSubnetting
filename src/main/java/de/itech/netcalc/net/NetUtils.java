@@ -1,4 +1,4 @@
-package de.itech.netcalc;
+package de.itech.netcalc.net;
 
 class NetUtils {
     static IPv4Address getMaskFromPrefix(int prefix) {

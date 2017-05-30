@@ -1,9 +1,9 @@
-package de.itech.netcalc;
+package de.itech.netcalc.net;
 
 public class IPv4Address extends IPAddress {
     private int value;
 
-    IPv4Address(int oct1, int oct2, int oct3, int oct4) {
+    public IPv4Address(int oct1, int oct2, int oct3, int oct4) {
         if(oct1 < 0 || oct1 > 255) throw new IllegalArgumentException("Value '" + oct1 + "' for oct1 is out of range.");
         if(oct2 < 0 || oct2 > 255) throw new IllegalArgumentException("Value '" + oct2 + "' for oct2 is out of range.");
         if(oct3 < 0 || oct3 > 255) throw new IllegalArgumentException("Value '" + oct3 + "' for oct3 is out of range.");

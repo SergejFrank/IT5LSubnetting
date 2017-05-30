@@ -1,6 +1,4 @@
-package de.itech.netcalc;
-
-import java.util.Arrays;
+package de.itech.netcalc.net;
 
 public class Subnet extends NetworkBase{
     private Host[] hosts;

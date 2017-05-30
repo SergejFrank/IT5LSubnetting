@@ -1,7 +1,5 @@
-package de.itech.netcalc;
+package de.itech.netcalc.net;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package de.itech.netcalc;
+package de.itech.netcalc.gui;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
 import sun.nio.ch.Net;

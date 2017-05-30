@@ -1,6 +1,6 @@
 
-import de.itech.netcalc.IPAddress;
-import de.itech.netcalc.IPv6Address;
+import de.itech.netcalc.net.IPAddress;
+import de.itech.netcalc.net.IPv6Address;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -8,7 +8,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 
