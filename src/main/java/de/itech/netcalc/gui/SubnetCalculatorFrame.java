@@ -34,7 +34,7 @@ public class SubnetCalculatorFrame extends JFrame {
 
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
+        //pack();
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2); // screen center
