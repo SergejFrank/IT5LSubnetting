@@ -5,6 +5,8 @@ import de.itech.netcalc.net.Subnet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SubnetPanel extends JPanel {
     private Network network;
@@ -39,6 +41,16 @@ public class SubnetPanel extends JPanel {
         subnetList.setVisibleRowCount(-1);
         subnetList.setSelectedIndex(0);
         subnetList.setVisibleRowCount(5);
+        subnetList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if (evt.getClickCount() == 2) {
+                    int index = list.locationToIndex(evt.getPoint());
+                    Subnet selectedSubnet = subnetListModel.elementAt(index);
+                    SubnetCalculatorFrame.Instance.goToHosts(selectedSubnet);
+                }
+            }
+        });
         JScrollPane listScrollPane = new JScrollPane(subnetList);
 
         c.weightx =1;

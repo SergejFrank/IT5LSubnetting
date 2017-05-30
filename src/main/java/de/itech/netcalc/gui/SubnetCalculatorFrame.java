@@ -1,6 +1,7 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
+import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,26 +13,26 @@ public class SubnetCalculatorFrame extends JFrame {
     // Panels
     private NetworksPanel netsPan;
 
-    private JPanel subnetsPanel = new SubnetPanel(Network.parse("10.0.0.5/24"));
-    private JPanel hostsPanel = new JPanel();
-    private JLabel networksLabel = new JLabel("Networks");
-    private JLabel subnetsLabel = new JLabel("Subnets");
-    private JLabel hostsLabel = new JLabel("Hosts");
+    private JPanel subnetsPanel;
+    private JPanel hostsPanel;
+    private JPanel treePanel = new TreeTabPanel();
 
     public SubnetCalculatorFrame(String title){
         super(title);
+
+        this.add(new TreeTabPanel());
+
         Instance = this;
 
         netsPan = new NetworksPanel();
 
         // Add Panels to the tabs
+        tabbedPane.add("Network-Tree", treePanel);
         tabbedPane.add("Networks", netsPan);
-        tabbedPane.add("Subnets", subnetsPanel);
-        tabbedPane.add("Hosts", hostsPanel);
 
         add(tabbedPane);
 
-        //setSize(800, 600);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 
@@ -47,7 +48,13 @@ public class SubnetCalculatorFrame extends JFrame {
         tabbedPane.remove(hostsPanel);
         subnetsPanel = new SubnetPanel(network);
         tabbedPane.add("Subnets", subnetsPanel);
-        tabbedPane.add("hosts", hostsPanel);
-        tabbedPane.setSelectedIndex(1);
+        tabbedPane.setSelectedIndex(2);
+    }
+
+    public void goToHosts(Subnet subnet) {
+        tabbedPane.remove(hostsPanel);
+        hostsPanel = new JPanel();
+        tabbedPane.add("Hosts", hostsPanel);
+        tabbedPane.setSelectedIndex(3);
     }
 }
