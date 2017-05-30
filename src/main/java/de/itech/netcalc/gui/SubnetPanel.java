@@ -116,6 +116,7 @@ public class SubnetPanel extends JPanel {
         c.gridy = 4;
         c.gridwidth=1;
         c.weighty =0.1;
+        c.insets = new Insets(3,3,3,3);
         this.add(newSubnetButton, c);
 
 
