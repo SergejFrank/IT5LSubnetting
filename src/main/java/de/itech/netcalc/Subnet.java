@@ -1,5 +1,7 @@
 package de.itech.netcalc;
 
+import java.util.Arrays;
+
 public class Subnet extends NetworkBase{
     private Host[] hosts;
 
@@ -21,9 +23,14 @@ public class Subnet extends NetworkBase{
         this.setPrefixV6(prefixV6);
         hosts = new Host[getMaxHosts()];
         for(int i = 1; i <= getMaxHosts(); i++) {
-            Host host = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + i), null);
+            IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i);
+            Host host = new Host(this, hostV4, null);
             hosts[i-1] = host;
         }
+    }
+
+    public void assignRandomIPv6Address(Host host) {
+        if(host == null) throw new IllegalArgumentException("'Host' can not be null.");
     }
 
     public Host[] getHosts(){
