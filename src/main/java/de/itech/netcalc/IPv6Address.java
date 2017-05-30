@@ -2,6 +2,7 @@ package de.itech.netcalc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class IPv6Address extends IPAddress {
     private int[] segments;
@@ -53,6 +54,18 @@ public class IPv6Address extends IPAddress {
             }
             return String.join(":",values).toLowerCase();
         }
+    }
+
+    public static IPv6Address getRandomInterfaceAddress(){
+        Random r = new Random();
+        int[] newSegments = new int[8];
+
+        newSegments[4] = r.nextInt(65025);
+        newSegments[5] = r.nextInt(65025) | 0x0F;
+        newSegments[6] = r.nextInt(255) | 0xE0;
+        newSegments[7] = r.nextInt(65025);
+
+        return new IPv6Address(newSegments);
     }
 
     @Override
