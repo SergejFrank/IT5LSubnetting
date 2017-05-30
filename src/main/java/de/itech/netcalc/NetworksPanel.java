@@ -1,6 +1,7 @@
 package de.itech.netcalc;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,8 @@ import java.awt.event.ActionListener;
  * Created by Marcel on 29.05.2017.
  */
 public class NetworksPanel extends JPanel{
+
+    GridBagConstraints c = new GridBagConstraints();
 
     private JLabel networksLabel;
     private JLabel ipLabel;
@@ -31,9 +34,11 @@ public class NetworksPanel extends JPanel{
 
     // Border
 
-    public NetworksPanel(LayoutManager layoutManager, Network network){
-        super(layoutManager);
+    public NetworksPanel(Network network){
+        this.setLayout(new GridBagLayout());
+        this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        // Labels, textfields
         networksLabel = new JLabel("Networks");
         ipLabel = new JLabel("IP: ");
         ipText = new JTextField();
@@ -45,9 +50,9 @@ public class NetworksPanel extends JPanel{
         bTest3 = new JButton("Test3");
 
         // Panels
-        bottomPanel = new JPanel(new GridLayout(2,1));
+        /*bottomPanel = new JPanel(new GridLayout(2,1));
         inputPanel = new JPanel(new BorderLayout(42,5));
-        buttonPanel = new JPanel();
+        buttonPanel = new JPanel();*/
 
 
         // JList
@@ -55,13 +60,8 @@ public class NetworksPanel extends JPanel{
         netList = new JList(listModel);
         netList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
-
-        bTest1.addActionListener(new ButtonListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("TEST");
-            }
-        });
+        // Buttonlisteners
+        bTest1.addActionListener(new ButtonListener());
         bTest2.addActionListener(new ButtonListener());
         bTest3.addActionListener(new ButtonListener());
 
@@ -80,10 +80,16 @@ public class NetworksPanel extends JPanel{
 
 
         // Configure Networks Layout
-        networksLabel.setVerticalAlignment(JLabel.TOP);
+
+        //networksLabel.setVerticalAlignment(JLabel.CENTER);
+        //ipLabel.setVerticalAlignment(JLabel.CENTER);
+
+        /*
         add(networksLabel, BorderLayout.LINE_START);
         add(netList);
         add(bottomPanel, BorderLayout.PAGE_END);
+
+
 
         bottomPanel.add(inputPanel);
         bottomPanel.add(buttonPanel);
@@ -94,14 +100,65 @@ public class NetworksPanel extends JPanel{
 
         buttonPanel.add(bTest1);
         buttonPanel.add(bTest2);
-        buttonPanel.add(bTest3);
+        buttonPanel.add(bTest3);*/
+
+
+        c.weightx =1;
+        c.weighty =1;
+
+        // Add labels
+        networksLabel.setVerticalAlignment(SwingConstants.TOP);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth=1;
+        add(networksLabel, c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        add(ipLabel, c);
+
+        // Add listscrollpane
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth=2;
+        add(listScrollPane, c);
+
+        c.gridx = 1;
+        c.gridy = 1;
+        add(ipText, c);
+
+        // Add buttons
+        c.insets = new Insets(3,3,3,3);
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        c.weightx = 0.1;
+        c.insets = new Insets(3,3,3,3);
+        add(bTest1, c);
+        c.gridx = 1;
+        c.gridy = 2;
+        c.weightx = 0.1;
+        add(bTest2, c);
+        c.gridx = 2;
+        c.gridy = 2;
+        c.weightx = 0.1;
+        add(bTest3, c);
 
     }
 
     public class ButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
-            System.out.println("Good job you pressed a button, what a man!");
+            if(e.getSource() == bTest1) {
+                System.out.println("1");
+            }else if(e.getSource() == bTest2){
+                System.out.println("2");
+            }else if(e.getSource() == bTest3){
+                System.out.println("3");
+            }
+
         }
     }
 
