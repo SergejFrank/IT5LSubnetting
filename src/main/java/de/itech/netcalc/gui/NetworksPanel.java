@@ -9,6 +9,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Optional;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -170,13 +172,28 @@ public class NetworksPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e){
             if(e.getSource() == bTest1) {
-                System.out.println("1");
+                addNewNetwork();
             }else if(e.getSource() == bTest2){
                 System.out.println("2");
             }else if(e.getSource() == bTest3){
                 System.out.println("3");
             }
 
+        }
+    }
+
+    public void addNewNetwork(){
+        String input = ipText.getText();
+        try{
+            Network network = Network.parse(input);
+            Optional<Network> collidingNetwork = Collections.list(listModel.elements()).stream().filter(other -> other.isColliding(network)).findFirst();
+            if(collidingNetwork.isPresent()){
+                throw new UnsupportedOperationException("Network is Colliding with "+collidingNetwork.get());
+            }else{
+                listModel.addElement(network);
+            }
+        }catch (UnsupportedOperationException e){
+            DialogBox.error(e.getMessage(),this);
         }
     }
 
