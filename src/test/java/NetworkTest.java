@@ -2,10 +2,9 @@ import de.itech.netcalc.*;
 import org.junit.Test;
 
 
-import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 public class NetworkTest {
 
@@ -45,7 +44,7 @@ public class NetworkTest {
         network.splitEqualy(62);
 
         //then
-        assertEquals(4, network.getSubnets().size());
+        assertThat(4, is(network.getSubnets().size()));
     }
 
     @Test
@@ -94,10 +93,10 @@ public class NetworkTest {
         Network net5Result =  Network.parse(net5input);
 
         //then
-        assertThat(net1Result, is("0.0.0.0/0"));
-        assertThat(net2Result, is("10.0.0.0/24"));
-        assertThat(net3Result, is("255.255.255.255/32"));
-        assertThat(net4Result, is("192.168.165.0/27"));
-        assertThat(net5Result, is(equalTo("128.0.0.0/8")));
+        assertThat(net1Result.toString(), is("0.0.0.0/0"));
+        assertThat(net2Result.toString(), is("10.0.0.0/24"));
+        assertThat(net3Result.toString(), is("255.255.255.255/32"));
+        assertThat(net4Result.toString(), is("192.168.165.0/27"));
+        assertThat(net5Result.toString(), is("127.0.0.0/8"));
     }
 }

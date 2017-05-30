@@ -22,7 +22,7 @@ class NetUtils {
 
     static int getPrefixFromMask(IPv4Address mask) {
         int index = mask.toBinary().indexOf("0");
-        return index == -1 ? 32 : 0;
+        return index == -1 ? 32 : index;
     }
 
     static long getLengthBetweenNetworks(NetworkBase n1, NetworkBase n2){
