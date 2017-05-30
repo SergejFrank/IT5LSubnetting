@@ -6,9 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SubnetCalculatorFrame extends JFrame {
+    public static SubnetCalculatorFrame Instance;
 
     private JTabbedPane tabbedPane = new JTabbedPane();
-
     // Panels
     private NetworksPanel netsPan;
 
@@ -20,6 +20,7 @@ public class SubnetCalculatorFrame extends JFrame {
 
     public SubnetCalculatorFrame(String title){
         super(title);
+        Instance = this;
 
         netsPan = new NetworksPanel();
 
@@ -41,4 +42,12 @@ public class SubnetCalculatorFrame extends JFrame {
 
     }
 
+    public void goToSubnets(Network network) {
+        tabbedPane.remove(subnetsPanel);
+        tabbedPane.remove(hostsPanel);
+        subnetsPanel = new SubnetPanel(network);
+        tabbedPane.add("Subnets", subnetsPanel);
+        tabbedPane.add("hosts", hostsPanel);
+        tabbedPane.setSelectedIndex(1);
+    }
 }

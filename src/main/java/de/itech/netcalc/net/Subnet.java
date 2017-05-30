@@ -3,7 +3,7 @@ package de.itech.netcalc.net;
 public class Subnet extends NetworkBase{
     private Host[] hosts;
 
-    public Subnet(IPv4Address networkIdV4, IPv4Address networkMaskV4) throws Exception {
+    public Subnet(IPv4Address networkIdV4, IPv4Address networkMaskV4) {
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
         hosts = new Host[getMaxHosts()];
@@ -13,7 +13,7 @@ public class Subnet extends NetworkBase{
         }
     }
 
-    public Subnet(IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) throws Exception {
+    public Subnet(IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
         if(prefixV6 < 0 || prefixV6 > 128) throw new IllegalArgumentException(prefixV6 + " is not a valid IPv6 Prefix");
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);

@@ -1,6 +1,7 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
+import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,6 +9,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class NetworksPanel extends JPanel{
 
@@ -65,15 +68,32 @@ public class NetworksPanel extends JPanel{
         bTest3.addActionListener(new ButtonListener());
 
         // Configure networks list
-        listModel.addElement(Network.parse("192.168.254.0/24"));
-        listModel.addElement(Network.parse("10.0.5.0/24"));
-        listModel.addElement(Network.parse("178.34.0.0/16"));
+        Network testNetwork1 = Network.parse("192.168.254.0/24");
+        Network testNetwork2 = Network.parse("10.0.5.0/24");
+        Network testNetwork3 = Network.parse("178.34.0.0/16");
+        testNetwork1.splitEqualy(126);
+        testNetwork2.splitEqualy(30);
+        testNetwork3.splitEqualy(14);
+        listModel.addElement(testNetwork1);
+        listModel.addElement(testNetwork2);
+        listModel.addElement(testNetwork3);
         netList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         netList.setLayoutOrientation(JList.VERTICAL);
         netList.setVisibleRowCount(-1);
         netList.setSelectedIndex(0);
         netList.setVisibleRowCount(5);
         netList.setPreferredSize(new Dimension(200, 200));
+        netList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if (evt.getClickCount() == 2) {
+                    int index = list.locationToIndex(evt.getPoint());
+                    Network selectedNetwork = listModel.elementAt(index);
+                    SubnetCalculatorFrame.Instance.goToSubnets(selectedNetwork);
+                }
+            }
+        });
+
         JScrollPane listScrollPane = new JScrollPane(netList);
 
 
