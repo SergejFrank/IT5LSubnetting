@@ -16,6 +16,14 @@ public class IPv6Address extends IPAddress {
         this.segments = segments.clone();
     }
 
+    public long getInterfaceId() {
+        return ((long)segments[4] << 24) + ((long)segments[5] << 16) + ((long)segments[6] << 8) + ((long)segments[7]);
+    }
+
+    public long getNetworkId() {
+        return ((long)segments[0] << 24) + ((long)segments[1] << 16) + ((long)segments[2] << 8) + ((long)segments[3]);
+    }
+
     @Override
     public String toString() {
         return toString(false);
