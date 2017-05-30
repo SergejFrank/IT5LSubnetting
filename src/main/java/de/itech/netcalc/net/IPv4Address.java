@@ -59,14 +59,9 @@ public class IPv4Address extends IPAddress {
         return getLValue() > ipAddress.getLValue();
     }
 
-    public String toBinary(String seperator){
+    public String toBinary(String separator){
         String[] elements = toBinary().split("(?<=\\G.{8})");
-        return String.join(seperator, elements);
-    }
-
-    private void checkRange(int val){
-        if(val < 0 || val > 255)
-            throw new IllegalArgumentException("Out of range: "+val);
+        return String.join(separator, elements);
     }
 
     @Override
@@ -87,7 +82,6 @@ public class IPv4Address extends IPAddress {
         IPv4Address that = (IPv4Address) o;
 
         return value == that.value;
-
     }
 
     @Override

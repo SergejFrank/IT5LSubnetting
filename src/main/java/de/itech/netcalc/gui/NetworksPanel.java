@@ -1,7 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -196,5 +195,4 @@ public class NetworksPanel extends JPanel{
             DialogBox.error(e.getMessage(),this);
         }
     }
-
 }

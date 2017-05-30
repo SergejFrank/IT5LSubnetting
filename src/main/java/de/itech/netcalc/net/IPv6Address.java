@@ -1,8 +1,6 @@
 package de.itech.netcalc.net;
 
-import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class IPv6Address extends IPAddress {
     private long networkId;
