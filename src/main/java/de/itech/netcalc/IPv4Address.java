@@ -55,7 +55,7 @@ public class IPv4Address extends IPAddress {
         return bin;
     }
 
-    boolean isGreaterThan(IPv4Address ipAddress) {
+    public boolean isGreaterThan(IPv4Address ipAddress) {
         return getLValue() > ipAddress.getLValue();
     }
 
