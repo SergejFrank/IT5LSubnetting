@@ -1,68 +1,42 @@
 package de.itech.netcalc;
 
 public class IPv4Address extends IPAddress {
-
-    private int oct1;
-    private int oct2;
-    private int oct3;
-    private int oct4;
+    private int value;
 
     IPv4Address(int oct1, int oct2, int oct3, int oct4) {
-        setOct1(oct1);
-        setOct2(oct2);
-        setOct3(oct3);
-        setOct4(oct4);
+        if(oct1 < 0 || oct1 > 255) throw new IllegalArgumentException("Value '" + oct1 + "' for oct1 is out of range.");
+        if(oct2 < 0 || oct2 > 255) throw new IllegalArgumentException("Value '" + oct2 + "' for oct2 is out of range.");
+        if(oct3 < 0 || oct3 > 255) throw new IllegalArgumentException("Value '" + oct3 + "' for oct3 is out of range.");
+        if(oct4 < 0 || oct4 > 255) throw new IllegalArgumentException("Value '" + oct4 + "' for oct4 is out of range.");
+        value =  (oct1 << 24) + (oct2 << 16) + (oct3 << 8) + oct4;
     }
 
     IPv4Address(int val){
-        setOct1(val >> 24 & 0xFF);
-        setOct2(val >> 16 & 0xFF);
-        setOct3(val >> 8 & 0xFF);
-        setOct4(val & 0xFF);
+        value = val;
     }
 
     private int getOct1() {
-        return oct1;
-    }
-
-    private void setOct1(int oct1) {
-        checkRange(oct1);
-        this.oct1 = oct1;
+        return (value & 0xFF000000) >> 24;
     }
 
     private int getOct2() {
-        return oct2;
-    }
-
-    private void setOct2(int oct2) {
-        checkRange(oct2);
-        this.oct2 = oct2;
+        return (value & 0x00FF0000) >> 16;
     }
 
     private int getOct3() {
-        return oct3;
-    }
-
-    private void setOct3(int oct3) {
-        checkRange(oct3);
-        this.oct3 = oct3;
+        return (value & 0x0000FF00) >> 8;
     }
 
     private int getOct4() {
-        return oct4;
+        return value & 0x000000FF;
     }
 
-    private void setOct4(int oct4) {
-        checkRange(oct4);
-        this.oct4 = oct4;
+    public int getValue() {
+        return value;
     }
 
-    int getValue(){
-        return (oct1 << 24) + (oct2 << 16) + (oct3 << 8) + oct4;
-    }
-
-    long getLValue() {
-        return ((long)oct1 << 24) + ((long)oct2 << 16) + ((long)oct3 << 8) + ((long)oct4);
+    public long getLValue() {
+        return 0L | value;
     }
 
     String toBinary(){
@@ -82,7 +56,7 @@ public class IPv4Address extends IPAddress {
     }
 
     boolean isGreaterThan(IPv4Address ipAddress) {
-        return getLValue() > ipAddress.getLValue();
+        return (0L | value) > (0L | ipAddress.value);
     }
 
     public String toBinary(String seperator){
@@ -101,26 +75,7 @@ public class IPv4Address extends IPAddress {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IPv4Address ipAddress = (IPv4Address) o;
-
-        return oct1 == ipAddress.oct1 && oct2 == ipAddress.oct2 && oct3 == ipAddress.oct3 && oct4 == ipAddress.oct4;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = oct1;
-        result = 31 * result + oct2;
-        result = 31 * result + oct3;
-        result = 31 * result + oct4;
-        return result;
-    }
-
-    @Override
     protected IPv4Address clone() {
-        return new IPv4Address(oct1, oct2, oct3, oct4);
+        return new IPv4Address(value);
     }
 }
