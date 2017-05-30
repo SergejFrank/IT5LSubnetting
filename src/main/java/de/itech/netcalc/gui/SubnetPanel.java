@@ -1,52 +1,45 @@
 package de.itech.netcalc.gui;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.StackPane;
-import sun.nio.ch.Net;
+import de.itech.netcalc.net.Network;
+import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.xml.soap.Text;
 import java.awt.*;
 
 public class SubnetPanel extends JPanel {
-
+    private Network network;
 
     GridBagConstraints c = new GridBagConstraints();
 
-    JProgressBar progressBar = new JProgressBar();
-    JProgressBar progressBar2 = new JProgressBar();
-    JLabel NetworkLabel = new JLabel("Network",SwingConstants.LEFT);
-    JTextField NetworkField = new JTextField();
-    JLabel NetclassLabel = new JLabel();
-    JTextField NetclassField = new JTextField();
-    JLabel SubnetLabel = new JLabel();
+    private JProgressBar progressBar = new JProgressBar();
+    private JProgressBar progressBar2 = new JProgressBar();
+    private JLabel NetworkLabel = new JLabel("Network",SwingConstants.LEFT);
+    private JTextField NetworkField = new JTextField();
+    private JLabel NetclassLabel = new JLabel();
+    private JTextField NetclassField = new JTextField();
+    private JLabel SubnetLabel = new JLabel();
     JTextArea SubnetTextArea = new JTextArea();
 
-    private JList list;
-    private DefaultListModel listModel;
+    private JList subnetList;
+    private DefaultListModel<Subnet> subnetListModel;
 
-    public SubnetPanel()
+    public SubnetPanel(Network network)
     {
-
+        this.network = network;
 
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        listModel = new DefaultListModel();
-        listModel.addElement("test");
-        listModel.addElement("eins");
-        listModel.addElement("zwei");
+        subnetListModel = new DefaultListModel();
+        network.getSubnets().forEach(subnet -> subnetListModel.addElement(subnet));
 
-        // Create the list and put it in a scroll pane
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        list.setLayoutOrientation(JList.VERTICAL);
-        list.setVisibleRowCount(-1);
-        list.setSelectedIndex(0);
-        list.setVisibleRowCount(5);
-        JScrollPane listScrollPane = new JScrollPane(list);
-
-
-
+        // Create the subnetList and put it in a scroll pane
+        subnetList = new JList(subnetListModel);
+        subnetList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        subnetList.setLayoutOrientation(JList.VERTICAL);
+        subnetList.setVisibleRowCount(-1);
+        subnetList.setSelectedIndex(0);
+        subnetList.setVisibleRowCount(5);
+        JScrollPane listScrollPane = new JScrollPane(subnetList);
 
         c.weightx =1;
         c.weighty =1;

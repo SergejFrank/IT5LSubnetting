@@ -12,7 +12,7 @@ public class SubnetCalculatorFrame extends JFrame {
     // Panels
     private NetworksPanel netsPan;
 
-    private JPanel subnetsPanel = new SubnetPanel();
+    private JPanel subnetsPanel = new SubnetPanel(Network.parse("10.0.0.5/24"));
     private JPanel hostsPanel = new JPanel();
     private JLabel networksLabel = new JLabel("Networks");
     private JLabel subnetsLabel = new JLabel("Subnets");
