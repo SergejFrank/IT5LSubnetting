@@ -96,8 +96,6 @@ public class SubnetPanel extends JPanel {
         this.add(NetclassField, c);
 
 
-
-
         c.gridx = 0;
         c.gridy = 3;
         c.gridwidth=3;

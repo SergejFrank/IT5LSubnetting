@@ -27,7 +27,7 @@ public class SubnetCalculatorFrame extends JFrame {
         super(title);
         this.network = network;
 
-        netsPan = new NetworksPanel(new BorderLayout(5, 5), network);
+        netsPan = new NetworksPanel(network);
 
         // Add Panels to the tabs
         tabbedPane.add("Networks", netsPan);

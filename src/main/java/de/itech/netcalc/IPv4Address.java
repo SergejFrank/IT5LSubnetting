@@ -78,4 +78,20 @@ public class IPv4Address extends IPAddress {
     protected IPv4Address clone() {
         return new IPv4Address(value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IPv4Address that = (IPv4Address) o;
+
+        return value == that.value;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
 }
