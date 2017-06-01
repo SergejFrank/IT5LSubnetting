@@ -19,6 +19,9 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
         return network;
     }
 
-    void splitEqualyBySize(int size) {
+    void refreshSubnets() {
+        this.removeAllChildren();
+        for(Subnet s : network.getSubnets())
+            add(new SubnetTreeNode(s));
     }
 }

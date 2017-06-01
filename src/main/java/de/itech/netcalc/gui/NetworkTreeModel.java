@@ -45,4 +45,11 @@ class NetworkTreeModel extends DefaultTreeModel {
         network.removeSubnet(subnetNode.getSubnet());
         this.removeNodeFromParent(subnetNode);
     }
+
+    void splitEqualyBySize(NetworkTreeNode networkNode, int size) {
+        Network network = networkNode.getNetwork();
+        network.splitEqualy(size);
+        networkNode.refreshSubnets();
+        this.nodeStructureChanged(networkNode);
+    }
 }
