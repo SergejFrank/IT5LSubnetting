@@ -2,92 +2,37 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
 import de.itech.netcalc.net.Subnet;
+import javax.swing.tree.*;
 
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import java.util.ArrayList;
-import java.util.List;
-
-public class NetworkTreeModel implements TreeModel {
-    private TreeNode root = new DefaultMutableTreeNode("Netzwerke");
-    private List<TreeModelListener> listeners = new ArrayList<>();
-    private List<Network> networks = new ArrayList<>();
-
-    @Override
-    public Object getRoot() {
-        return root;
+class NetworkTreeModel extends DefaultTreeModel {
+    NetworkTreeModel() {
+        super(new DefaultMutableTreeNode("Netzwerke"));
     }
 
-    @Override
-    public Object getChild(Object parent, int index) {
-        if(parent == root) {
-            return networks.get(index);
+    void addNetwork(Network network) {
+        DefaultMutableTreeNode root = getRootNode();
+        NetworkTreeNode networkNode = new NetworkTreeNode(network);
+        insertNodeInto(networkNode, root, root.getChildCount());
+    }
+
+    void addSubnet(Network network, Subnet subnet) {
+        NetworkTreeNode networkTreeNode = getNodeForNetwork(network);
+        if(network == null) throw new IllegalArgumentException("Network '" + network + "' not found in JTree Nodes");
+        SubnetTreeNode subnetNode = new SubnetTreeNode(subnet);
+        networkTreeNode.add(subnetNode);
+        nodesWereInserted(subnetNode, new int[]{subnetNode.getChildCount()-1});
+    }
+
+    DefaultMutableTreeNode getRootNode() {
+        return (DefaultMutableTreeNode)getRoot();
+    }
+
+    NetworkTreeNode getNodeForNetwork(Network network) {
+        for(int i=0; i<getRootNode().getChildCount();i++) {
+            NetworkTreeNode node = ((NetworkTreeNode)getRootNode().getChildAt(i));
+            if(node.getNetwork().equals(network))
+                return node;
         }
-        if(parent instanceof Network)
-        {
-            Network network = networks.get(networks.indexOf(parent));
-            return network.getSubnets().get(index);
-        }
-        throw new UnsupportedOperationException("parent is invalid.");
-    }
-
-    @Override
-    public int getChildCount(Object parent) {
-        if(parent == root) {
-            return networks.size();
-        }
-        if(parent instanceof Network)
-        {
-            Network network = networks.get(networks.indexOf(parent));
-            return network.getSubnets().size();
-        }
-        throw new UnsupportedOperationException("parent is invalid.");
-    }
-
-    @Override
-    public boolean isLeaf(Object node) {
-        return node instanceof Subnet ||(node instanceof Network && ((Network)node).getSubnets().size() == 0);
-    }
-
-    @Override
-    public void valueForPathChanged(TreePath path, Object newValue) {
-
-    }
-
-    public void addNetwork(Network network) {
-        networks.add(network);
-        fireTreeStructureChanged();
-    }
-
-    @Override
-    public int getIndexOfChild(Object parent, Object child) {
-        if(parent == root)
-            return networks.indexOf(child);
-        if(parent instanceof Subnet)
-            return networks.get(networks.indexOf(child)).getSubnets().size();
-        return 0;
-    }
-
-    @Override
-    public void addTreeModelListener(TreeModelListener l)
-    {
-        listeners.add(l);
-    }
-
-    @Override
-    public void removeTreeModelListener(TreeModelListener l)
-    {
-        listeners.remove(l);
-    }
-
-    private void fireTreeStructureChanged() {
-        Object[] o = {root};
-        TreeModelEvent e = new TreeModelEvent(this, o);
-        for(TreeModelListener l : listeners)
-            l.treeStructureChanged(e);
+        return null;
     }
 }
