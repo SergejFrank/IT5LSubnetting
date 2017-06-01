@@ -117,22 +117,62 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             else if(element instanceof NetworkTreeNode)
             {
                 NetworkTreeNode networkNode = (NetworkTreeNode)element;
-                menu.add(new AbstractAction("Neues Subnetz") {
-                    public void actionPerformed (ActionEvent e) {
-                        TreeTabPanel.Instance.handleCreateNetwork(networkNode);
-                    }
-                });
-                menu.add(new AbstractAction("Gleichmäßig nach Größe") {
-                    public void actionPerformed (ActionEvent e) {
-                        TreeTabPanel.Instance.handleSplitBySize(networkNode);
-                    }
-                });
-                menu.add(new AbstractAction("Gleichmäßig nach Anzahl") {
-                    public void actionPerformed (ActionEvent e) {
-                        TreeTabPanel.Instance.handleSplitByCount(networkNode);
-                    }
-                });
-                menu.addSeparator();
+                Network.SubnetStatus status = networkNode.getNetwork().getStatus();
+                if(status != Network.SubnetStatus.HAS_HOSTS)
+                {
+                    menu.add(new AbstractAction("Neues Subnetz") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleCreateNetwork(networkNode);
+                        }
+                    });
+                    menu.add(new AbstractAction("Gleichmäßig nach Größe") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleSplitBySize(networkNode);
+                        }
+                    });
+                    menu.add(new AbstractAction("Gleichmäßig nach Anzahl") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleSplitByCount(networkNode);
+                        }
+                    });
+                    menu.addSeparator();
+                }
+                if(status == Network.SubnetStatus.HAS_SUBNETS)
+                {
+                    menu.add(new AbstractAction("Alle Subnetze entfernen") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleClearSubnets(networkNode);
+                        }
+                    });
+                    menu.addSeparator();
+                }
+                if(status != Network.SubnetStatus.HAS_SUBNETS)
+                {
+                    menu.add(new AbstractAction("Host hinzufügen") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleAddHost(networkNode);
+                        }
+                    });
+                    menu.add(new AbstractAction("Alle Hosts hinzufügen") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleAddAllHosts(networkNode);
+                        }
+                    });
+                    menu.addSeparator();
+                }
+                if(status == Network.SubnetStatus.HAS_HOSTS)
+                {
+                    menu.add(new AbstractAction("Alle Hosts entfernen") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleClearHosts(networkNode);
+                        }
+                    });
+                    menu.addSeparator();
+                }
                 menu.add(new AbstractAction("Netzwerk/Subnetz löschen") {
                     public void actionPerformed (ActionEvent e) {
                         networkTreeModel.deleteNetwork(networkNode);
@@ -214,5 +254,24 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         }
 
         networkTreeModel.splitByCount(networkTreeNode, (int)input);
+    }
+
+    private void handleAddHost(NetworkTreeNode networkNode) {
+        networkNode.getNetwork().addOneHost();
+        hostPanel.reloadHosts();
+    }
+
+    private void handleAddAllHosts(NetworkTreeNode networkNode) {
+        networkNode.getNetwork().addAllHosts();
+        hostPanel.reloadHosts();
+    }
+
+    private void handleClearHosts(NetworkTreeNode networkNode) {
+        networkNode.getNetwork().clearHosts();
+        hostPanel.reloadHosts();
+    }
+
+    private void handleClearSubnets(NetworkTreeNode networkNode) {
+        networkTreeModel.clearSubnets(networkNode);
     }
 }

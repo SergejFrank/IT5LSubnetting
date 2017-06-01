@@ -63,6 +63,7 @@ public class Network {
             case UNSPECIFIED:
                 hosts = new Host[getMaxHosts()];
                 hosts[0] = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), null);
+                status = SubnetStatus.HAS_HOSTS;
                 numberOfHosts = 1;
                 break;
             case HAS_HOSTS:
@@ -81,6 +82,7 @@ public class Network {
             case UNSPECIFIED:
                 hosts = new Host[getMaxHosts()];
                 hosts[0] = new Host(this, address, null);
+                status = SubnetStatus.HAS_HOSTS;
                 numberOfHosts = 1;
                 break;
             case HAS_HOSTS:
@@ -95,10 +97,15 @@ public class Network {
         }
     }
 
+    public void clearHosts() {
+        hosts = new Host[getMaxHosts()];
+        numberOfHosts = 0;
+        if(getStatus() == SubnetStatus.HAS_HOSTS)
+            status = SubnetStatus.UNSPECIFIED;
+    }
+
     public Network addSubnet(Network subnet) throws IllegalArgumentException {
-        if(status == SubnetStatus.HAS_HOSTS){
-            throw new UnsupportedOperationException("can't add subnets to network with hosts");
-        }
+        if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new IllegalArgumentException("Subnet already exists.");
         status = SubnetStatus.HAS_SUBNETS;
@@ -109,10 +116,7 @@ public class Network {
     }
 
     public Network addSubnet(int size) {
-        if(status == SubnetStatus.HAS_HOSTS){
-            throw new UnsupportedOperationException("can't add subnets to network with hosts");
-        }
-        status = SubnetStatus.HAS_SUBNETS;
+        if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
         IPv4Address subnetMask = NetUtils.getMaskFromPrefix(32 - maskLength);
@@ -143,6 +147,12 @@ public class Network {
         }
     }
 
+    public void clearSubnets() {
+        subnets.clear();
+        if(getStatus() == SubnetStatus.HAS_SUBNETS)
+            status = SubnetStatus.UNSPECIFIED;
+    }
+
     private void sortSubnets(){
         Collections.sort(subnets, Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));
     }
@@ -166,6 +176,7 @@ public class Network {
     }
 
     public void splitBySize(int size) {
+        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         int length = getAmountIpAddresses();
         int realSize = size + 2;
         if(length % realSize != 0) {
@@ -173,6 +184,7 @@ public class Network {
         }
         int count = length / realSize;
         subnets.clear();
+        status = SubnetStatus.HAS_SUBNETS;
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
@@ -184,8 +196,10 @@ public class Network {
     }
 
     public void splitByCount(int count){
+        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         int realSize = getAmountIpAddresses() / count;
         subnets.clear();
+        status = SubnetStatus.HAS_SUBNETS;
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));

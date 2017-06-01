@@ -32,6 +32,7 @@ class HostPanel extends JPanel implements TableModelListener{
         if(network != null && network.getHosts() != null)
         {
             for(Host h : network.getHosts()) {
+                if(h == null) continue;
                 Object[] data = new Object[] {
                         h.getIPv4Address(),
                         h.getName()
