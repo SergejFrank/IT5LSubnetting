@@ -20,7 +20,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         if(network == null) throw new IllegalArgumentException("Network '" + network + "' not found in JTree Nodes");
         SubnetTreeNode subnetNode = new SubnetTreeNode(subnet);
         networkTreeNode.add(subnetNode);
-        nodesWereInserted(subnetNode, new int[]{subnetNode.getChildCount()-1});
+        nodesWereInserted(subnetNode, new int[]{subnetNode.getChildCount() - 1});
     }
 
     DefaultMutableTreeNode getRootNode() {
@@ -48,7 +48,7 @@ class NetworkTreeModel extends DefaultTreeModel {
 
     void splitBySize(NetworkTreeNode networkNode, int size) {
         Network network = networkNode.getNetwork();
-        network.splitEqualy(size);
+        network.splitBySize(size);
         networkNode.refreshSubnets();
         this.nodeStructureChanged(networkNode);
     }

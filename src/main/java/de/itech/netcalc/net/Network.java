@@ -88,13 +88,26 @@ public class Network extends NetworkBase{
         return deviders;
     }
 
-    public void splitEqualy(int size) {
+    public void splitBySize(int size) {
         int length = getLength();
         int realSize = size + 2;
         if(length % realSize != 0) {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+deviders());
         }
         int count = length / realSize;
+        subnets.clear();
+        for (int i=0;i < count; i++) {
+            IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
+            int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
+            IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
+
+            Subnet subnet = new Subnet(nAddress,mask);
+            subnets.add(subnet);
+        }
+    }
+
+    public void splitByCount(int count){
+        int realSize = getLength() / count;
         subnets.clear();
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);

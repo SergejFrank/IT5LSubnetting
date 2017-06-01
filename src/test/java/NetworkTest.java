@@ -44,7 +44,7 @@ public class NetworkTest {
         Network network = new Network(networkNetId,networkMask);
 
         //when
-        network.splitEqualy(62);
+        network.splitBySize(62);
 
         //then
         assertThat(4, is(network.getSubnets().size()));

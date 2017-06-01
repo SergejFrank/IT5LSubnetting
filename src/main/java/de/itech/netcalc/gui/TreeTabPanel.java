@@ -48,9 +48,9 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
         Network testNetwork4 = Network.parse("1.2.3.4/24");
-        testNetwork1.splitEqualy(126);
-        testNetwork2.splitEqualy(30);
-        testNetwork3.splitEqualy(14);
+        testNetwork1.splitBySize(126);
+        testNetwork2.splitBySize(30);
+        testNetwork3.splitBySize(14);
         testNetwork3.addSubnet(24);
         networkTreeModel.addNetwork(testNetwork1);
         networkTreeModel.addNetwork(testNetwork2);
