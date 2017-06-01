@@ -1,7 +1,6 @@
 import de.itech.netcalc.net.IPAddress;
 import de.itech.netcalc.net.IPv4Address;
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.Subnet;
 import org.junit.Test;
 
 

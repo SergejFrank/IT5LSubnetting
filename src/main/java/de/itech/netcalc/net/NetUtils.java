@@ -29,7 +29,7 @@ class NetUtils {
         return index == -1 ? 32 : index;
     }
 
-    static long getLengthBetweenNetworks(NetworkBase n1, NetworkBase n2){
+    static long getLengthBetweenNetworks(Network n1, Network n2){
         return getLengthBetweenIpAddresses(n1.getBroadcastAddress(), n2.getNetworkIdV4());
     }
 

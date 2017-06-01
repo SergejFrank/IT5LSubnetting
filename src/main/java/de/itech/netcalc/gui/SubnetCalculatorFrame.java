@@ -1,7 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +48,7 @@ public class SubnetCalculatorFrame extends JFrame {
         tabbedPane.setSelectedIndex(2);
     }
 
-    public void goToHosts(Subnet subnet) {
+    public void goToHosts(Network subnet) {
         tabbedPane.remove(hostsPanel);
         hostsPanel = new JPanel();
         tabbedPane.add("Hosts", hostsPanel);

@@ -1,8 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.NetworkBase;
-import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -77,7 +75,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         }
     }
 
-    private void fillInfoPanel(NetworkBase networkBase, String header) {
+    private void fillInfoPanel(Network networkBase, String header) {
         JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
         infoPanel.add(new JLabel(header));
         infoPanel.add(new JLabel(networkBase.getName()));
@@ -161,7 +159,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
-        Object[] deviders = networkTreeNode.getNetwork().possibleDeviders().toArray();
+        Object[] deviders = networkTreeNode.getNetwork().possibleDividers().toArray();
 
         int input = (int)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,

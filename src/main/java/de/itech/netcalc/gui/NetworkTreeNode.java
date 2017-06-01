@@ -1,7 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.Subnet;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -11,7 +10,7 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
     NetworkTreeNode(Network network) {
         super(network, true);
         this.network = network;
-        for(Subnet s : network.getSubnets())
+        for(Network s : network.getSubnets())
             add(new SubnetTreeNode(s));
     }
 
@@ -21,7 +20,7 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
 
     void refreshSubnets() {
         this.removeAllChildren();
-        for(Subnet s : network.getSubnets())
+        for(Network s : network.getSubnets())
             add(new SubnetTreeNode(s));
     }
 }

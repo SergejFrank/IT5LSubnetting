@@ -1,7 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.Subnet;
 
 import javax.swing.tree.*;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         return networks;
     }
 
-    void addSubnet(Network network, Subnet subnet) {
+    void addSubnet(Network network, Network subnet) {
         NetworkTreeNode networkTreeNode = getNodeForNetwork(network);
         if(network == null) throw new IllegalArgumentException("Network '" + network + "' not found in JTree Nodes");
         SubnetTreeNode subnetNode = new SubnetTreeNode(subnet);

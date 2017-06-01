@@ -1,6 +1,5 @@
 package de.itech.netcalc.gui;
 import de.itech.netcalc.net.Network;
-import de.itech.netcalc.net.Subnet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +22,7 @@ public class SubnetPanel extends JPanel {
     JTextArea SubnetTextArea = new JTextArea();
 
     private JList subnetList;
-    private DefaultListModel<Subnet> subnetListModel;
+    private DefaultListModel<Network> subnetListModel;
 
     public SubnetPanel(Network network)
     {
@@ -46,7 +45,7 @@ public class SubnetPanel extends JPanel {
                 JList list = (JList)evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
-                    Subnet selectedSubnet = subnetListModel.elementAt(index);
+                    Network selectedSubnet = subnetListModel.elementAt(index);
                     SubnetCalculatorFrame.Instance.goToHosts(selectedSubnet);
                 }
             }
