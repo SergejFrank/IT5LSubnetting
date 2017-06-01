@@ -6,6 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class Network {
+    public enum SubnetStatus{
+        UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS;
+    }
+
     private ArrayList<Network> subnets = new ArrayList<>();
 
     int numberOfHosts;
@@ -19,7 +23,6 @@ public class Network {
     private IPv4Address networkMaskV4;
     private IPv6Address networkIdV6;
     private int prefixV6;
-
 
     public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4) {
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
@@ -95,6 +98,7 @@ public class Network {
         if(status == SubnetStatus.HAS_HOSTS){
             throw new UnsupportedOperationException("can't add subnets to network with hosts");
         }
+        status = SubnetStatus.HAS_SUBNETS;
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new IllegalArgumentException("Subnet already exists.");
 
@@ -104,6 +108,10 @@ public class Network {
     }
 
     public Network addSubnet(int size) {
+        if(status == SubnetStatus.HAS_HOSTS){
+            throw new UnsupportedOperationException("can't add subnets to network with hosts");
+        }
+        status = SubnetStatus.HAS_SUBNETS;
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
         IPv4Address subnetMask = NetUtils.getMaskFromPrefix(32 - maskLength);
@@ -129,6 +137,9 @@ public class Network {
 
     public void removeSubnet(Network subnet) {
         subnets.remove(subnet);
+        if(subnets.size() == 0){
+            status = SubnetStatus.UNSPECIFIED;
+        }
     }
 
     private void sortSubnets(){
@@ -136,25 +147,25 @@ public class Network {
     }
 
     public ArrayList<Integer> possibleDividers(){
-        int num = getLength();
-        ArrayList<Integer> deviders = new ArrayList<>();
+        int num = getAmountIpAddresses();
+        ArrayList<Integer> dividers = new ArrayList<>();
         for (int i = 2; i <= Math.sqrt(num); i++) {
             if (num % i == 0) {
                 if (i - 2 > 0) {
-                    deviders.add(i - 2);
+                    dividers.add(i - 2);
                 }
                 if (i != num/i) {
-                    deviders.add((num/i)-2);
+                    dividers.add((num / i) - 2);
                 }
             }
         }
 
-        Collections.sort(deviders);
-        return deviders;
+        Collections.sort(dividers);
+        return dividers;
     }
 
     public void splitBySize(int size) {
-        int length = getLength();
+        int length = getAmountIpAddresses();
         int realSize = size + 2;
         if(length % realSize != 0) {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDividers());
@@ -172,7 +183,7 @@ public class Network {
     }
 
     public void splitByCount(int count){
-        int realSize = getLength() / count;
+        int realSize = getAmountIpAddresses() / count;
         subnets.clear();
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
@@ -209,7 +220,7 @@ public class Network {
         this.name = name;
     }
 
-    public int getLength() { return ~getNetworkMaskV4().getValue() + 1; }
+    public int getAmountIpAddresses() { return ~getNetworkMaskV4().getValue() + 1; }
 
     public IPv4Address getNetworkIdV4() {
         return networkIdV4.clone();
@@ -223,7 +234,7 @@ public class Network {
         return networkMaskV4.clone();
     }
 
-    public int getMaxHosts(){ return getLength() - 2; }
+    public int getMaxHosts(){ return getAmountIpAddresses() - 2; }
 
     public IPv4Address getBroadcastAddress(){
         return new IPv4Address(getNetworkIdV4().getValue() + getMaxHosts() + 1);
@@ -261,6 +272,10 @@ public class Network {
         return hosts;
     }
 
+    public SubnetStatus getStatus(){
+        return status;
+    }
+
 
     //overwridden methods
     @Override
@@ -288,9 +303,5 @@ public class Network {
         result = 31 * result + (networkIdV6 != null ? networkIdV6.hashCode() : 0);
         result = 31 * result + prefixV6;
         return result;
-    }
-
-    public enum SubnetStatus{
-        UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS;
     }
 }
