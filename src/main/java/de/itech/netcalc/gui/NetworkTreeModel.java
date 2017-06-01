@@ -35,4 +35,8 @@ class NetworkTreeModel extends DefaultTreeModel {
         }
         return null;
     }
+
+    void deleteNetwork(NetworkTreeNode networkNode) {
+        this.removeNodeFromParent(networkNode);
+    }
 }
