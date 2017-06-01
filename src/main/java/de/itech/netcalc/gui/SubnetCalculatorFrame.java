@@ -20,8 +20,6 @@ public class SubnetCalculatorFrame extends JFrame {
     public SubnetCalculatorFrame(String title){
         super(title);
 
-        this.add(new TreeTabPanel());
-
         Instance = this;
 
         netsPan = new NetworksPanel();

@@ -7,6 +7,7 @@ import de.itech.netcalc.net.Subnet;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -42,6 +43,8 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         JScrollPane treeScrollPane = new JScrollPane(networkTree);
         infoPane.setTopComponent(treeScrollPane);
 
+        add(mainPane);
+
         Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
@@ -55,7 +58,6 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(testNetwork3);
         networkTreeModel.addNetwork(testNetwork4);
 
-        add(mainPane);
     }
 
     @Override
@@ -113,15 +115,20 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                     }
                 });
             }
-            else if(element instanceof Network)
+            else if(element instanceof NetworkTreeNode)
             {
+                NetworkTreeNode networkNode = (NetworkTreeNode)element;
                 menu.add(new JMenuItem("Neues Subnetz"));
-                menu.add(new JMenuItem("Gleichmäßig nach Größe"));
+                menu.add(new AbstractAction("Gleichmäßig nach Größe") {
+                    public void actionPerformed (ActionEvent e) {
+                        TreeTabPanel.Instance.handleSplitEqualyBySize(networkNode);
+                    }
+                });
                 menu.add(new JMenuItem("Gleichmäßig nach Anzahl"));
                 menu.addSeparator();
                 menu.add(new JMenuItem("Netzwerk löschen"));
             }
-            else if(element instanceof Subnet)
+            else if(element instanceof SubnetTreeNode)
             {
                 menu.add(new JMenuItem("Subnetz löschen"));
             }
@@ -135,6 +142,15 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 "Netzwerk Id und Prefix::",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE);
-        networkTreeModel.addNetwork(Network.parse(input));
+        Network network = Network.parse(input);
+        networkTreeModel.addNetwork(network);
+    }
+
+    private void handleSplitEqualyBySize(NetworkTreeNode networkTreeNode) {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Größe der Subnetze angeben::",
+                "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
+                JOptionPane.PLAIN_MESSAGE);
     }
 }
