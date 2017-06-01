@@ -27,8 +27,8 @@ public class NetworksPanel extends JPanel{
 
     // Buttons
     private JButton bNewNetwork;
-    private JButton bTest2;
-    private JButton bTest3;
+    private JButton bDeleteNetwork;
+    private JButton bSubnets;
 
     // Border
 
@@ -36,26 +36,27 @@ public class NetworksPanel extends JPanel{
         this.setLayout(new GridBagLayout());
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Labels, textfields
+        // Labels, textfield
         networksLabel = new JLabel("Networks");
         ipLabel = new JLabel("IP: ");
         ipText = new JTextField();
         ipText.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
         // Buttons
-        bNewNetwork = new JButton("New");
-        bTest2 = new JButton("Test2");
-        bTest3 = new JButton("Test3");
+        bNewNetwork = new JButton("New Network");
+        bDeleteNetwork = new JButton("Delete Network");
+        bSubnets = new JButton("Subnets");
 
         // JList
         listModel = new DefaultListModel();
         netList = new JList(listModel);
         netList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
-        // Buttonlisteners
-        bNewNetwork.addActionListener(new ButtonListener());
-        bTest2.addActionListener(new ButtonListener());
-        bTest3.addActionListener(new ButtonListener());
+        // Buttonlistener
+        ButtonListener bListener = new ButtonListener();
+        bNewNetwork.addActionListener(bListener);
+        bDeleteNetwork.addActionListener(bListener);
+        bSubnets.addActionListener(bListener);
 
         // Configure networks list
         Network testNetwork1 = Network.parse("192.168.254.0/24");
@@ -126,11 +127,11 @@ public class NetworksPanel extends JPanel{
         c.gridx = 1;
         c.gridy = 2;
         c.weightx = 0.1;
-        add(bTest2, c);
+        add(bDeleteNetwork, c);
         c.gridx = 2;
         c.gridy = 2;
         c.weightx = 0.1;
-        add(bTest3, c);
+        add(bSubnets, c);
 
     }
 
@@ -139,9 +140,9 @@ public class NetworksPanel extends JPanel{
         public void actionPerformed(ActionEvent e){
             if(e.getSource() == bNewNetwork) {
                 addNewNetwork();
-            }else if(e.getSource() == bTest2){
+            }else if(e.getSource() == bDeleteNetwork){
                 System.out.println("2");
-            }else if(e.getSource() == bTest3){
+            }else if(e.getSource() == bSubnets){
                 System.out.println("3");
             }
 
