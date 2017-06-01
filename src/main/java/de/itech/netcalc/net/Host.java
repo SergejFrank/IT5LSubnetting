@@ -41,6 +41,10 @@ public class Host {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Network getIPv4Subnet() {
         return ipv4Subnet;
     }

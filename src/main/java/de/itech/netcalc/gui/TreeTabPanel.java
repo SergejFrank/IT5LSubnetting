@@ -18,7 +18,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private JTree networkTree;
     private HostPanel hostPanel;
 
-    public TreeTabPanel() {
+    TreeTabPanel() {
         super(new GridLayout(1,0));
         Instance = this;
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -30,8 +30,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         mainPane.setResizeWeight(0.3);
         infoPane.setResizeWeight(0.5);
 
-        networkTreeModel = new NetworkTreeModel();
-        networkTree = new JTree(networkTreeModel);
+        networkTree = new JTree(networkTreeModel = new NetworkTreeModel());
         networkTree.addTreeSelectionListener(this);
         networkTree.addMouseListener(new MouseAdapter() {
             @Override
@@ -39,8 +38,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 handleTreeRightClick(e);
             }
         });
-        JScrollPane treeScrollPane = new JScrollPane(networkTree);
-        infoPane.setTopComponent(treeScrollPane);
+        infoPane.setTopComponent(new JScrollPane(networkTree));
 
         add(mainPane);
 
@@ -64,12 +62,9 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         Object node = networkTree.getLastSelectedPathComponent();
         if(node instanceof NetworkTreeNode)
         {
-            fillInfoPanel(((NetworkTreeNode)node).getNetwork(), "Netzwerk");
-            fillHostPanel(null);
-        }
-        else if(node instanceof SubnetTreeNode)
-        {
-            fillInfoPanel(((SubnetTreeNode)node).getSubnet(), "Subnetz");
+            Network network = ((NetworkTreeNode)node).getNetwork();
+            fillInfoPanel(network);
+            fillHostPanel(network);
         }
         else
         {
@@ -77,9 +72,9 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         }
     }
 
-    private void fillInfoPanel(Network networkBase, String header) {
+    private void fillInfoPanel(Network networkBase) {
         JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
-        infoPanel.add(new JLabel(header));
+        infoPanel.add(new JLabel("Netzwerk"));
         infoPanel.add(new JLabel(networkBase.getName()));
         infoPanel.add(new JLabel("IPv4"));
         infoPanel.add(new JLabel());
@@ -101,8 +96,8 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         infoPane.setBottomComponent(infoPanel);
     }
 
-    private void fillHostPanel(Subnet subnet) {
-        hostPanel.setSubnet(subnet);
+    private void fillHostPanel(Network network) {
+        hostPanel.setNetwork(network);
     }
 
     private void handleTreeRightClick(MouseEvent e){
@@ -122,7 +117,11 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             else if(element instanceof NetworkTreeNode)
             {
                 NetworkTreeNode networkNode = (NetworkTreeNode)element;
-                menu.add(new JMenuItem("Neues Subnetz"));
+                menu.add(new AbstractAction("Neues Subnetz") {
+                    public void actionPerformed (ActionEvent e) {
+                        TreeTabPanel.Instance.handleCreateNetwork(networkNode);
+                    }
+                });
                 menu.add(new AbstractAction("Gleichmäßig nach Größe") {
                     public void actionPerformed (ActionEvent e) {
                         TreeTabPanel.Instance.handleSplitBySize(networkNode);
@@ -140,10 +139,6 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                     }
                 });
             }
-            else if(element instanceof SubnetTreeNode)
-            {
-                menu.add(new JMenuItem("Subnetz löschen"));
-            }
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
     }
@@ -154,8 +149,6 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 "Netzwerk Id und Prefix:",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE);
-
-
         try{
             Network network = Network.parse(input);
             networkTreeModel.addNetwork(network);
@@ -164,8 +157,22 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    private void handleCreateNetwork(NetworkTreeNode parent) {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Netzwerk Id und Prefix:",
+                "Subnetz hinzufügen",
+                JOptionPane.PLAIN_MESSAGE);
+        try{
+            Network network = Network.parse(input);
+            networkTreeModel.addNetwork(network, parent);
+        }catch (UnsupportedOperationException e){
+            DialogBox.error(e.getMessage(),this);
+        }
+    }
+
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
-        ArrayList<Integer> deviders = networkTreeNode.getNetwork().possibleDeviders();
+        ArrayList<Integer> deviders = networkTreeNode.getNetwork().possibleDividers();
 
         Object input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
@@ -185,7 +192,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private void handleSplitByCount(NetworkTreeNode networkTreeNode) {
         ArrayList<Integer> sizes = new ArrayList<>();
 
-        networkTreeNode.getNetwork().possibleDeviders().stream()
+        networkTreeNode.getNetwork().possibleDividers()
                 .forEach(x -> sizes.add((networkTreeNode.getNetwork().getMaxHosts()+2) / (x+2)));
         sizes.add(1);
 

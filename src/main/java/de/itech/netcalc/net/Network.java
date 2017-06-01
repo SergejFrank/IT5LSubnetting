@@ -1,5 +1,6 @@
 package de.itech.netcalc.net;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -98,9 +99,9 @@ public class Network {
         if(status == SubnetStatus.HAS_HOSTS){
             throw new UnsupportedOperationException("can't add subnets to network with hosts");
         }
-        status = SubnetStatus.HAS_SUBNETS;
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new IllegalArgumentException("Subnet already exists.");
+        status = SubnetStatus.HAS_SUBNETS;
 
         subnets.add(subnet);
         sortSubnets();
@@ -303,5 +304,10 @@ public class Network {
         result = 31 * result + (networkIdV6 != null ? networkIdV6.hashCode() : 0);
         result = 31 * result + prefixV6;
         return result;
+    }
+
+    public Host getHost(Object iPv4Address) {
+        Optional<Host> host = Arrays.stream(getHosts()).filter(h -> h.getIPv4Address().equals(iPv4Address)).findFirst();
+        return host.orElse(null);
     }
 }

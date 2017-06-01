@@ -10,8 +10,7 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
     NetworkTreeNode(Network network) {
         super(network, true);
         this.network = network;
-        for(Network s : network.getSubnets())
-            add(new SubnetTreeNode(s));
+        refreshSubnets();
     }
 
     Network getNetwork() {
@@ -19,8 +18,13 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
     }
 
     void refreshSubnets() {
-        this.removeAllChildren();
-        for(Network s : network.getSubnets())
-            add(new SubnetTreeNode(s));
+        //TODO: machs richtig
+        if(network.getSubnets().size() != 0){
+            setAllowsChildren(true);
+            for(Network s : network.getSubnets())
+                add(new NetworkTreeNode(s));
+        } else {
+            setAllowsChildren(false);
+        }
     }
 }

@@ -1,7 +1,9 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
+import sun.reflect.generics.tree.Tree;
 
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,14 +15,21 @@ class NetworkTreeModel extends DefaultTreeModel {
     }
 
     void addNetwork(Network network) {
-        DefaultMutableTreeNode root = getRootNode();
-        NetworkTreeNode networkNode = new NetworkTreeNode(network);
+        addNetwork(network, getRootNode());
+    }
 
+    void addNetwork(Network network, NetworkTreeNode parent) {
+        parent.getNetwork().addSubnet(network);
+        addNetwork(network, parent);
+    }
+
+    private void addNetwork(Network network, DefaultMutableTreeNode parent) {
+        NetworkTreeNode networkNode = new NetworkTreeNode(network);
         Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
         if(collidingNetwork.isPresent()){
             throw new UnsupportedOperationException("Network is Colliding with "+collidingNetwork.get());
         }else{
-            insertNodeInto(networkNode, root, root.getChildCount());
+            insertNodeInto(networkNode, parent, parent.getChildCount());
         }
     }
 
@@ -28,14 +37,6 @@ class NetworkTreeModel extends DefaultTreeModel {
         ArrayList<Network> networks = new ArrayList<>();
         Collections.list(root.children()).stream().forEach(node -> networks.add(((NetworkTreeNode) node).getNetwork()));
         return networks;
-    }
-
-    void addSubnet(Network network, Network subnet) {
-        NetworkTreeNode networkTreeNode = getNodeForNetwork(network);
-        if(network == null) throw new IllegalArgumentException("Network '" + network + "' not found in JTree Nodes");
-        SubnetTreeNode subnetNode = new SubnetTreeNode(subnet);
-        networkTreeNode.add(subnetNode);
-        nodesWereInserted(subnetNode, new int[]{subnetNode.getChildCount() - 1});
     }
 
     DefaultMutableTreeNode getRootNode() {
@@ -52,13 +53,12 @@ class NetworkTreeModel extends DefaultTreeModel {
     }
 
     void deleteNetwork(NetworkTreeNode networkNode) {
+        TreeNode parent = networkNode.getParent();
+        if(parent instanceof NetworkTreeNode) {
+            Network network = ((NetworkTreeNode)parent).getNetwork();
+            network.removeSubnet(networkNode.getNetwork());
+        }
         this.removeNodeFromParent(networkNode);
-    }
-
-    void deleteSubnet(SubnetTreeNode subnetNode) {
-        Network network = ((NetworkTreeNode)subnetNode.getParent()).getNetwork();
-        network.removeSubnet(subnetNode.getSubnet());
-        this.removeNodeFromParent(subnetNode);
     }
 
     void splitBySize(NetworkTreeNode networkNode, int size) {

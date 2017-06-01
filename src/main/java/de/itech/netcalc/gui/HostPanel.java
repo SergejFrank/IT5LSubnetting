@@ -2,7 +2,7 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Host;
 import de.itech.netcalc.net.IPAddress;
-import de.itech.netcalc.net.Subnet;
+import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -11,7 +11,7 @@ import java.awt.*;
 
 class HostPanel extends JPanel implements TableModelListener{
     private HostTableModel model;
-    private Subnet subnet;
+    private Network network;
 
     HostPanel() {
         super(new GridLayout());
@@ -22,12 +22,16 @@ class HostPanel extends JPanel implements TableModelListener{
         this.add(new JScrollPane(table));
     }
 
-    public void setSubnet(Subnet subnet) {
-        this.subnet = subnet;
+    public void setNetwork(Network network) {
+        this.network = network;
+        reloadHosts();
+    }
+
+    public void reloadHosts() {
         model.setRowCount(0);
-        if(subnet != null)
+        if(network != null && network.getHosts() != null)
         {
-            for(Host h : subnet.getHosts()) {
+            for(Host h : network.getHosts()) {
                 Object[] data = new Object[] {
                         h.getIPv4Address(),
                         h.getName()
@@ -40,7 +44,7 @@ class HostPanel extends JPanel implements TableModelListener{
     @Override
     public void tableChanged(TableModelEvent e) {
         if(e.getType() != TableModelEvent.UPDATE) return;
-        Host host = subnet.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
+        Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
         String newName = model.getValueAt(e.getFirstRow(), 1).toString();
         host.setName(newName);
     }
