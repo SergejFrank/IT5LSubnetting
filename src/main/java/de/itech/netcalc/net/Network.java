@@ -58,6 +58,10 @@ public class Network extends NetworkBase{
         return null;
     }
 
+    public void removeSubnet(Subnet subnet) {
+        subnets.remove(subnet);
+    }
+
     private int getOffset(int position, int count) {
         return (int)Math.ceil((double)position / (double)count) * count;
     }

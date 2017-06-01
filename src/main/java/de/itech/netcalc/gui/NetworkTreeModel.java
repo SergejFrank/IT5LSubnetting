@@ -39,4 +39,10 @@ class NetworkTreeModel extends DefaultTreeModel {
     void deleteNetwork(NetworkTreeNode networkNode) {
         this.removeNodeFromParent(networkNode);
     }
+
+    void deleteSubnet(SubnetTreeNode subnetNode) {
+        Network network = ((NetworkTreeNode)subnetNode.getParent()).getNetwork();
+        network.removeSubnet(subnetNode.getSubnet());
+        this.removeNodeFromParent(subnetNode);
+    }
 }
