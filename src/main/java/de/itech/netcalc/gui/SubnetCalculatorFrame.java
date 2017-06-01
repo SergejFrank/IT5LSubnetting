@@ -6,31 +6,29 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SubnetCalculatorFrame extends JFrame {
-    public static SubnetCalculatorFrame Instance;
+    static SubnetCalculatorFrame Instance;
 
     private JTabbedPane tabbedPane = new JTabbedPane();
-    // Panels
-    private NetworksPanel netsPan;
 
     private JPanel subnetsPanel;
     private JPanel hostsPanel;
-    private JPanel treePanel = new TreeTabPanel();
 
     public SubnetCalculatorFrame(String title){
         super(title);
 
         Instance = this;
 
-        netsPan = new NetworksPanel();
+        NetworksPanel netsPan = new NetworksPanel();
 
         // Add Panels to the tabs
+        JPanel treePanel = new TreeTabPanel();
         tabbedPane.add("Network-Tree", treePanel);
         tabbedPane.add("Networks", netsPan);
 
         add(tabbedPane);
 
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //pack();
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -40,7 +38,7 @@ public class SubnetCalculatorFrame extends JFrame {
 
     }
 
-    public void goToSubnets(Network network) {
+    void goToSubnets(Network network) {
         tabbedPane.remove(subnetsPanel);
         tabbedPane.remove(hostsPanel);
         subnetsPanel = new SubnetPanel(network);
@@ -48,7 +46,7 @@ public class SubnetCalculatorFrame extends JFrame {
         tabbedPane.setSelectedIndex(2);
     }
 
-    public void goToHosts(Network subnet) {
+    void goToHosts(Network subnet) {
         tabbedPane.remove(hostsPanel);
         hostsPanel = new JPanel();
         tabbedPane.add("Hosts", hostsPanel);

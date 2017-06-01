@@ -56,7 +56,7 @@ public class Network {
         }
     }
 
-    public void addOneHost(){
+    public void addHost(){
         switch (status){
             case HAS_SUBNETS:
                 throw new UnsupportedOperationException("can't add host to subnetted network");
@@ -75,7 +75,7 @@ public class Network {
         }
     }
 
-    public void addOneHost(IPv4Address address){
+    public void addHost(IPv4Address address){
         switch (status){
             case HAS_SUBNETS:
                 throw new UnsupportedOperationException("can't add host to subnetted network");
@@ -154,7 +154,7 @@ public class Network {
     }
 
     private void sortSubnets(){
-        Collections.sort(subnets, Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));
+        subnets.sort(Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));
     }
 
     public ArrayList<Integer> possibleDividers(){
@@ -225,6 +225,10 @@ public class Network {
         return new Network(networkID, netmask);
     }
 
+    public Host getHost(Object iPv4Address) {
+        Optional<Host> host = Arrays.stream(getHosts()).filter(h -> h.getIPv4Address().equals(iPv4Address)).findFirst();
+        return host.orElse(null);
+    }
 
     //getter and setter
     public String getName() {
@@ -241,7 +245,7 @@ public class Network {
         return networkIdV4.clone();
     }
 
-    protected void setNetworkIdV4(IPv4Address networkIdV4) {
+    private void setNetworkIdV4(IPv4Address networkIdV4) {
         this.networkIdV4 = networkIdV4;
     }
 
@@ -255,7 +259,7 @@ public class Network {
         return new IPv4Address(getNetworkIdV4().getValue() + getMaxHosts() + 1);
     }
 
-    protected void setNetworkMaskV4(IPv4Address networkMaskV4) {
+    private void setNetworkMaskV4(IPv4Address networkMaskV4) {
         this.networkMaskV4 = networkMaskV4;
     }
 
@@ -263,7 +267,7 @@ public class Network {
         return networkIdV6;
     }
 
-    protected void setNetworkIdV6(IPv6Address networkIdV6) {
+    private void setNetworkIdV6(IPv6Address networkIdV6) {
         this.networkIdV6 = networkIdV6;
     }
 
@@ -271,7 +275,7 @@ public class Network {
         return prefixV6;
     }
 
-    protected void setPrefixV6(int prefixV6) {
+    private void setPrefixV6(int prefixV6) {
         this.prefixV6 = prefixV6;
     }
 
@@ -318,10 +322,5 @@ public class Network {
         result = 31 * result + (networkIdV6 != null ? networkIdV6.hashCode() : 0);
         result = 31 * result + prefixV6;
         return result;
-    }
-
-    public Host getHost(Object iPv4Address) {
-        Optional<Host> host = Arrays.stream(getHosts()).filter(h -> h.getIPv4Address().equals(iPv4Address)).findFirst();
-        return host.orElse(null);
     }
 }

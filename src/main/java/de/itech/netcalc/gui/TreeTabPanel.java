@@ -257,7 +257,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleAddHost(NetworkTreeNode networkNode) {
-        networkNode.getNetwork().addOneHost();
+        networkNode.getNetwork().addHost();
         hostPanel.reloadHosts();
     }
 

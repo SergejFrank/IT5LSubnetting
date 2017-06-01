@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SubnetPanel extends JPanel {
+class SubnetPanel extends JPanel {
     private Network network;
 
     GridBagConstraints c = new GridBagConstraints();

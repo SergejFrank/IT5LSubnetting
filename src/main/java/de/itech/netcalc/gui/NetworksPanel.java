@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class NetworksPanel extends JPanel{
+class NetworksPanel extends JPanel{
 
     GridBagConstraints c = new GridBagConstraints();
 
@@ -32,7 +32,7 @@ public class NetworksPanel extends JPanel{
 
     // Border
 
-    public NetworksPanel(){
+    NetworksPanel(){
         this.setLayout(new GridBagLayout());
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -149,7 +149,7 @@ public class NetworksPanel extends JPanel{
         }
     }
 
-    public void addNewNetwork(){
+    private void addNewNetwork(){
         String input = ipText.getText();
         try{
             Network network = Network.parse(input);

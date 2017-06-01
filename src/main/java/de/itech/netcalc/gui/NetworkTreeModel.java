@@ -1,9 +1,7 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
-import sun.reflect.generics.tree.Tree;
 
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,15 +13,15 @@ class NetworkTreeModel extends DefaultTreeModel {
     }
 
     void addNetwork(Network network) {
-        addNetwork(network, getRootNode());
+        insertNetwork(network, getRootNode());
     }
 
     void addNetwork(Network network, NetworkTreeNode parent) {
         parent.getNetwork().addSubnet(network);
-        addNetwork(network, parent);
+        insertNetwork(network, parent);
     }
 
-    private void addNetwork(Network network, DefaultMutableTreeNode parent) {
+    private void insertNetwork(Network network, DefaultMutableTreeNode parent) {
         NetworkTreeNode networkNode = new NetworkTreeNode(network);
         Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
         if(collidingNetwork.isPresent()){
@@ -39,7 +37,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         return networks;
     }
 
-    DefaultMutableTreeNode getRootNode() {
+    private DefaultMutableTreeNode getRootNode() {
         return (DefaultMutableTreeNode)getRoot();
     }
 

@@ -17,6 +17,7 @@ class HostPanel extends JPanel implements TableModelListener{
         super(new GridLayout());
         JTable table = new JTable(model = new HostTableModel());
         model.addColumn("IPv4 Adresse");
+        model.addColumn("IPv6 Adresse");
         model.addColumn("Name");
         model.addTableModelListener(this);
         this.add(new JScrollPane(table));
@@ -27,7 +28,7 @@ class HostPanel extends JPanel implements TableModelListener{
         reloadHosts();
     }
 
-    public void reloadHosts() {
+    void reloadHosts() {
         model.setRowCount(0);
         if(network != null && network.getHosts() != null)
         {
@@ -35,6 +36,7 @@ class HostPanel extends JPanel implements TableModelListener{
                 if(h == null) continue;
                 Object[] data = new Object[] {
                         h.getIPv4Address(),
+                        h.getIPv6Address(),
                         h.getName()
                 };
                 model.addRow(data);

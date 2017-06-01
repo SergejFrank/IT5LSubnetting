@@ -57,7 +57,7 @@ public class IPv6Address extends IPAddress {
         return address.toLowerCase();
     }
 
-    public static long getRandomInterfaceAddress(){
+    private static long getRandomInterfaceAddress(){
         //due to EUI Standards the 25th bit from the right always has to be 0
         //https://supportforums.cisco.com/document/100566/understanding-ipv6-eui-64-bit-address
         return (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24;
