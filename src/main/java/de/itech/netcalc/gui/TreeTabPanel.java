@@ -133,7 +133,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                     }
                 });
                 menu.addSeparator();
-                menu.add(new AbstractAction("Netzwerk löschen") {
+                menu.add(new AbstractAction("Netzwerk/Subnetz löschen") {
                     public void actionPerformed (ActionEvent e) {
                         networkTreeModel.deleteNetwork(networkNode);
                     }
