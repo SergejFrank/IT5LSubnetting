@@ -21,17 +21,12 @@ public class NetworksPanel extends JPanel{
     private JLabel ipLabel;
     private JTextField ipText;
 
-    // Sub panels
-    private JPanel bottomPanel;
-    private JPanel inputPanel;
-    private JPanel buttonPanel;
-
     // JList
     private JList netList;
     private DefaultListModel<Network> listModel;
 
     // Buttons
-    private JButton bTest1;
+    private JButton bNewNetwork;
     private JButton bTest2;
     private JButton bTest3;
 
@@ -48,15 +43,9 @@ public class NetworksPanel extends JPanel{
         ipText.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
         // Buttons
-        bTest1 = new JButton("New");
+        bNewNetwork = new JButton("New");
         bTest2 = new JButton("Test2");
         bTest3 = new JButton("Test3");
-
-        // Panels
-        /*bottomPanel = new JPanel(new GridLayout(2,1));
-        inputPanel = new JPanel(new BorderLayout(42,5));
-        buttonPanel = new JPanel();*/
-
 
         // JList
         listModel = new DefaultListModel();
@@ -64,7 +53,7 @@ public class NetworksPanel extends JPanel{
         netList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
         // Buttonlisteners
-        bTest1.addActionListener(new ButtonListener());
+        bNewNetwork.addActionListener(new ButtonListener());
         bTest2.addActionListener(new ButtonListener());
         bTest3.addActionListener(new ButtonListener());
 
@@ -100,30 +89,8 @@ public class NetworksPanel extends JPanel{
 
         // Configure Networks Layout
 
-        //networksLabel.setVerticalAlignment(JLabel.CENTER);
-        //ipLabel.setVerticalAlignment(JLabel.CENTER);
-
-        /*
-        add(networksLabel, BorderLayout.LINE_START);
-        add(netList);
-        add(bottomPanel, BorderLayout.PAGE_END);
-
-
-
-        bottomPanel.add(inputPanel);
-        bottomPanel.add(buttonPanel);
-
-        ipLabel.setVerticalAlignment(JLabel.TOP);
-        inputPanel.add(ipLabel, BorderLayout.LINE_START);
-        inputPanel.add(ipText, BorderLayout.CENTER);
-
-        buttonPanel.add(bTest1);
-        buttonPanel.add(bTest2);
-        buttonPanel.add(bTest3);*/
-
-
-        c.weightx =1;
-        c.weighty =1;
+        c.weightx = 1;
+        c.weighty = 1;
 
         // Add labels
         networksLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -137,7 +104,7 @@ public class NetworksPanel extends JPanel{
         c.gridy = 1;
         add(ipLabel, c);
 
-        // Add listscrollpane
+        // Add listcrollpane
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
@@ -155,7 +122,7 @@ public class NetworksPanel extends JPanel{
         c.gridwidth = 1;
         c.weightx = 0.1;
         c.insets = new Insets(3,3,3,3);
-        add(bTest1, c);
+        add(bNewNetwork, c);
         c.gridx = 1;
         c.gridy = 2;
         c.weightx = 0.1;
@@ -170,7 +137,7 @@ public class NetworksPanel extends JPanel{
     public class ButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
-            if(e.getSource() == bTest1) {
+            if(e.getSource() == bNewNetwork) {
                 addNewNetwork();
             }else if(e.getSource() == bTest2){
                 System.out.println("2");

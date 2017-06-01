@@ -32,13 +32,15 @@ public class SubnetCalculatorFrame extends JFrame {
 
         add(tabbedPane);
 
-        setSize(800, 600);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //pack();
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2); // screen center
 
         setVisible(true);
+
     }
 
     public void goToSubnets(Network network) {
