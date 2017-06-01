@@ -7,7 +7,6 @@ import de.itech.netcalc.net.Subnet;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -121,10 +120,14 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 menu.add(new JMenuItem("Neues Subnetz"));
                 menu.add(new AbstractAction("Gleichmäßig nach Größe") {
                     public void actionPerformed (ActionEvent e) {
-                        TreeTabPanel.Instance.handleSplitEqualyBySize(networkNode);
+                        TreeTabPanel.Instance.handleSplitBySize(networkNode);
                     }
                 });
-                menu.add(new JMenuItem("Gleichmäßig nach Anzahl"));
+                menu.add(new AbstractAction("Gleichmäßig nach Anzahl") {
+                    public void actionPerformed (ActionEvent e) {
+                        TreeTabPanel.Instance.handleSplitByCount(networkNode);
+                    }
+                });
                 menu.addSeparator();
                 menu.add(new JMenuItem("Netzwerk löschen"));
             }
@@ -146,12 +149,21 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(network);
     }
 
-    private void handleSplitEqualyBySize(NetworkTreeNode networkTreeNode) {
+    private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
         String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Größe der Subnetze angeben:",
                 "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
                 JOptionPane.PLAIN_MESSAGE);
-        networkTreeModel.splitEqualyBySize(networkTreeNode, Integer.valueOf(input));
+        networkTreeModel.splitBySize(networkTreeNode, Integer.valueOf(input));
+    }
+
+    private void handleSplitByCount(NetworkTreeNode networkTreeNode) {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Anzahl der Subnetze angeben:",
+                "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
+                JOptionPane.PLAIN_MESSAGE);
+        networkTreeModel.splitByCount(networkTreeNode, Integer.valueOf(input));
     }
 }
