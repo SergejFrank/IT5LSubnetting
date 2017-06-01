@@ -95,6 +95,10 @@ public class Network extends NetworkBase{
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDeviders());
         }
         int count = length / realSize;
+        splitHelper(realSize,count);
+    }
+
+    private void splitHelper(int realSize, int count){
         subnets.clear();
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
@@ -108,15 +112,7 @@ public class Network extends NetworkBase{
 
     public void splitByCount(int count){
         int realSize = getLength() / count;
-        subnets.clear();
-        for (int i=0;i < count; i++) {
-            IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
-            int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
-            IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
-
-            Subnet subnet = new Subnet(nAddress,mask);
-            subnets.add(subnet);
-        }
+        splitHelper(realSize,count);
     }
 
     public static Network parse(String value) {
