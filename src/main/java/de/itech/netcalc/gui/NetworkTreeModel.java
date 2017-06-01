@@ -2,7 +2,11 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Network;
 import de.itech.netcalc.net.Subnet;
+
 import javax.swing.tree.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 
 class NetworkTreeModel extends DefaultTreeModel {
     NetworkTreeModel() {
@@ -12,7 +16,19 @@ class NetworkTreeModel extends DefaultTreeModel {
     void addNetwork(Network network) {
         DefaultMutableTreeNode root = getRootNode();
         NetworkTreeNode networkNode = new NetworkTreeNode(network);
-        insertNodeInto(networkNode, root, root.getChildCount());
+
+        Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
+        if(collidingNetwork.isPresent()){
+            throw new UnsupportedOperationException("Network is Colliding with "+collidingNetwork.get());
+        }else{
+            insertNodeInto(networkNode, root, root.getChildCount());
+        }
+    }
+
+    ArrayList<Network> getNetworks(){
+        ArrayList<Network> networks = new ArrayList<>();
+        Collections.list(root.children()).stream().forEach(node -> networks.add(((NetworkTreeNode) node).getNetwork()));
+        return networks;
     }
 
     void addSubnet(Network network, Subnet subnet) {

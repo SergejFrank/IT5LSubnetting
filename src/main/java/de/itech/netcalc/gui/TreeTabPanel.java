@@ -129,7 +129,11 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                     }
                 });
                 menu.addSeparator();
-                menu.add(new JMenuItem("Netzwerk löschen"));
+                menu.add(new AbstractAction("Netzwerk löschen") {
+                    public void actionPerformed (ActionEvent e) {
+                        networkTreeModel.deleteNetwork(networkNode);
+                    }
+                });
             }
             else if(element instanceof SubnetTreeNode)
             {
@@ -145,8 +149,14 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 "Netzwerk Id und Prefix:",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE);
-        Network network = Network.parse(input);
-        networkTreeModel.addNetwork(network);
+
+
+        try{
+            Network network = Network.parse(input);
+            networkTreeModel.addNetwork(network);
+        }catch (UnsupportedOperationException e){
+            DialogBox.error(e.getMessage(),this);
+        }
     }
 
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
