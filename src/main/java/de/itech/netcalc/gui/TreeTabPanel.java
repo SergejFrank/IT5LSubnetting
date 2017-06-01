@@ -9,13 +9,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private static TreeTabPanel Instance;
     private NetworkTreeModel networkTreeModel;
     private JSplitPane infoPane;
     private JTree networkTree;
+    private HostPanel hostPanel;
 
     public TreeTabPanel() {
         super(new GridLayout(1,0));
@@ -25,7 +26,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         mainPane.setDividerSize(3);
         infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
-        mainPane.setRightComponent(new JPanel());
+        mainPane.setRightComponent(hostPanel = new HostPanel());
         mainPane.setResizeWeight(0.3);
         infoPane.setResizeWeight(0.5);
 
@@ -64,6 +65,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         if(node instanceof NetworkTreeNode)
         {
             fillInfoPanel(((NetworkTreeNode)node).getNetwork(), "Netzwerk");
+            fillHostPanel(null);
         }
         else if(node instanceof SubnetTreeNode)
         {
@@ -97,6 +99,10 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             infoPanel.add(new JLabel(String.valueOf(networkBase.getPrefixV6())));
         }
         infoPane.setBottomComponent(infoPanel);
+    }
+
+    private void fillHostPanel(Subnet subnet) {
+        hostPanel.setSubnet(subnet);
     }
 
     private void handleTreeRightClick(MouseEvent e){
@@ -159,33 +165,42 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
-        Object[] deviders = networkTreeNode.getNetwork().possibleDividers().toArray();
+        ArrayList<Integer> deviders = networkTreeNode.getNetwork().possibleDeviders();
 
-        int input = (int)JOptionPane.showInputDialog(
+        Object input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Größe der Subnetze angeben",
                 "Netzwerk teilen",
                 JOptionPane.QUESTION_MESSAGE, null,
-                deviders, // Array of choices
-                deviders[0]); // Initial choice
-        System.out.println(input);
+                deviders.toArray(), // Array of choices
+                deviders.get(0)); // Initial choice
 
-        networkTreeModel.splitBySize(networkTreeNode, input);
+        if(input == null){
+            return;
+        }
+
+        networkTreeModel.splitBySize(networkTreeNode, (int)input);
     }
 
     private void handleSplitByCount(NetworkTreeNode networkTreeNode) {
-        String input = JOptionPane.showInputDialog(
+        ArrayList<Integer> sizes = new ArrayList<>();
+
+        networkTreeNode.getNetwork().possibleDeviders().stream()
+                .forEach(x -> sizes.add((networkTreeNode.getNetwork().getMaxHosts()+2) / (x+2)));
+        sizes.add(1);
+
+        Object input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
-                "Anzahl der Subnetze angeben:",
-                "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
-                JOptionPane.PLAIN_MESSAGE);
-        if(input == null || Objects.equals(input, ""))
+                "Anzahl der Subnetze angeben",
+                "Netzwerk teilen",
+                JOptionPane.QUESTION_MESSAGE, null,
+                sizes.toArray(), // Array of choices
+                sizes.get(0)); // Initial choice
+
+        if(input == null){
             return;
-        try{
-            int count = Integer.parseInt(input);
-            networkTreeModel.splitByCount(networkTreeNode, count);
-        } catch (IllegalArgumentException e) {
-            handleSplitByCount(networkTreeNode);
         }
+
+        networkTreeModel.splitByCount(networkTreeNode, (int)input);
     }
 }
