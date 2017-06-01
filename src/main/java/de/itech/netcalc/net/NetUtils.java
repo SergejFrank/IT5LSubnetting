@@ -16,6 +16,10 @@ class NetUtils {
         return (valIp & valSub) == (valNet & valSub);
     }
 
+    static boolean isInSubnet(IPv6Address subnet, IPv6Address host){
+        return subnet.getNetworkId() == host.getNetworkId();
+    }
+
     static IPv4Address addPrefixToMask(IPv4Address mask, int prefix) {
         return getMaskFromPrefix(getPrefixFromMask(mask) + prefix);
     }
