@@ -62,13 +62,13 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     @Override
     public void valueChanged(TreeSelectionEvent e) {
         Object node = networkTree.getLastSelectedPathComponent();
-        if(node instanceof Network)
+        if(node instanceof NetworkTreeNode)
         {
-            fillInfoPanel((Network)node, "Netzwerk");
+            fillInfoPanel(((NetworkTreeNode)node).getNetwork(), "Netzwerk");
         }
-        else if(node instanceof Subnet)
+        else if(node instanceof SubnetTreeNode)
         {
-            fillInfoPanel((Subnet)node, "Subnetz");
+            fillInfoPanel(((SubnetTreeNode)node).getSubnet(), "Subnetz");
         }
         else
         {
@@ -174,6 +174,13 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 "Anzahl der Subnetze angeben:",
                 "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
                 JOptionPane.PLAIN_MESSAGE);
-        networkTreeModel.splitByCount(networkTreeNode, Integer.valueOf(input));
+        if(input == null || input == "")
+            return;
+        try{
+            int count = Integer.parseInt(input);
+            networkTreeModel.splitByCount(networkTreeNode, count);
+        } catch (IllegalArgumentException e) {
+            handleSplitByCount(networkTreeNode);
+        }
     }
 }
