@@ -18,6 +18,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private NetworkTreeModel networkTreeModel;
     private JSplitPane infoPane;
     private JTree networkTree;
+    private HostPanel hostPanel;
 
     public TreeTabPanel() {
         super(new GridLayout(1,0));
@@ -27,7 +28,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         mainPane.setDividerSize(3);
         infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
-        mainPane.setRightComponent(new JPanel());
+        mainPane.setRightComponent(hostPanel = new HostPanel());
         mainPane.setResizeWeight(0.3);
         infoPane.setResizeWeight(0.5);
 
@@ -63,17 +64,18 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     @Override
     public void valueChanged(TreeSelectionEvent e) {
         Object node = networkTree.getLastSelectedPathComponent();
-        if(node instanceof NetworkTreeNode)
-        {
+        if(node instanceof NetworkTreeNode) {
             fillInfoPanel(((NetworkTreeNode)node).getNetwork(), "Netzwerk");
+            fillHostPanel(null);
         }
-        else if(node instanceof SubnetTreeNode)
-        {
-            fillInfoPanel(((SubnetTreeNode)node).getSubnet(), "Subnetz");
+        else if(node instanceof SubnetTreeNode) {
+            Subnet subnet = ((SubnetTreeNode)node).getSubnet();
+            fillInfoPanel(subnet, "Subnetz");
+            fillHostPanel(subnet);
         }
-        else
-        {
+        else {
             infoPane.setBottomComponent(null);
+            fillHostPanel(null);
         }
     }
 
@@ -99,6 +101,10 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             infoPanel.add(new JLabel(String.valueOf(networkBase.getPrefixV6())));
         }
         infoPane.setBottomComponent(infoPanel);
+    }
+
+    private void fillHostPanel(Subnet subnet) {
+        hostPanel.setSubnet(subnet);
     }
 
     private void handleTreeRightClick(MouseEvent e){

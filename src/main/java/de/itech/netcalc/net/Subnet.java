@@ -1,5 +1,8 @@
 package de.itech.netcalc.net;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public class Subnet extends NetworkBase{
     private Host[] hosts;
 
@@ -33,5 +36,10 @@ public class Subnet extends NetworkBase{
 
     public Host[] getHosts(){
         return hosts;
+    }
+
+    public Host getHost(Object iPv4Address) {
+        Optional<Host> host = Arrays.stream(getHosts()).filter(h -> h.getIPv4Address().equals(iPv4Address)).findFirst();
+        return host.isPresent() ? host.get() : null;
     }
 }
