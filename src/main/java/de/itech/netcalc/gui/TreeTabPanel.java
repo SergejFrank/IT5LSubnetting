@@ -161,12 +161,18 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
-        String input = JOptionPane.showInputDialog(
+        Object[] deviders = networkTreeNode.getNetwork().possibleDeviders().toArray();
+
+        int input = (int)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
-                "Größe der Subnetze angeben:",
-                "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
-                JOptionPane.PLAIN_MESSAGE);
-        networkTreeModel.splitBySize(networkTreeNode, Integer.valueOf(input));
+                "Größe der Subnetze angeben",
+                "Netzwerk teilen",
+                JOptionPane.QUESTION_MESSAGE, null,
+                deviders, // Array of choices
+                deviders[0]); // Initial choice
+        System.out.println(input);
+
+        networkTreeModel.splitBySize(networkTreeNode, input);
     }
 
     private void handleSplitByCount(NetworkTreeNode networkTreeNode) {

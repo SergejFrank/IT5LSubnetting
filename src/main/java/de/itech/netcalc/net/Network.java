@@ -70,7 +70,7 @@ public class Network extends NetworkBase{
         Collections.sort(subnets, Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));
     }
 
-    private ArrayList<Integer> deviders(){
+    public ArrayList<Integer> possibleDeviders(){
         int num = getLength();
         ArrayList<Integer> deviders = new ArrayList<>();
         for (int i = 2; i <= Math.sqrt(num); i++) {
@@ -92,7 +92,7 @@ public class Network extends NetworkBase{
         int length = getLength();
         int realSize = size + 2;
         if(length % realSize != 0) {
-            throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+deviders());
+            throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDeviders());
         }
         int count = length / realSize;
         subnets.clear();
