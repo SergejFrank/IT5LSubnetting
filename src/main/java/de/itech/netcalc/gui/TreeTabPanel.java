@@ -7,16 +7,19 @@ import de.itech.netcalc.net.Subnet;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private static TreeTabPanel Instance;
-    private NetworkTreeModel networkTreeModel;
+    private DefaultTreeModel networkTreeModel;
     private JSplitPane infoPane;
     private JTree networkTree;
+
+    private DefaultMutableTreeNode root;
 
     public TreeTabPanel() {
         super(new GridLayout(1,0));
@@ -30,19 +33,34 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         mainPane.setResizeWeight(0.3);
         infoPane.setResizeWeight(0.5);
 
-        networkTreeModel = new NetworkTreeModel();
+        root = new DefaultMutableTreeNode("Netzwerke");
+        networkTreeModel = new DefaultTreeModel(root);
         networkTree = new JTree(networkTreeModel);
-        networkTree.addTreeSelectionListener(this);
-        networkTree.addMouseListener(new MouseAdapter() {
+        //networkTree.addTreeSelectionListener(this);
+        /*networkTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 handleTreeRightClick(e);
             }
-        });
-        JScrollPane treeScrollPane = new JScrollPane(networkTree);
-        infoPane.setTopComponent(treeScrollPane);
+        });*/
+        //JScrollPane treeScrollPane = new JScrollPane(networkTree);
+        infoPane.setTopComponent(networkTree);
+        JButton button = new JButton("click me");
 
-        Network testNetwork1 = Network.parse("192.168.254.0/24");
+        button.addActionListener(e -> TreeTabPanel.Instance.networkTreeModel.insertNodeInto(
+                new DefaultMutableTreeNode("Item added x"),
+                (DefaultMutableTreeNode)TreeTabPanel.Instance.networkTreeModel.getRoot(),
+                ((DefaultMutableTreeNode)(TreeTabPanel.Instance.networkTreeModel.getRoot())).getChildCount()));
+
+        infoPane.setBottomComponent(button);
+        add(mainPane);
+
+        networkTreeModel.insertNodeInto(new DefaultMutableTreeNode("1"), root, root.getChildCount());
+        networkTreeModel.insertNodeInto(new DefaultMutableTreeNode("2"), root, root.getChildCount());
+        networkTreeModel.insertNodeInto(new DefaultMutableTreeNode("3"), root, root.getChildCount());
+        networkTreeModel.insertNodeInto(new DefaultMutableTreeNode("4"), root, root.getChildCount());
+
+        /*Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
         Network testNetwork4 = Network.parse("1.2.3.4/24");
@@ -53,9 +71,8 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(testNetwork1);
         networkTreeModel.addNetwork(testNetwork2);
         networkTreeModel.addNetwork(testNetwork3);
-        networkTreeModel.addNetwork(testNetwork4);
+        networkTreeModel.addNetwork(testNetwork4);*/
 
-        add(mainPane);
     }
 
     @Override
@@ -113,15 +130,20 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                     }
                 });
             }
-            else if(element instanceof Network)
+            else if(element instanceof NetworkTreeNode)
             {
+                NetworkTreeNode networkNode = (NetworkTreeNode)element;
                 menu.add(new JMenuItem("Neues Subnetz"));
-                menu.add(new JMenuItem("Gleichmäßig nach Größe"));
+                menu.add(new AbstractAction("Gleichmäßig nach Größe") {
+                    public void actionPerformed (ActionEvent e) {
+                        TreeTabPanel.Instance.handleSplitEqualyBySize(networkNode);
+                    }
+                });
                 menu.add(new JMenuItem("Gleichmäßig nach Anzahl"));
                 menu.addSeparator();
                 menu.add(new JMenuItem("Netzwerk löschen"));
             }
-            else if(element instanceof Subnet)
+            else if(element instanceof SubnetTreeNode)
             {
                 menu.add(new JMenuItem("Subnetz löschen"));
             }
@@ -130,11 +152,21 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleCreateNetwork() {
-        String input = JOptionPane.showInputDialog(
+        networkTreeModel.insertNodeInto(new DefaultMutableTreeNode("4"), root, root.getChildCount());
+        /*String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Netzwerk Id und Prefix::",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE);
-        networkTreeModel.addNetwork(Network.parse(input));
+        Network network = Network.parse(input);
+        networkTreeModel.addNetwork(network);*/
+    }
+
+    private void handleSplitEqualyBySize(NetworkTreeNode networkTreeNode) {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Größe der Subnetze angeben::",
+                "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
+                JOptionPane.PLAIN_MESSAGE);
     }
 }
