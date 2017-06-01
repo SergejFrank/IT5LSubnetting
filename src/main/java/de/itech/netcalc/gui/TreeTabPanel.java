@@ -149,6 +149,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 "Netzwerk Id und Prefix:",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE);
+        if(input == null) return;
         try{
             Network network = Network.parse(input);
             networkTreeModel.addNetwork(network);
@@ -158,11 +159,15 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleCreateNetwork(NetworkTreeNode parent) {
-        String input = JOptionPane.showInputDialog(
+        String input = (String)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Netzwerk Id und Prefix:",
                 "Subnetz hinzufügen",
-                JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                GuiUtils.getInitialSubnetString(parent.getNetwork()));
+        if(input == null) return;
         try{
             Network network = Network.parse(input);
             networkTreeModel.addNetwork(network, parent);

@@ -1,6 +1,6 @@
 package de.itech.netcalc.net;
 
-class NetUtils {
+public class NetUtils {
     static IPv4Address getMaskFromPrefix(int prefix) {
         if(prefix < 0 || prefix > 32) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
 
@@ -24,7 +24,7 @@ class NetUtils {
         return getMaskFromPrefix(getPrefixFromMask(mask) + prefix);
     }
 
-    static int getPrefixFromMask(IPv4Address mask) {
+    public static int getPrefixFromMask(IPv4Address mask) {
         int index = mask.toBinary().indexOf("0");
         return index == -1 ? 32 : index;
     }

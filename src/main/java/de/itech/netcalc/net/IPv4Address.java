@@ -15,19 +15,19 @@ public class IPv4Address extends IPAddress {
         value = val;
     }
 
-    private int getOct1() {
+    public int getOct1() {
         return (value & 0xFF000000) >>> 24;
     }
 
-    private int getOct2() {
+    public int getOct2() {
         return (value & 0x00FF0000) >> 16;
     }
 
-    private int getOct3() {
+    public int getOct3() {
         return (value & 0x0000FF00) >> 8;
     }
 
-    private int getOct4() {
+    public int getOct4() {
         return value & 0x000000FF;
     }
 
