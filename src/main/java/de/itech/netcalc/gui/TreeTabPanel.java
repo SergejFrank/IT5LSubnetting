@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private static TreeTabPanel Instance;
@@ -174,7 +175,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                 "Anzahl der Subnetze angeben:",
                 "Netzwerk gleichmäßig in Subnetzwerke aufteilen",
                 JOptionPane.PLAIN_MESSAGE);
-        if(input == null || input == "")
+        if(input == null || Objects.equals(input, ""))
             return;
         try{
             int count = Integer.parseInt(input);
