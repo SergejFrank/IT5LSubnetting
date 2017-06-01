@@ -70,6 +70,9 @@ class NetworkTreeModel extends DefaultTreeModel {
     }
 
     void splitByCount(NetworkTreeNode networkNode, int count) {
+        if((count & (count - 1)) != 0){
+            throw new IllegalArgumentException("subnets can only be split by powers of 2");
+        }
         Network network = networkNode.getNetwork();
         network.splitByCount(count);
         networkNode.refreshSubnets();
