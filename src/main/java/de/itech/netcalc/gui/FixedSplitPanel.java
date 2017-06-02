@@ -2,9 +2,9 @@ package de.itech.netcalc.gui;
 
 import javax.swing.*;
 
-public class MySplitPanel extends JSplitPane
+public class FixedSplitPanel extends JSplitPane
 {
-    MySplitPanel(int split)
+    FixedSplitPanel(int split)
     {
         super(split);
     }

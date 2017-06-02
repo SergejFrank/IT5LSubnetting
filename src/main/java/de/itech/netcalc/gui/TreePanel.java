@@ -28,7 +28,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         super(new GridLayout(1,0));
         Instance = this;
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        infoPane = new MySplitPanel(JSplitPane.VERTICAL_SPLIT);
+        infoPane = new FixedSplitPanel(JSplitPane.VERTICAL_SPLIT);
         mainPane.setDividerSize(3);
         infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
