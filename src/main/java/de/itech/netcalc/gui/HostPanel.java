@@ -1,14 +1,13 @@
 package de.itech.netcalc.gui;
 
-import de.itech.netcalc.net.Host;
-import de.itech.netcalc.net.IPAddress;
-import de.itech.netcalc.net.IPv6Address;
-import de.itech.netcalc.net.Network;
+import de.itech.netcalc.net.*;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
+import java.awt.dnd.InvalidDnDOperationException;
+import java.util.InvalidPropertiesFormatException;
 
 class HostPanel extends JPanel implements TableModelListener{
     private HostTableModel model;
@@ -57,15 +56,33 @@ class HostPanel extends JPanel implements TableModelListener{
         else if(e.getColumn() == 1) {
             String input = model.getValueAt(e.getFirstRow(), 1).toString();
             Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
-            if(input == null || input.equals("")) {
+            if (input == null || input.equals("")) {
                 host.setIpv6Address(null);
             } else {
+                if(network.getNetworkIdV6() == null) {
+                    DialogBox.error("Biite zuerst IPv6 im Netzwerk konfigurieren.", null);
+                    throw new UnsupportedOperationException("Configure IPv6 on Network first.");
+                }
+                if (!IPAddress.isValidIPv6(input)) {
+                    DialogBox.error("Die eingegebene Adresse ist keine gültige IPv6 Adresse.", null);
+                    throw new UnsupportedOperationException("Invalid IPv6 address.");
+                }
                 IPv6Address address = IPAddress.parseIPv6(input);
-                host.setIpv6Address(address);
-                //model.setValueAt will fire tableChanged event -> prevent event handler from executing
-                updatedProgrammatically = true;
-                model.setValueAt(address, e.getFirstRow(), 1);
-                updatedProgrammatically = false;
+                if(!NetUtils.isInSubnet(network.getNetworkIdV6(), address)) {
+                    DialogBox.error("Die eingegebene Adresse liegt nicht im IPv6 Subnetz.", null);
+                    throw new UnsupportedOperationException("Not in Network.");
+                }
+                try {
+                    host.setIpv6Address(address);
+                    //model.setValueAt will fire tableChanged event -> prevent event handler from executing
+                    updatedProgrammatically = true;
+                    model.setValueAt(address, e.getFirstRow(), 1);
+                    updatedProgrammatically = false;
+                } catch(Exception ex) {
+                    updatedProgrammatically = false;
+                    DialogBox.error("Ein Fehler ist aufgetreten\n" + ex.getMessage(), null);
+                    throw new UnsupportedOperationException("Unexpected Exception", ex);
+                }
             }
         }
     }
