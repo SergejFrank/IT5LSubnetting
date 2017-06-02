@@ -205,21 +205,16 @@ public class Network {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDividers());
         }
         int count = length / realSize;
-        subnets.clear();
-        status = SubnetStatus.HAS_SUBNETS;
-        for (int i=0;i < count; i++) {
-            IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
-            int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
-            IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
-
-            Network subnet = new Network(nAddress,mask);
-            subnets.add(subnet);
-        }
+        split(realSize,count);
     }
 
     public void splitByCount(int count){
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         int realSize = getAmountIpAddresses() / count;
+        split(realSize,count);
+    }
+
+    private void split(int realSize, int count){
         subnets.clear();
         status = SubnetStatus.HAS_SUBNETS;
         for (int i=0;i < count; i++) {
