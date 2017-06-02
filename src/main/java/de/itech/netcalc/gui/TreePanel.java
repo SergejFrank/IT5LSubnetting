@@ -165,7 +165,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             {
                 menu.add(new AbstractAction("Neues Netzwerk") {
                     public void actionPerformed (ActionEvent e) {
-                        TreePanel.Instance.handleCreateNetwork();
+                        TreePanel.Instance.handleCreateNetwork(null);
                     }
                 });
             }
@@ -177,7 +177,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 {
                     menu.add(new AbstractAction("Neues Subnetz") {
                         public void actionPerformed (ActionEvent e) {
-                            handleCreateNetwork(networkNode);
+                            handleCreateNetwork(networkNode, null);
                         }
                     });
                     menu.add(new AbstractAction("Gleichmäßig nach Größe") {
@@ -244,22 +244,25 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
-    private void handleCreateNetwork() {
+    private void handleCreateNetwork(String initialValue) {
         String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Netzwerk Id und Prefix:",
                 "Netzwerk hinzufügen",
-                JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.PLAIN_MESSAGE,
+                null, null, initialValue)
+                .toString();
         if(input == null) return;
         try{
             Network network = Network.parse(input);
             networkTreeModel.addNetwork(network);
         }catch (UnsupportedOperationException e){
             DialogBox.error(e.getMessage(),this);
+            handleCreateNetwork(input);
         }
     }
 
-    private void handleCreateNetwork(NetworkTreeNode parent) {
+    private void handleCreateNetwork(NetworkTreeNode parent, String initialValue) {
         String input = (String)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Netzwerk Id und Prefix:",
@@ -267,13 +270,14 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                GuiUtils.getInitialSubnetString(parent.getNetwork()));
+                initialValue == null ? GuiUtils.getInitialSubnetString(parent.getNetwork()) : initialValue);
         if(input == null) return;
         try{
             Network network = Network.parse(input);
             networkTreeModel.addNetwork(network, parent);
         }catch (UnsupportedOperationException e){
             DialogBox.error(e.getMessage(),this);
+            handleCreateNetwork(parent, input);
         }
     }
 
