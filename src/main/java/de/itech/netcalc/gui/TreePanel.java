@@ -20,14 +20,14 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Optional;
 
-public class TreeTabPanel extends JPanel implements TreeSelectionListener {
-    private static TreeTabPanel Instance;
+public class TreePanel extends JPanel implements TreeSelectionListener {
+    private static TreePanel Instance;
     private NetworkTreeModel networkTreeModel;
     private JSplitPane infoPane;
     private JTree networkTree;
     private HostPanel hostPanel;
 
-    TreeTabPanel() {
+    TreePanel() {
         super(new GridLayout(1,0));
         Instance = this;
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -167,7 +167,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             {
                 menu.add(new AbstractAction("Neues Netzwerk") {
                     public void actionPerformed (ActionEvent e) {
-                        TreeTabPanel.Instance.handleCreateNetwork();
+                        TreePanel.Instance.handleCreateNetwork();
                     }
                 });
             }
