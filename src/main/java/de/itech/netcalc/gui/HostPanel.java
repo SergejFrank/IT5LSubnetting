@@ -60,9 +60,7 @@ class HostPanel extends JPanel implements TableModelListener{
             if(input == null || input.equals("")) {
                 host.setIpv6Address(null);
             } else {
-                System.out.println(input);
                 IPv6Address address = IPAddress.parseIPv6(input);
-                System.out.println(address);
                 host.setIpv6Address(address);
                 updatedProgrammatically = true;
                 model.setValueAt(address, e.getFirstRow(), 1);
