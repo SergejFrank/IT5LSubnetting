@@ -26,6 +26,7 @@ public class Network {
         this.setNetworkMaskV4(networkMaskV4);
         status = SubnetStatus.UNSPECIFIED;
         numberOfHosts = 0;
+        hosts = new Host[getMaxHosts()];
     }
 
     public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
@@ -36,6 +37,7 @@ public class Network {
         this.setPrefixV6(prefixV6);
         status = SubnetStatus.UNSPECIFIED;
         numberOfHosts = 0;
+        hosts = new Host[getMaxHosts()];
     }
 
     public void addAllHosts(){
