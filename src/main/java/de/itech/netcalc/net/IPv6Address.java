@@ -47,7 +47,6 @@ public class IPv6Address extends IPAddress {
     public String toString(Boolean shorthand) {
         Short[] segments = new Short[8];
 
-
         for(int i = 0; i < 4; i++){
             segments[i] = (short) (networkId >> (3-i)*16);
             segments[i + 4] = (short) (interfaceId >> (3-i)*16);

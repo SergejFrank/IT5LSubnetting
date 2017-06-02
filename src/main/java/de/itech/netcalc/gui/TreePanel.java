@@ -52,10 +52,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             e.printStackTrace();
         }
 
-        Network testNetwork1 = Network.parse("192.168.254.0/24");
-        Network testNetwork2 = Network.parse("10.0.5.0/24");
-        Network testNetwork3 = Network.parse("178.34.0.0/16");
-        Network testNetwork4 = new Network(IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
+        Network testNetwork1 = Network.parse("192.168.254.0/24", null);
+        Network testNetwork2 = Network.parse("10.0.5.0/24", null);
+        Network testNetwork3 = Network.parse("178.34.0.0/16", null);
+        Network testNetwork4 = new Network(null, IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
         testNetwork1.splitBySize(126);
         testNetwork2.splitBySize(30);
         testNetwork3.splitBySize(14);
@@ -72,7 +72,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     public void initWithLocalInterfaces() throws SocketException {
         for (NetworkInterface netint : getInterfacesWithIPv4()) {
             try {
-                addNetwork(netint);
+                addExternalNetwork(netint);
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -97,14 +97,14 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         return interfaces;
     }
 
-    private void addNetwork(NetworkInterface netint) throws Exception {
+    private void addExternalNetwork(NetworkInterface netint) throws Exception {
         if(netint.isLoopback()) return;
         Optional<InterfaceAddress> address = netint.getInterfaceAddresses().stream().filter(a -> a.getAddress() instanceof Inet4Address).findFirst();
         if(!address.isPresent()) return;
         String ip = address.get().getAddress().getHostAddress();
         String prefix = String.valueOf(address.get().getNetworkPrefixLength());
 
-        Network network = Network.parse(ip+"/"+prefix);
+        Network network = Network.parse(ip+"/"+prefix, null);
         network.setName(netint.getDisplayName());
         network.addAllHosts();
         networkTreeModel.addNetwork(network);
@@ -313,7 +313,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 .toString();
         if(input == null) return;
         try{
-            Network network = Network.parse(input);
+            Network network = Network.parse(input, null);
             networkTreeModel.addNetwork(network);
         }catch (UnsupportedOperationException e){
             DialogBox.error(e.getMessage(),this);
@@ -332,7 +332,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 initialValue == null ? GuiUtils.getInitialSubnetString(parent.getNetwork()) : initialValue);
         if(input == null) return;
         try{
-            Network network = Network.parse(input);
+            Network network = Network.parse(input, parent.getNetwork());
             networkTreeModel.addNetwork(network, parent);
         }catch (UnsupportedOperationException e){
             DialogBox.error(e.getMessage(),this);

@@ -7,6 +7,8 @@ public class Network {
         UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS;
     }
 
+    private Network parent;
+
     private ArrayList<Network> subnets = new ArrayList<>();
 
     private int hostCount;
@@ -21,7 +23,8 @@ public class Network {
     private IPv6Address networkIdV6;
     private int prefixV6;
 
-    public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4) {
+    public Network(Network parent, IPv4Address networkIdV4, IPv4Address networkMaskV4) {
+        this.parent = parent;
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
         status = SubnetStatus.UNSPECIFIED;
@@ -30,7 +33,8 @@ public class Network {
         checkIsZeroNetmask(networkMaskV4);
     }
 
-    public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
+    public Network(Network parent, IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
+        this.parent = parent;
         if(prefixV6 < 0 || prefixV6 > 128) throw new IllegalArgumentException(prefixV6 + " is not a valid IPv6 Prefix");
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
@@ -157,19 +161,19 @@ public class Network {
         IPv4Address subnetMask = NetUtils.prefixToMask(32 - maskLength);
 
         if(subnets.isEmpty() || NetUtils.getLengthBetweenIpAddresses(this.getNetworkIdV4(), subnets.get(0).getNetworkIdV4()) >= size) {
-            return addSubnet(new Network(getNetworkIdV4(), subnetMask));
+            return addSubnet(new Network(this, getNetworkIdV4(), subnetMask));
         }
 
         for(int i=0;i<subnets.size()-1;i++) {
             Network curr = subnets.get(i);
             Network next = subnets.get(i + 1);
             if (NetUtils.getLengthBetweenNetworks(curr, next) >= size)
-                return addSubnet(new Network(new IPv4Address(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), subnetMask));
+                return addSubnet(new Network(this, new IPv4Address(getOffset(curr.getBroadcastAddress().getValue() + 1, realSize)), subnetMask));
         }
 
         Network last = subnets.get(subnets.size()-1);
         if(NetUtils.getLengthBetweenIpAddresses(last.getBroadcastAddress(), this.getBroadcastAddress()) >= size) {
-            return addSubnet(new Network(new IPv4Address(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), subnetMask));
+            return addSubnet(new Network(this, new IPv4Address(getOffset(last.getBroadcastAddress().getValue() + 1,realSize)), subnetMask));
         }
 
         return null;
@@ -218,7 +222,7 @@ public class Network {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDividers());
         }
         long count = length / realSize;
-        split(realSize,count);
+        split(realSize, count);
     }
 
     public void splitByCount(long count){
@@ -234,7 +238,7 @@ public class Network {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
             IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
-            Network subnet = new Network(nAddress,mask);
+            Network subnet = new Network(this, nAddress,mask);
             subnets.add(subnet);
         }
     }
@@ -244,7 +248,7 @@ public class Network {
                 || NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), getNetworkIdV4());
     }
 
-    public static Network parse(String value) {
+    public static Network parse(String value, Network parent) {
         if(value == null) throw new IllegalArgumentException("'value' can not be null.");
         String[] splitted = value.split("/");
         if(splitted.length != 2 || !IPAddress.isValidIPv4(splitted[0])){
@@ -262,7 +266,7 @@ public class Network {
         }
 
         IPv4Address networkID = IPAddress.parseIPv4(splitted[0]);
-        return new Network(networkID, netmask);
+        return new Network(parent, networkID, netmask);
     }
 
     public Host getHost(Object iPv4Address) {
