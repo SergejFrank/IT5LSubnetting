@@ -1,5 +1,6 @@
 package de.itech.netcalc.gui;
 
+import de.itech.netcalc.net.Host;
 import de.itech.netcalc.net.IPAddress;
 import de.itech.netcalc.net.NetUtils;
 import de.itech.netcalc.net.Network;
@@ -190,6 +191,27 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                     });
                     menu.addSeparator();
                 }
+                if(networkNode.getNetwork().getNetworkIdV6() == null) {
+                    menu.add(new AbstractAction("IPv6 zuweisen") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleAssignIPv6(networkNode);
+                        }
+                    });
+                    menu.addSeparator();
+                }
+                else {
+                    menu.add(new AbstractAction("IPv6 ändern") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleEditIPv6(networkNode);
+                        }
+                    });
+                    menu.add(new AbstractAction("IPv6 entfernen") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleRemoveIPv6(networkNode);
+                        }
+                    });
+                    menu.addSeparator();
+                }
                 if(status == Network.SubnetStatus.HAS_SUBNETS)
                 {
                     menu.add(new AbstractAction("Alle Subnetze entfernen") {
@@ -245,6 +267,40 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             }
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
+    }
+
+    private void handleRemoveIPv6(NetworkTreeNode networkNode) {
+        int input = JOptionPane.showConfirmDialog(null,
+                "IPv6 wird aus dem Netzwerk und allen Hosts entfernt.",
+                "Sicherheitsabfrage - IPv6 entfernen",
+                JOptionPane.OK_CANCEL_OPTION);
+        if(input != 0) return;
+        Network network = networkNode.getNetwork();
+        removeIPv6FromNetwork(network);
+        networkTreeModel.nodeStructureChanged(networkNode);
+        hostPanel.reloadHosts();
+        fillInfoPanel(network);
+    }
+
+    private void removeIPv6FromNetwork(Network network) {
+        if(network.getStatus() == Network.SubnetStatus.HAS_HOSTS) {
+            for (Host host : network.getHosts()) {
+                host.setIpv6Address(null);
+            }
+        }
+        if(network.getStatus() == Network.SubnetStatus.HAS_SUBNETS) {
+            for (Network subnet : network.getSubnets()) {
+                removeIPv6FromNetwork(subnet);
+            }
+        }
+        network.setIPv6(null, 0);
+    }
+
+    private void handleEditIPv6(NetworkTreeNode networkNode) {
+    }
+
+    private void handleAssignIPv6(NetworkTreeNode networkNode) {
+
     }
 
     private void handleCreateNetwork(String initialValue) {

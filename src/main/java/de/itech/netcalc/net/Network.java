@@ -329,6 +329,11 @@ public class Network {
         this.prefixV6 = prefixV6;
     }
 
+    public void setIPv6(IPv6Address networkId, int prefix) {
+        setNetworkIdV6(networkId);
+        setPrefixV6(networkId == null ? 0 : prefix);
+    }
+
     public ArrayList<Network> getSubnets(){
         return subnets;
     }
