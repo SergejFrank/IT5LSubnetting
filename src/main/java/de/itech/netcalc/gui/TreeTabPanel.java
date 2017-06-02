@@ -70,8 +70,13 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     }
 
     public void initWithLocalInterfaces() throws SocketException {
-        for (NetworkInterface netint : getInterfacesWithIPv4())
-            addNetwork(netint);
+        for (NetworkInterface netint : getInterfacesWithIPv4()) {
+            try {
+                addNetwork(netint);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private ArrayList<NetworkInterface> getInterfacesWithIPv4() throws SocketException {
@@ -91,7 +96,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         return interfaces;
     }
 
-    private void addNetwork(NetworkInterface netint) throws SocketException {
+    private void addNetwork(NetworkInterface netint) throws Exception {
         if(netint.isLoopback()) return;
         Optional<InterfaceAddress> address = netint.getInterfaceAddresses().stream().filter(a -> a.getAddress() instanceof Inet4Address).findFirst();
         if(!address.isPresent()) return;
