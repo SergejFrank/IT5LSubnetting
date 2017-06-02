@@ -232,6 +232,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                     });
                     menu.addSeparator();
                 }
+                menu.add(new AbstractAction("Umbenennen") {
+                    public void actionPerformed (ActionEvent e) {
+                        handleRename(networkNode);
+                    }
+                });
                 menu.add(new AbstractAction("Netzwerk/Subnetz löschen") {
                     public void actionPerformed (ActionEvent e) {
                         networkTreeModel.deleteNetwork(networkNode);
@@ -353,5 +358,19 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
     private void handleClearSubnets(NetworkTreeNode networkNode) {
         networkTreeModel.clearSubnets(networkNode);
+    }
+
+    private void handleRename(NetworkTreeNode networkNode) {
+        String initialValue = networkNode.getNetwork().getName();
+        String input = (String) JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Name",
+                "Netzwerk/Subnetz umbenennen",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                initialValue);
+        networkNode.getNetwork().setName(input);
+        networkTreeModel.nodeChanged(networkNode);
     }
 }
