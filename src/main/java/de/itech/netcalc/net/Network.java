@@ -9,7 +9,7 @@ public class Network {
 
     private ArrayList<Network> subnets = new ArrayList<>();
 
-    int hostCount;
+    private int hostCount;
 
     private Host[] hosts;
 
@@ -131,7 +131,7 @@ public class Network {
     }
 
     public Network addSubnet(Network subnet) {
-        if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
+        if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnet to network with hosts");
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new UnsupportedOperationException("Subnet already exists.");
         if(NetUtils.isInSubnet(this.getNetworkIdV4(), this.getNetworkMaskV4(), subnet.getNetworkIdV4()))
@@ -204,7 +204,7 @@ public class Network {
     }
 
     public void splitBySize(int size) {
-        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
+        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("Can not add subnet to network with hosts");
         long length = getAmountIpAddresses();
         int realSize = size + 2;
         if(length % realSize != 0) {
@@ -215,7 +215,7 @@ public class Network {
     }
 
     public void splitByCount(long count){
-        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
+        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("Can not add subnet to network with hosts");
         int realSize = (int) (getAmountIpAddresses() / count);
         split(realSize,count);
     }
