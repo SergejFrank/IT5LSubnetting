@@ -1,6 +1,8 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.IPAddress;
+import de.itech.netcalc.net.NetUtils;
+import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
@@ -55,7 +57,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
-        Network testNetwork4 = new Network(IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
+//        Network testNetwork4 = new Network(IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
         testNetwork1.splitBySize(126);
         testNetwork2.splitBySize(30);
         testNetwork3.splitBySize(14);
@@ -63,7 +65,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(testNetwork1);
         networkTreeModel.addNetwork(testNetwork2);
         networkTreeModel.addNetwork(testNetwork3);
-        networkTreeModel.addNetwork(testNetwork4);
+        //networkTreeModel.addNetwork(testNetwork4);
 
         networkTree.expandRow(0);
 
@@ -208,6 +210,12 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
                             handleAddHost(networkNode);
                         }
                     });
+                    menu.add(new AbstractAction("Host mit IP Adresse hinzufügen") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleAddHostWithIP(networkNode);
+                        }
+                    });
                     menu.add(new AbstractAction("Alle Hosts hinzufügen") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -306,11 +314,28 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             return;
         }
 
-        networkTreeModel.splitByCount(networkTreeNode, (int)input);
+        networkTreeModel.splitByCount(networkTreeNode, (int) input);
     }
 
     private void handleAddHost(NetworkTreeNode networkNode) {
         networkNode.getNetwork().addHost();
+        hostPanel.reloadHosts();
+    }
+
+    private void handleAddHostWithIP(NetworkTreeNode networkNode) {
+        Network network = networkNode.getNetwork();
+        String networkString = network.getNetworkIdV4().toString() + "/" +
+                NetUtils.maskToPrefix(network.getNetworkMaskV4());
+        String input = (String) JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "IP Adresse (" + networkString + ")",
+                "Host mit IP Adresse hinzufügen",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                GuiUtils.getInitialSubnetString(network));
+
+        network.addHost(IPAddress.parseIPv4(input));
         hostPanel.reloadHosts();
     }
 
