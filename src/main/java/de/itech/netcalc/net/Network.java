@@ -340,7 +340,7 @@ public class Network {
     //overwridden methods
     @Override
     public String toString(){
-        return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getNetworkMaskV4());
+        return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getNetworkMaskV4()) + (name == null ? "" : " (" + name + ")");
     }
 
     @Override
