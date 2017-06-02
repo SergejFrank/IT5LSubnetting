@@ -51,7 +51,14 @@ public class Network {
         for(int i = 0; i < getMaxHosts(); i++) {
             if(hosts[i] == null){
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
-                Host host = new Host(this, hostV4, null);
+                Host host;
+                if(networkIdV6 != null) {
+                    IPv6Address random = IPv6Address.getRandomInterfaceAddress(networkIdV6.getNetworkId());
+                    host = new Host(this, hostV4, random, null);
+                }
+                else {
+                    host = new Host(this, hostV4, null);
+                }
                 hosts[i] = host;
             }
         }
