@@ -2,9 +2,6 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.IPAddress;
 import de.itech.netcalc.net.NetUtils;
-import de.itech.netcalc.net.IPAddress;
-import de.itech.netcalc.net.NetUtils;
-import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
@@ -31,7 +28,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         super(new GridLayout(1,0));
         Instance = this;
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        infoPane = new ownSplitPanel(JSplitPane.VERTICAL_SPLIT);
+        infoPane = new MySplitPanel(JSplitPane.VERTICAL_SPLIT);
         mainPane.setDividerSize(3);
         infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
