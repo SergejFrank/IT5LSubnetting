@@ -17,6 +17,7 @@ class HostPanel extends JPanel implements TableModelListener{
     HostPanel() {
         super(new GridLayout());
         JTable table = new JTable(model = new HostTableModel());
+        table.setFont(new Font("monospaced", Font.PLAIN, 12));
         model.addColumn("IPv4 Adresse");
         model.addColumn("IPv6 Adresse");
         model.addColumn("Name");
@@ -37,7 +38,7 @@ class HostPanel extends JPanel implements TableModelListener{
                 if(h == null) continue;
                 Object[] data = new Object[] {
                         h.getIPv4Address(),
-                        h.getIPv6Address(),
+                        h.getIPv6Address().toString(true),
                         h.getName()
                 };
                 model.addRow(data);
