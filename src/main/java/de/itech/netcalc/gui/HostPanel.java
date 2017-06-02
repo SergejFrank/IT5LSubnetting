@@ -2,6 +2,7 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.Host;
 import de.itech.netcalc.net.IPAddress;
+import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
@@ -47,8 +48,21 @@ class HostPanel extends JPanel implements TableModelListener{
     @Override
     public void tableChanged(TableModelEvent e) {
         if(e.getType() != TableModelEvent.UPDATE) return;
-        Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
-        String newName = model.getValueAt(e.getFirstRow(), 1).toString();
-        host.setName(newName);
+        if(e.getColumn() == 2) {
+            Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
+            String newName = model.getValueAt(e.getFirstRow(), 2).toString();
+            host.setName(newName);
+        }
+        else if(e.getColumn() == 1) {
+            String input = model.getValueAt(e.getFirstRow(), 1).toString();
+            Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
+            if(input == null || input.equals("")) {
+                host.setIpv6Address(null);
+            } else {
+                IPv6Address address = IPAddress.parseIPv6(input);
+                host.setIpv6Address(address);
+                model.setValueAt(address, e.getFirstRow(), 1);
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 package de.itech.netcalc.gui;
 
+import de.itech.netcalc.net.IPAddress;
+import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
@@ -45,7 +47,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
-        Network testNetwork4 = Network.parse("1.2.3.4/24");
+        Network testNetwork4 = new Network(IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
         testNetwork1.splitBySize(126);
         testNetwork2.splitBySize(30);
         testNetwork3.splitBySize(14);
