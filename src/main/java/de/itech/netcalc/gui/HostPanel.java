@@ -13,6 +13,7 @@ import java.awt.*;
 class HostPanel extends JPanel implements TableModelListener{
     private HostTableModel model;
     private Network network;
+    private Boolean updatedProgrammatically = false;
 
     HostPanel() {
         super(new GridLayout());
@@ -47,7 +48,7 @@ class HostPanel extends JPanel implements TableModelListener{
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        if(e.getType() != TableModelEvent.UPDATE) return;
+        if(e.getType() != TableModelEvent.UPDATE || updatedProgrammatically) return;
         if(e.getColumn() == 2) {
             Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
             String newName = model.getValueAt(e.getFirstRow(), 2).toString();
@@ -59,9 +60,13 @@ class HostPanel extends JPanel implements TableModelListener{
             if(input == null || input.equals("")) {
                 host.setIpv6Address(null);
             } else {
+                System.out.println(input);
                 IPv6Address address = IPAddress.parseIPv6(input);
+                System.out.println(address);
                 host.setIpv6Address(address);
+                updatedProgrammatically = true;
                 model.setValueAt(address, e.getFirstRow(), 1);
+                updatedProgrammatically = false;
             }
         }
     }

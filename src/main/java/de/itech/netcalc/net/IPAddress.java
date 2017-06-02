@@ -34,10 +34,10 @@ public abstract class IPAddress {
             int missingSegments = 0;
             if (split.length != expectedLength)
                 missingSegments = (expectedLength - split.length + 1) / 2;
-            if(split.length == 3)
-                missingSegments = 7;
-            if(split.length == 2)
-                missingSegments = 8;
+            if(value.startsWith("::"))
+                missingSegments++;
+            if(value.endsWith("::"))
+                missingSegments++;
 
             String currSegment;
             for (int i = 0; i < split.length; i++) {
