@@ -194,7 +194,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 if(networkNode.getNetwork().getNetworkIdV6() == null) {
                     menu.add(new AbstractAction("IPv6 zuweisen") {
                         public void actionPerformed (ActionEvent e) {
-                            handleAssignIPv6(networkNode);
+                            handleAssignIPv6(networkNode, null);
                         }
                     });
                     menu.addSeparator();
@@ -300,7 +300,18 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
     }
 
-    private void handleAssignIPv6(NetworkTreeNode networkNode) {
+    private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "IPv6 Network und Prefix:",
+                "IPv6 zuweisen",
+                JOptionPane.PLAIN_MESSAGE,
+                null, null, initialValue)
+                .toString();
+        if(!IPAddress.isValidIPv6(input)) {
+             DialogBox.error("Die eingebenene IPv6 Adresse ist ungültig.", null);
+             handleAssignIPv6(networkNode, input);
+        }
 
     }
 

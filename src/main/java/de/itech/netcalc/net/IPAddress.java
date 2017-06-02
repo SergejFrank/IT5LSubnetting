@@ -22,15 +22,35 @@ public abstract class IPAddress {
         return value != null && value.matches(validV6Regex);
     }
 
+    public static Boolean isValidIPv6WithPrefix(String value, Integer maxValue) {
+        if(value == null || !value.contains("/")) return false;
+        String[] splitted = value.split("/");
+        if(splitted.length != 2) return false;
+        try {
+            Integer prefix = Integer.valueOf(splitted[1]);
+            if(prefix < 0 || prefix > maxValue)
+                return false;
+        } catch(Exception e) {
+            return false;
+        }
+        return splitted[0].matches(validV6Regex);
+    }
+
     public static IPv6Address parseIPv6(String value) {
         try {
-
+            if(value.contains("/"))
+            {
+                if(!isValidIPv6WithPrefix(value, 128))
+                    throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
+                value = value.split("/")[0];
+            }
             if (!isValidIPv6(value))
                 throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
             ArrayList<Integer> parsedSegments = new ArrayList<>();
 
-            int expectedLength = value.contains(".") ? 19 : 15;
-            String[] split = value.split("((?<=[:.])|(?=[:.]))");
+            int expectedLength = 15;
+            String[] split = value.split("((?<=[:])|(?=[:]))");
+            //String[] split = value.split("((?<=[:.])|(?=[:.]))");
             int missingSegments = 0;
             if (split.length != expectedLength)
                 missingSegments = (expectedLength - split.length + 1) / 2;
@@ -75,6 +95,16 @@ public abstract class IPAddress {
             System.out.println("Can not parse IPv6Address (" + e.toString() + ")");
             throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
         }
+    }
+
+    public int parseIPv6Prefix(String value) {
+        if(!isValidIPv6WithPrefix(value, 128))
+            throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
+        String[] splitted = value.split("/");
+        if(splitted.length != 2) {
+            throw new IllegalArgumentException("Invalid IPv6Address");
+        }
+        return Integer.valueOf(splitted[1]);
     }
 
     private static boolean isDelimiter(String value) {
