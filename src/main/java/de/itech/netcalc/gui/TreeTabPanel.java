@@ -314,7 +314,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             return;
         }
 
-        networkTreeModel.splitByCount(networkTreeNode, (int) input);
+        networkTreeModel.splitByCount(networkTreeNode, (int)input);
     }
 
     private void handleAddHost(NetworkTreeNode networkNode) {
