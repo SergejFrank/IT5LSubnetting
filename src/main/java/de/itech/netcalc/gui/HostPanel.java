@@ -62,6 +62,7 @@ class HostPanel extends JPanel implements TableModelListener{
             } else {
                 IPv6Address address = IPAddress.parseIPv6(input);
                 host.setIpv6Address(address);
+                //model.setValueAt will fire tableChanged event -> prevent event handler from executing
                 updatedProgrammatically = true;
                 model.setValueAt(address, e.getFirstRow(), 1);
                 updatedProgrammatically = false;
