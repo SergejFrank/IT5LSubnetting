@@ -130,6 +130,8 @@ public class Network {
         if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new IllegalArgumentException("Subnet already exists.");
+        if(NetUtils.isInSubnet(this.getNetworkIdV4(), this.getNetworkMaskV4(), subnet.getNetworkIdV4()))
+            throw new UnsupportedOperationException("Subnet is not in range of the parent network.");
         status = SubnetStatus.HAS_SUBNETS;
 
         subnets.add(subnet);
