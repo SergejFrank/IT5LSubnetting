@@ -210,17 +210,17 @@ public class Network {
         if(length % realSize != 0) {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDividers());
         }
-        int count = length / realSize;
+        long count = length / realSize;
         split(realSize,count);
     }
 
-    public void splitByCount(int count){
+    public void splitByCount(long count){
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
-        int realSize = getAmountIpAddresses() / count;
+        int realSize = (int) (getAmountIpAddresses() / count);
         split(realSize,count);
     }
 
-    private void split(int realSize, int count){
+    private void split(int realSize, long count){
         subnets.clear();
         status = SubnetStatus.HAS_SUBNETS;
         for (int i=0;i < count; i++) {
