@@ -1,7 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.IPAddress;
-import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
 import javax.swing.*;
