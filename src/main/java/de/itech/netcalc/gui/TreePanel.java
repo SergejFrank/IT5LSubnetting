@@ -297,6 +297,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleEditIPv6(NetworkTreeNode networkNode) {
+
     }
 
     private void handleAssignIPv6(NetworkTreeNode networkNode) {
@@ -428,5 +429,6 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 initialValue);
         networkNode.getNetwork().setName(input);
         networkTreeModel.nodeChanged(networkNode);
+        fillInfoPanel(networkNode.getNetwork());
     }
 }
