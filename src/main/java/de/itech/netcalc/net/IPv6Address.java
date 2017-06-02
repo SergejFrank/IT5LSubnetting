@@ -7,11 +7,6 @@ public class IPv6Address extends IPAddress {
 
     private long interfaceId;
 
-    public IPv6Address(long networkId){
-        this.networkId = networkId;
-        this.interfaceId = getRandomInterfaceAddress();
-    }
-
     public IPv6Address(long networkId, long interfaceId){
         this.networkId = networkId;
         this.interfaceId = interfaceId;
@@ -60,17 +55,17 @@ public class IPv6Address extends IPAddress {
     private static long getRandomInterfaceAddress(){
         //due to EUI Standards the 25th bit from the right always has to be 0
         //https://supportforums.cisco.com/document/100566/understanding-ipv6-eui-64-bit-address
-        return (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24;
+        return (new Random().nextLong() & ~(1 << 24)) | 0xFFFEL << 24;
     }
 
-    public static IPv6Address getRandomInterfaceAddress(long networkId){
-        //for explanation see other method implementation of getRandomInterfaceAddress
-        return new IPv6Address(networkId, (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24);
+    public static IPv6Address getAddressWithRandomHost(long networkId){
+        //for explanation see other method implementation of getAddressWithRandomHost
+        return new IPv6Address(networkId, getRandomInterfaceAddress());
     }
 
-    public static IPv6Address getRandomInterfaceAddress(IPv6Address address){
-        //for explanation see other method implementation of getRandomInterfaceAddress
-        return new IPv6Address(address.networkId, (new Random().nextLong() & ~(1 << 24)) | 0xFFFE << 24);
+    public static IPv6Address getAddressWithRandomHost(IPv6Address address){
+        //for explanation see other method implementation of getAddressWithRandomHost
+        return new IPv6Address(address.networkId, getRandomInterfaceAddress());
     }
 
     @Override

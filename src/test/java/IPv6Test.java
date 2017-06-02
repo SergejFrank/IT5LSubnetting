@@ -9,7 +9,7 @@ public class IPv6Test {
     @Test
     public void shouldCreateIPv6AddressWithOnlyNetworkId(){
         long networkId = 255;
-        IPv6Address address = new IPv6Address(networkId);
+        IPv6Address address = IPv6Address.getAddressWithRandomHost(networkId);
 
         assertThat(address.getNetworkId(), is(255L));
     }

@@ -53,7 +53,7 @@ public class Network {
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
                 Host host;
                 if(networkIdV6 != null) {
-                    IPv6Address random = IPv6Address.getRandomInterfaceAddress(networkIdV6.getNetworkId());
+                    IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     host = new Host(this, hostV4, random, null);
                 }
                 else {
