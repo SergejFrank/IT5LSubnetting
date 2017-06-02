@@ -278,7 +278,9 @@ public class Network {
         this.name = name;
     }
 
-    public long getAmountIpAddresses() { return (~getNetworkMaskV4().getLValue()) + 1; }
+    public long getAmountIpAddresses() {
+        return ((~getNetworkMaskV4().getLValue()) & Integer.toUnsignedLong(-1)) + 1;
+    }
 
     public IPv4Address getNetworkIdV4() {
         return networkIdV4.clone();

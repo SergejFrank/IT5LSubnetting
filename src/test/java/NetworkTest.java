@@ -10,7 +10,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 public class NetworkTest {
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected=UnsupportedOperationException.class)
     public void shouldThrowErrorOnCollidingSubnets() throws Exception {
 
         //given
@@ -46,7 +46,7 @@ public class NetworkTest {
         network.splitBySize(62);
 
         //then
-        assertThat(4, is(network.getSubnets().size()));
+        assertThat(network.getSubnets().size(), is(4));
     }
 
     @Test
