@@ -239,10 +239,21 @@ public class Network {
 
     public static Network parse(String value) {
         if(value == null) throw new IllegalArgumentException("'value' can not be null.");
-        final String v4Regex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$";
-        if(!value.matches(v4Regex)) throw new UnsupportedOperationException("'value' is not a valid network identifier.");
         String[] splitted = value.split("/");
-        IPv4Address netmask = NetUtils.prefixToMask(Integer.valueOf(splitted[1]));
+        if(splitted.length != 2 || !IPAddress.isValidIPv4(splitted[0])){
+            throw new UnsupportedOperationException("'value' is not a valid network identifier.");
+        }
+
+        IPv4Address netmask = null;
+
+        if(splitted[1].chars().allMatch( Character::isDigit )){
+            netmask = NetUtils.prefixToMask(Integer.valueOf(splitted[1]));
+        }else if(IPAddress.isValidIPv4(splitted[1])){
+            netmask = IPAddress.parseIPv4(splitted[1]);
+        }else{
+            throw new UnsupportedOperationException("'value' is not a valid network identifier.");
+        }
+
         IPv4Address networkID = IPAddress.parseIPv4(splitted[0]);
         return new Network(networkID, netmask);
     }
