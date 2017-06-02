@@ -13,7 +13,7 @@ import java.awt.*;
 class HostPanel extends JPanel implements TableModelListener{
     private HostTableModel model;
     private Network network;
-    private Boolean updatedProgrammatically = false;
+    private boolean updatedProgrammatically;
 
     HostPanel() {
         super(new GridLayout());
