@@ -2,6 +2,8 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.IPAddress;
 import de.itech.netcalc.net.NetUtils;
+import de.itech.netcalc.net.IPAddress;
+import de.itech.netcalc.net.NetUtils;
 import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
@@ -314,7 +316,7 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             return;
         }
 
-        networkTreeModel.splitByCount(networkTreeNode, (int)input);
+        networkTreeModel.splitByCount(networkTreeNode, (int) input);
     }
 
     private void handleAddHost(NetworkTreeNode networkNode) {
