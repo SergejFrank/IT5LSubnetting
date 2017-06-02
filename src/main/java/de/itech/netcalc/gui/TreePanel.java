@@ -31,7 +31,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         super(new GridLayout(1,0));
         Instance = this;
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        infoPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        infoPane = new ownSplitPanel(JSplitPane.VERTICAL_SPLIT);
         mainPane.setDividerSize(3);
         infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
@@ -59,7 +59,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
         Network testNetwork3 = Network.parse("178.34.0.0/16");
-//        Network testNetwork4 = new Network(IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
+        Network testNetwork4 = new Network(IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
         testNetwork1.splitBySize(126);
         testNetwork2.splitBySize(30);
         testNetwork3.splitBySize(14);
@@ -67,7 +67,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(testNetwork1);
         networkTreeModel.addNetwork(testNetwork2);
         networkTreeModel.addNetwork(testNetwork3);
-        //networkTreeModel.addNetwork(testNetwork4);
+        networkTreeModel.addNetwork(testNetwork4);
 
         networkTree.expandRow(0);
 
@@ -80,6 +80,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             } catch(Exception e) {
                 e.printStackTrace();
             }
+            //mimi
         }
     }
 
