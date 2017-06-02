@@ -10,12 +10,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.Inet4Address;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Optional;
 
 public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private static TreeTabPanel Instance;
@@ -94,8 +93,10 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
 
     private void addNetwork(NetworkInterface netint) throws SocketException {
         if(netint.isLoopback()) return;
-        String ip = netint.getInterfaceAddresses().get(1).getAddress().getHostAddress();
-        String prefix = String.valueOf(netint.getInterfaceAddresses().get(1).getNetworkPrefixLength());
+        Optional<InterfaceAddress> address = netint.getInterfaceAddresses().stream().filter(a -> a.getAddress() instanceof Inet4Address).findFirst();
+        if(!address.isPresent()) return;
+        String ip = address.get().getAddress().getHostAddress();
+        String prefix = String.valueOf(address.get().getNetworkPrefixLength());
 
         Network network = Network.parse(ip+"/"+prefix);
         network.setName(netint.getDisplayName());
