@@ -5,6 +5,25 @@ import java.util.Random;
 public class IPv6Address extends IPAddress {
     private long networkId;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IPv6Address that = (IPv6Address) o;
+
+        if (networkId != that.networkId) return false;
+        return interfaceId == that.interfaceId;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (networkId ^ (networkId >>> 32));
+        result = 31 * result + (int) (interfaceId ^ (interfaceId >>> 32));
+        return result;
+    }
+
     private long interfaceId;
 
     public IPv6Address(long networkId, long interfaceId){

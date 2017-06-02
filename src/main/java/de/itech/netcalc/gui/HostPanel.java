@@ -73,6 +73,9 @@ class HostPanel extends JPanel implements TableModelListener{
                     DialogBox.error("Die eingegebene Adresse liegt nicht im IPv6 Subnetz.", null);
                     throw new UnsupportedOperationException("Not in Network.");
                 }
+                if(address.equals(host.getIPv6Address())){
+                    return;
+                }
                 try {
                     host.setIpv6Address(address);
                     //model.setValueAt will fire tableChanged event -> prevent event handler from executing

@@ -2,6 +2,7 @@ package de.itech.netcalc.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Arrays;
 
 /**
  * The host class can be used to configure a virtual ipv4 and ipv6 end point of a subnet
@@ -120,7 +121,11 @@ public class Host {
             this.ipv6Address = null;
         else if(subnet.getNetworkIdV6() == null) {
             throw new UnsupportedOperationException("Configure IPv6 on subnet first.");
-        } else {
+        }
+        else if(Arrays.asList(subnet.getHosts()).stream().anyMatch(host-> host.getIPv6Address().equals(ipv6Address))) {
+            throw new UnsupportedOperationException("IPv6 already in user");
+        }
+        else {
             if(!NetUtils.isInSubnet(subnet.getNetworkIdV6(), ipv6Address)) {
                 throw new UnsupportedOperationException("IPv6Address '" + ipv6Address + "' not in subnet '"
                         + subnet.getNetworkIdV6() + "' with prefix '" + subnet.getPrefixV6());
