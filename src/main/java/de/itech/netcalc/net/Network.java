@@ -56,6 +56,22 @@ public class Network {
         }
     }
 
+    public void removeHost(IPv4Address ip){
+        for (Host host:hosts) {
+            if(host != null && host.getIPv4Address().equals(ip)){
+                host = null;
+            }
+        }
+    }
+
+    public void removeHost(Host host){
+        for (Host other:hosts) {
+            if(other != null && other.equals(host)){
+                other = null;
+            }
+        }
+    }
+
     public void addHost(){
         switch (status){
             case HAS_SUBNETS:
@@ -225,7 +241,7 @@ public class Network {
         return new Network(networkID, netmask);
     }
 
-    public Host getHost(Object iPv4Address) {
+    public Host getHost(IPAddress iPv4Address) {
         Optional<Host> host = Arrays.stream(getHosts()).filter(h -> h.getIPv4Address().equals(iPv4Address)).findFirst();
         return host.orElse(null);
     }
@@ -299,7 +315,7 @@ public class Network {
     //overwridden methods
     @Override
     public String toString(){
-        return this.getNetworkIdV4().toString()+"/"+NetUtils.getPrefixFromMask(this.getNetworkMaskV4());
+        return this.getNetworkIdV4().toString()+"/"+NetUtils.getPrefixFromMask(this.getNetworkMaskV4())+" ("+getName()+")";
     }
 
     @Override

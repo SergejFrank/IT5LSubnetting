@@ -1,5 +1,8 @@
 package de.itech.netcalc.net;
 
+import java.io.IOException;
+import java.net.InetAddress;
+
 public class Host {
     private String name;
     private IPv4Address ipv4Address;
@@ -70,5 +73,15 @@ public class Host {
 
     public int getIPv6Prefix() {
         return subnet.getPrefixV6();
+    }
+
+    public boolean isReachable(){
+        int timeout = 100;
+        try {
+            return InetAddress.getByName(this.getIPv4Address().toString()).isReachable(timeout);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

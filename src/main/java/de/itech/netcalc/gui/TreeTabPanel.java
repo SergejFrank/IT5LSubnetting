@@ -10,7 +10,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Inet4Address;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 
 public class TreeTabPanel extends JPanel implements TreeSelectionListener {
     private static TreeTabPanel Instance;
@@ -40,8 +45,13 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
             }
         });
         infoPane.setTopComponent(new JScrollPane(networkTree));
-
         add(mainPane);
+
+        try {
+            initWithLocalInterfaces();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
         Network testNetwork1 = Network.parse("192.168.254.0/24");
         Network testNetwork2 = Network.parse("10.0.5.0/24");
@@ -56,7 +66,43 @@ public class TreeTabPanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(testNetwork3);
         networkTreeModel.addNetwork(testNetwork4);
 
+        networkTree.expandRow(0);
+
     }
+
+    public void initWithLocalInterfaces() throws SocketException {
+        for (NetworkInterface netint : getInterfacesWithIPv4())
+            addNetwork(netint);
+    }
+
+    private ArrayList<NetworkInterface> getInterfacesWithIPv4() throws SocketException {
+        ArrayList<NetworkInterface> interfaces = new ArrayList<>();
+        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        for (NetworkInterface netint : Collections.list(nets))
+            Collections.list(netint.getInetAddresses()).stream()
+                    .filter(net-> Inet4Address.class.isAssignableFrom(net.getClass()))
+                    .forEach(net -> {
+                        try {
+                            interfaces.add(NetworkInterface.getByInetAddress(net));
+                        } catch (SocketException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+        return interfaces;
+    }
+
+    private void addNetwork(NetworkInterface netint) throws SocketException {
+        if(netint.isLoopback()) return;
+        String ip = netint.getInterfaceAddresses().get(1).getAddress().getHostAddress();
+        String prefix = String.valueOf(netint.getInterfaceAddresses().get(1).getNetworkPrefixLength());
+
+        Network network = Network.parse(ip+"/"+prefix);
+        network.setName(netint.getDisplayName());
+        network.addAllHosts();
+        networkTreeModel.addNetwork(network);
+    }
+
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {

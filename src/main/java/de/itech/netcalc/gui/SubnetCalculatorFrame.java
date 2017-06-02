@@ -27,7 +27,7 @@ public class SubnetCalculatorFrame extends JFrame {
 
         add(tabbedPane);
 
-        setSize(600, 400);
+        setSize(800, 400);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //pack();
 
