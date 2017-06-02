@@ -1,7 +1,7 @@
 package de.itech.netcalc.net;
 
 public class NetUtils {
-    static IPv4Address prefixToMask(int prefix) {
+    public static IPv4Address prefixToMask(int prefix) {
         if(prefix < 0 || prefix > 32) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
 
         int mask = prefix == 0 ? 0 : -1 << (32 - prefix);

@@ -1,5 +1,6 @@
 import de.itech.netcalc.net.IPAddress;
 import de.itech.netcalc.net.IPv4Address;
+import de.itech.netcalc.net.NetUtils;
 import de.itech.netcalc.net.Network;
 import org.junit.Test;
 
@@ -100,5 +101,23 @@ public class NetworkTest {
         assertThat(net3Result.toString(), is("255.255.255.255/32"));
         assertThat(net4Result.toString(), is("192.168.165.0/27"));
         assertThat(net5Result.toString(), is("127.0.0.0/8"));
+    }
+
+    @Test
+    public void shouldCalculateTheLength(){
+        IPv4Address netId = IPAddress.parseIPv4("0.0.0.0");
+
+        for (int prefix = 32 ; prefix>= 1; prefix--){
+            try{
+                Network network = new Network(netId,NetUtils.prefixToMask(prefix));
+                assertThat(network.getAmountIpAddresses(), is((long)(Math.pow(2,32-prefix))));
+            }catch (OutOfMemoryError e){
+                System.out.println("OutOfMemoryError for prefix:"+prefix);
+                return;
+            }
+
+
+        }
+
     }
 }
