@@ -18,7 +18,6 @@ import java.util.Enumeration;
 import java.util.Optional;
 
 public class TreePanel extends JPanel implements TreeSelectionListener {
-    private static TreePanel Instance;
     private NetworkTreeModel networkTreeModel;
     private JSplitPane infoPane;
     private JTree networkTree;
@@ -26,7 +25,6 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
     TreePanel() {
         super(new GridLayout(1,0));
-        Instance = this;
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         infoPane = new FixedSplitPanel(JSplitPane.VERTICAL_SPLIT);
         mainPane.setDividerSize(3);
@@ -165,7 +163,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             {
                 menu.add(new AbstractAction("Neues Netzwerk") {
                     public void actionPerformed (ActionEvent e) {
-                        TreePanel.Instance.handleCreateNetwork(null);
+                        handleCreateNetwork(null);
                     }
                 });
             }
