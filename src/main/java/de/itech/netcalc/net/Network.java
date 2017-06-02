@@ -9,7 +9,7 @@ public class Network {
 
     private ArrayList<Network> subnets = new ArrayList<>();
 
-    int numberOfHosts;
+    int hostCount;
 
     private Host[] hosts;
 
@@ -25,8 +25,9 @@ public class Network {
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
         status = SubnetStatus.UNSPECIFIED;
-        numberOfHosts = 0;
+        hostCount = 0;
         hosts = new Host[getMaxHosts()];
+        checkIsZeroNetmask(networkMaskV4);
     }
 
     public Network(IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
@@ -36,8 +37,9 @@ public class Network {
         this.setNetworkIdV6(networkIdV6);
         this.setPrefixV6(prefixV6);
         status = SubnetStatus.UNSPECIFIED;
-        numberOfHosts = 0;
+        hostCount = 0;
         hosts = new Host[getMaxHosts()];
+        checkIsZeroNetmask(networkMaskV4);
     }
 
     public void addAllHosts(){
@@ -45,7 +47,7 @@ public class Network {
             throw new UnsupportedOperationException("can't add host to subnetted network");
         }
         status = SubnetStatus.HAS_HOSTS;
-        numberOfHosts = getMaxHosts();
+        hostCount = getMaxHosts();
         for(int i = 0; i < getMaxHosts(); i++) {
             if(hosts[i] == null){
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
@@ -59,6 +61,7 @@ public class Network {
         for (Host host:hosts) {
             if(host != null && host.getIPv4Address().equals(ip)){
                 host = null;
+                hostCount--;
             }
         }
     }
@@ -67,6 +70,7 @@ public class Network {
         for (Host other:hosts) {
             if(other != null && other.equals(host)){
                 other = null;
+                hostCount--;
             }
         }
     }
@@ -78,10 +82,10 @@ public class Network {
             case UNSPECIFIED:
                 hosts[0] = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), null);
                 status = SubnetStatus.HAS_HOSTS;
-                numberOfHosts = 1;
+                hostCount = 1;
                 break;
             case HAS_HOSTS:
-                if(numberOfHosts >= getMaxHosts()){
+                if(hostCount >= getMaxHosts()){
                     throw new UnsupportedOperationException("network already has maximum amount of hosts");
                 }
                 int indexOfAdress = 0;
@@ -92,7 +96,7 @@ public class Network {
                 int addressValue = networkIdV4.getValue() | (indexOfAdress + 1);
 
                 hosts[indexOfAdress] = new Host(this, new IPv4Address(addressValue), null);
-                numberOfHosts++;
+                hostCount++;
         }
     }
 
@@ -107,7 +111,7 @@ public class Network {
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
             case HAS_HOSTS:
-                if(numberOfHosts >= getMaxHosts()){
+                if(hostCount >= getMaxHosts()){
                     throw new UnsupportedOperationException("network already has maximum amount of hosts");
                 }
                 if(Arrays.stream(hosts).anyMatch(h -> h != null && h.getIPv4Address().equals(address))){
@@ -115,13 +119,13 @@ public class Network {
                 }
                 int indexOfAddress = (address.getValue() & ~networkMaskV4.getValue());
                 hosts[indexOfAddress - 1] = new Host(this, address, null);
-                numberOfHosts++;
+                hostCount++;
         }
     }
 
     public void clearHosts() {
         hosts = new Host[getMaxHosts()];
-        numberOfHosts = 0;
+        hostCount = 0;
         if(getStatus() == SubnetStatus.HAS_HOSTS)
             status = SubnetStatus.UNSPECIFIED;
     }
@@ -182,7 +186,7 @@ public class Network {
     }
 
     public ArrayList<Integer> possibleDividers(){
-        int num = getAmountIpAddresses();
+        long num = getAmountIpAddresses();
         ArrayList<Integer> dividers = new ArrayList<>();
         for (int i = 2; i <= Math.sqrt(num); i++) {
             if (num % i == 0) {
@@ -190,7 +194,7 @@ public class Network {
                     dividers.add(i - 2);
                 }
                 if (i != num/i) {
-                    dividers.add((num / i) - 2);
+                    dividers.add((int) (num / i) - 2);
                 }
             }
         }
@@ -201,7 +205,7 @@ public class Network {
 
     public void splitBySize(int size) {
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
-        int length = getAmountIpAddresses();
+        long length = getAmountIpAddresses();
         int realSize = size + 2;
         if(length % realSize != 0) {
             throw new IllegalArgumentException("Size " + size + " is not suitable for network length " + length+ "\npossible sizes: "+ possibleDividers());
@@ -223,7 +227,6 @@ public class Network {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
             IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
-
             Network subnet = new Network(nAddress,mask);
             subnets.add(subnet);
         }
@@ -260,6 +263,12 @@ public class Network {
         return host.orElse(null);
     }
 
+    private void checkIsZeroNetmask(IPv4Address mask){
+        if(mask.getValue() == 0){
+            status = SubnetStatus.HAS_SUBNETS;
+        }
+    }
+
     //getter and setter
     public String getName() {
         return name;
@@ -269,7 +278,7 @@ public class Network {
         this.name = name;
     }
 
-    public int getAmountIpAddresses() { return ~getNetworkMaskV4().getValue() + 1; }
+    public long getAmountIpAddresses() { return (~getNetworkMaskV4().getLValue()) + 1; }
 
     public IPv4Address getNetworkIdV4() {
         return networkIdV4.clone();
@@ -283,10 +292,12 @@ public class Network {
         return networkMaskV4.clone();
     }
 
-    public int getMaxHosts(){ return getAmountIpAddresses() - 2; }
+    public int getMaxHosts(){
+        return Math.max((int) (getAmountIpAddresses() - 2), 0);
+    }
 
     public IPv4Address getBroadcastAddress(){
-        return new IPv4Address(getNetworkIdV4().getValue() + getMaxHosts() + 1);
+        return new IPv4Address((int) (getNetworkIdV4().getValue() + getMaxHosts() + 1));
     }
 
     private void setNetworkMaskV4(IPv4Address networkMaskV4) {
