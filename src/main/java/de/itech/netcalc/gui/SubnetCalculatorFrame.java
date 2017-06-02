@@ -13,7 +13,7 @@ public class SubnetCalculatorFrame extends JFrame {
 
         add(new TreePanel());
 
-        setSize(800, 400);
+        setSize(1000, 550);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
