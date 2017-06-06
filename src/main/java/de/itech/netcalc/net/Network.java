@@ -57,7 +57,7 @@ public class Network {
             if(hosts[i] == null){
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
                 Host host;
-                if(networkIdV6 != null) {
+                if(isIPv6Enabled()) {
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     host = new Host(this, hostV4, random, null);
                 }
@@ -87,12 +87,21 @@ public class Network {
         }
     }
 
-    public void addHost(){
+    public Host addHost(){
+        Host newHost;
         switch (status){
             case HAS_SUBNETS:
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
-                hosts[0] = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), null);
+
+                if(isIPv6Enabled()){
+                    IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
+                    newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), random, null);
+                } else {
+                    newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), null);
+                }
+
+                hosts[0] = newHost;
                 status = SubnetStatus.HAS_HOSTS;
                 hostCount = 1;
                 break;
@@ -107,12 +116,21 @@ public class Network {
 
                 int addressValue = networkIdV4.getValue() | (indexOfAdress + 1);
 
-                hosts[indexOfAdress] = new Host(this, new IPv4Address(addressValue), null);
+                if(isIPv6Enabled()){
+                    IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
+                    newHost = new Host(this, new IPv4Address(addressValue), random, null);
+                } else {
+                    newHost = new Host(this, new IPv4Address(addressValue), null);
+                }
+
+                hosts[indexOfAdress] = newHost;
                 hostCount++;
+                return newHost;
         }
+        return null;
     }
 
-    public void addHost(IPv4Address address){
+    public Host addHost(IPv4Address address){
 
         if(!NetUtils.isInSubnet(networkIdV4, networkMaskV4, address)){
             throw new IllegalArgumentException("IP adress must be in the specified network");
@@ -130,9 +148,19 @@ public class Network {
                     throw new UnsupportedOperationException("IPv4 Address is already given in this subnet");
                 }
                 int indexOfAddress = (address.getValue() & ~networkMaskV4.getValue());
-                hosts[indexOfAddress - 1] = new Host(this, address, null);
+
+                Host newHost;
+                if(isIPv6Enabled()){
+                    IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
+                    newHost = new Host(this, address, random, null);
+                } else {
+                    newHost = new Host(this, address, null);
+                }
+                hosts[indexOfAddress - 1] = newHost;
                 hostCount++;
+                return newHost;
         }
+        return null;
     }
 
     public void clearHosts() {
@@ -229,7 +257,7 @@ public class Network {
     public void splitByCount(long count){
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("Can not add subnet to network with hosts");
         int realSize = (int) (getAmountIpAddresses() / count);
-        split(realSize,count);
+        split(realSize, count);
     }
 
     private void split(int realSize, long count){
@@ -281,6 +309,9 @@ public class Network {
         }
     }
 
+    public boolean isIPv6Enabled(){
+        return networkIdV6 != null;
+    }
     //getter and setter
     public String getName() {
         return name;

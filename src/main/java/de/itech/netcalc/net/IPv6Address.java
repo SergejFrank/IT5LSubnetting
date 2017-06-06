@@ -77,12 +77,10 @@ public class IPv6Address extends IPAddress {
     }
 
     public static IPv6Address getAddressWithRandomHost(long networkId){
-        //for explanation see other method implementation of getAddressWithRandomHost
         return new IPv6Address(networkId, getRandomInterfaceAddress());
     }
 
     public static IPv6Address getAddressWithRandomHost(IPv6Address address){
-        //for explanation see other method implementation of getAddressWithRandomHost
         return new IPv6Address(address.networkId, getRandomInterfaceAddress());
     }
 
