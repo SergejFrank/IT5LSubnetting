@@ -69,7 +69,7 @@ class HostPanel extends JPanel implements TableModelListener{
                     throw new UnsupportedOperationException("Invalid IPv6 address.");
                 }
                 IPv6Address address = IPAddress.parseIPv6(input);
-                if(!NetUtils.isInSubnet(network.getNetworkIdV6(), address)) {
+                if(!NetUtils.isInSubnet(network.getNetworkIdV6(), network.getPrefixV6(), address)) {
                     GuiUtils.error("Die eingegebene Adresse liegt nicht im IPv6 Subnetz.", null);
                     throw new UnsupportedOperationException("Not in Network.");
                 }

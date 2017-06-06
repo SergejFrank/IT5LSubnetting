@@ -1,5 +1,7 @@
 package de.itech.netcalc.net;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class NetUtils {
 
     /**
@@ -30,13 +32,21 @@ public class NetUtils {
     }
 
     /**
-     *
-     * @param subnet IPv6 address
-     * @param host IPv6 address
-     * @return If the subnet is inside host
+     * Determinate if an IPv6 address is located in an IPv6 network
+     * @param subnet IPv6 network address
+     * @param prefixLength IPv6 network prefix length (0-128)
+     * @param host IPv6 host address
+     * @return true, if the host is located in the network
      */
-    public static boolean isInSubnet(IPv6Address subnet, IPv6Address host){
-        return subnet.getNetworkId() == host.getNetworkId();
+    public static boolean isInSubnet(IPv6Address subnet, int prefixLength, IPv6Address host){
+        if(prefixLength < 0 || prefixLength > 128) throw new IllegalArgumentException("'" + prefixLength + "' is not a valid prefix length.");
+        if(prefixLength <= 64) {
+            return (subnet.getNetworkId() & ipv6PrefixLengthToValue(prefixLength)) == (host.getNetworkId() & ipv6PrefixLengthToValue(prefixLength));
+        } else {
+            long prefix = ipv6PrefixLengthToValue(prefixLength - 64);
+            return  (subnet.getNetworkId() == host.getNetworkId())
+                    && ((subnet.getInterfaceId() & prefix) == (host.getNetworkId() & prefix));
+        }
     }
 
     /**
@@ -47,6 +57,11 @@ public class NetUtils {
      */
     static IPv4Address addPrefixToMask(IPv4Address mask, int prefix) {
         return prefixToMask(maskToPrefix(mask) + prefix);
+    }
+
+    static long ipv6PrefixLengthToValue(int prefix) {
+        if(prefix < 0 || prefix > 64) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
+        return (long) (prefix == 0 ? 0 : -1 << (32 - prefix));
     }
 
     /**

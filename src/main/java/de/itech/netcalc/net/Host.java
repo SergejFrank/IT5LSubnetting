@@ -126,7 +126,7 @@ public class Host {
             throw new UnsupportedOperationException("IPv6 already in use.");
         }
         else {
-            if(!NetUtils.isInSubnet(subnet.getNetworkIdV6(), ipv6Address)) {
+            if(!NetUtils.isInSubnet(subnet.getNetworkIdV6(), subnet.getPrefixV6(), ipv6Address)) {
                 throw new UnsupportedOperationException("IPv6Address '" + ipv6Address + "' not in subnet '"
                         + subnet.getNetworkIdV6() + "' with prefix '" + subnet.getPrefixV6());
             }
