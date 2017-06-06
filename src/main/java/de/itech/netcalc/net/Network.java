@@ -2,28 +2,73 @@ package de.itech.netcalc.net;
 
 import java.util.*;
 
+/**
+ * The Network class represents a logical network that can hold sub-networks and hosts.
+ */
 public class Network {
-
+    /**
+     * Specifies, if a Network has Hosts or sub-networks
+     */
     public enum SubnetStatus{
         UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS;
     }
 
+    /**
+     * Backing field for the Parent property
+     */
     private Network parent;
 
+    /**
+     * Backing field for all sub-networks hold by the network
+     */
     private ArrayList<Network> subnets = new ArrayList<>();
 
+    /**
+     * Counts the amount of hosts hold by the network
+     */
     private int hostCount;
 
+    /**
+     * Backing field for all hosts hold by the network
+     */
     private Host[] hosts;
 
+    /**
+     * Backing field for the Status Property
+     */
     private SubnetStatus status;
 
+    /**
+     * Backing field for the Name property
+     */
     private String name;
+
+    /**
+     * Backing field for the IPv4 network ID
+     */
     private IPv4Address networkIdV4;
+
+    /**
+     * Backing field for the IPv4 network mask
+     */
     private IPv4Address networkMaskV4;
+
+    /**
+     * Backing field for the IPv6 network ID
+     */
     private IPv6Address networkIdV6;
+
+    /**
+     * Backing field for the IPv6 network prefix
+     */
     private int prefixV6;
 
+    /**
+     * Creates a new Network with the passed IPv4 details
+     * @param parent the parent network, can be null
+     * @param networkIdV4 the IPv4 network ID
+     * @param networkMaskV4 the IPv4 network mask
+     */
     public Network(Network parent, IPv4Address networkIdV4, IPv4Address networkMaskV4) {
         this.parent = parent;
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
@@ -34,6 +79,15 @@ public class Network {
         checkIsZeroNetmask(networkMaskV4);
     }
 
+    /**
+     *
+     * Creates a new Network with the passed IPv4 and IPv6 details
+     * @param parent the parent network, can be null
+     * @param networkIdV4 the IPv4 network ID
+     * @param networkMaskV4 the IPv4 network mask
+     * @param networkIdV6 the IPv6 network ID
+     * @param prefixV6 the IPv6 network prefix
+     */
     public Network(Network parent, IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
         this.parent = parent;
         if(prefixV6 < 0 || prefixV6 > 128) throw new IllegalArgumentException(prefixV6 + " is not a valid IPv6 Prefix");
@@ -47,6 +101,9 @@ public class Network {
         checkIsZeroNetmask(networkMaskV4);
     }
 
+    /**
+     * Fills all unused IPv4 addresses with empty hosts
+     */
     public void addAllHosts(){
         if(status == SubnetStatus.HAS_SUBNETS){
             throw new UnsupportedOperationException("can't add host to subnetted network");
@@ -69,6 +126,10 @@ public class Network {
         }
     }
 
+    /**
+     * Removes a host from the network.
+     * @param ip the IPv4 address of host to remove
+     */
     public void removeHost(IPv4Address ip){
         for (Host host:hosts) {
             if(host != null && host.getIPv4Address().equals(ip)){
@@ -78,6 +139,10 @@ public class Network {
         }
     }
 
+    /**
+     * Removes a host from the network.
+     * @param host the host to remove
+     */
     public void removeHost(Host host){
         for (Host other:hosts) {
             if(other != null && other.equals(host)){
@@ -87,6 +152,10 @@ public class Network {
         }
     }
 
+    /**
+     * Fills the next unused IPv4 address with an empty host.
+     * @return the created host
+     */
     public Host addHost(){
         Host newHost;
         switch (status){
@@ -130,6 +199,11 @@ public class Network {
         return null;
     }
 
+    /**
+     * Fills the passed IPv4 address with an empty host.
+     * @param address the IPv4 address to fill
+     * @return the created host
+     */
     public Host addHost(IPv4Address address){
 
         if(!NetUtils.isInSubnet(networkIdV4, networkMaskV4, address)){
@@ -163,6 +237,9 @@ public class Network {
         return null;
     }
 
+    /**
+     * Removes all hosts from the network.
+     */
     public void clearHosts() {
         hosts = new Host[getMaxHosts()];
         hostCount = 0;
@@ -170,6 +247,11 @@ public class Network {
             status = SubnetStatus.UNSPECIFIED;
     }
 
+    /**
+     * Adds the passed subnet to the network.
+     * @param subnet the subnet to add
+     * @return the added subnet
+     */
     public Network addSubnet(Network subnet) {
         if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnet to network with hosts");
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
@@ -183,6 +265,12 @@ public class Network {
         return subnet;
     }
 
+    /**
+     * Adds a new subnet to the network with the given size.
+     * Calculates the sub-network size and locates the first free space.
+     * @param size the minimum size of the subnet
+     * @return the created subnet
+     */
     public Network addSubnet(int size) {
         if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
@@ -208,6 +296,10 @@ public class Network {
         return null;
     }
 
+    /**
+     * Removed a sub-network from the network.
+     * @param subnet the sub-network to remove
+     */
     public void removeSubnet(Network subnet) {
         subnets.remove(subnet);
         if(subnets.size() == 0){
@@ -215,16 +307,26 @@ public class Network {
         }
     }
 
+    /**
+     * Removes all sub-networks from the network.
+     */
     public void clearSubnets() {
         subnets.clear();
         if(getStatus() == SubnetStatus.HAS_SUBNETS)
             status = SubnetStatus.UNSPECIFIED;
     }
 
+    /**
+     * Sorts the subnet by their network ID
+     */
     private void sortSubnets(){
         subnets.sort(Comparator.comparing(o -> o.getNetworkIdV4().getLValue()));
     }
 
+    /**
+     * Calculates all possible subnet sizes of the network
+     * @return a list of all sizes
+     */
     public ArrayList<Integer> possibleDividers(){
         long num = getAmountIpAddresses();
         ArrayList<Integer> dividers = new ArrayList<>();
@@ -243,6 +345,9 @@ public class Network {
         return dividers;
     }
 
+    /**
+     * Assigns random IPv6 Address to all hosts of the network
+     */
     public void assginIPv6ToAllHosts() {
         if(!isIPv6Enabled())
             throw new UnsupportedOperationException("Configure IPv6 first.");
@@ -252,6 +357,10 @@ public class Network {
         }
     }
 
+    /**
+     * Splits the network in sub-networks with the specified size.
+     * @param size the size of the sub-networks
+     */
     public void splitBySize(int size) {
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("Can not add subnet to network with hosts");
         long length = getAmountIpAddresses();
@@ -263,6 +372,10 @@ public class Network {
         split(realSize, count);
     }
 
+    /**
+     * Splits the network in sub-networks with the specified host count.
+     * @param count the host count of the sub-networks
+     */
     public void splitByCount(long count){
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("Can not add subnet to network with hosts");
         int realSize = (int) (getAmountIpAddresses() / count);
