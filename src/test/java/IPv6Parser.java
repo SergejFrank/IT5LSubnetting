@@ -73,7 +73,7 @@ public class IPv6Parser {
 
         @Test
         public void shouldValidate(){
-            assertEquals(expected, IPAddress.isValidIPv6WithPrefix(in, 64));
+            assertEquals(expected, IPAddress.isValidIPv6WithPrefix(in, 0, 64));
         }
     }
 
