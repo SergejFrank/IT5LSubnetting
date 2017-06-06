@@ -315,20 +315,16 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleRemoveGlobalIPv6() {
-        int input = JOptionPane.showConfirmDialog(null,
-                "Der globale IPv6 Prefix wird entfernt. Alle Netzwerke behalten ihre IPv6 Konfiguration.",
-                "Sicherheitsabfrage - IPv6 entfernen",
-                JOptionPane.OK_CANCEL_OPTION);
-        if(input != JOptionPane.OK_OPTION) return;
+        if(!GuiUtils.confirmation("Sicherheitsabfrage - IPv6 entfernen",
+                "Der globale IPv6 Prefix wird entfernt. Alle Netzwerke behalten ihre IPv6 Konfiguration."))
+            return;
         networkTreeModel.setRootIPv6Prefix(null, 0);
     }
 
     private void handleRemoveIPv6(NetworkTreeNode networkNode) {
-        int input = JOptionPane.showConfirmDialog(null,
-                "IPv6 wird aus dem Netzwerk und allen Hosts entfernt.",
-                "Sicherheitsabfrage - IPv6 entfernen",
-                JOptionPane.OK_CANCEL_OPTION);
-        if(input != 0) return;
+        if(!GuiUtils.confirmation("Sicherheitsabfrage - IPv6 entfernen",
+                "IPv6 wird aus dem Netzwerk und allen Hosts entfernt."))
+            return;
         Network network = networkNode.getNetwork();
         removeIPv6FromNetwork(network);
         networkTreeModel.nodeStructureChanged(networkNode);
