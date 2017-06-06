@@ -164,6 +164,25 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                         handleCreateNetwork(null);
                     }
                 });
+                menu.addSeparator();
+                if(networkTreeModel.getRootIPv6Prefix() == null) {
+                    menu.add(new AbstractAction("Globalen IPv6 Prefix hinzufügen") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleAssignGlobalIPv6(null);
+                        }
+                    });
+                } else {
+                    menu.add(new AbstractAction("Globalen IPv6 Prefix bearbeiten") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleAssignGlobalIPv6(networkTreeModel.getRootIPv6Prefix().toString(true) + "/" + networkTreeModel.getRootIPv6PrefixLength());
+                        }
+                    });
+                    menu.add(new AbstractAction("Globalen IPv6 Prefix entfernen") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleRemoveGlobalIPv6();
+                        }
+                    });
+                }
             }
             else if(element instanceof NetworkTreeNode)
             {
@@ -271,6 +290,37 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    private void handleAssignGlobalIPv6(String initialValue) {
+        String input = JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "IPv6 Network und Prefix (>=128):",
+                "IPv6 zuweisen",
+                JOptionPane.PLAIN_MESSAGE,
+                null, null, initialValue)
+                .toString();
+        if(!IPAddress.isValidIPv6WithPrefix(input, 128)) {
+            if(!IPAddress.isValidIPv6(input)) {
+                DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
+            }
+            else {
+                DialogBox.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
+            }
+            handleAssignGlobalIPv6(input);
+        }
+        IPv6Address address = IPAddress.parseIPv6(input);
+        int prefix = IPAddress.parseIPv6Prefix(input);
+        networkTreeModel.setRootIPv6Prefix(address, prefix);
+    }
+
+    private void handleRemoveGlobalIPv6() {
+        int input = JOptionPane.showConfirmDialog(null,
+                "Der globale IPv6 Prefix wird entfernt. Alle Netzwerke behalten ihre IPv6 Konfiguration.",
+                "Sicherheitsabfrage - IPv6 entfernen",
+                JOptionPane.OK_CANCEL_OPTION);
+        if(input != JOptionPane.OK_OPTION) return;
+        networkTreeModel.setRootIPv6Prefix(null, 0);
+    }
+
     private void handleRemoveIPv6(NetworkTreeNode networkNode) {
         int input = JOptionPane.showConfirmDialog(null,
                 "IPv6 wird aus dem Netzwerk und allen Hosts entfernt.",
@@ -302,7 +352,8 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         Network network = networkNode.getNetwork();
         Network parent = network.getParent();
         int maxPrefix = parent != null && parent.getNetworkIdV6() != null
-                ? parent.getPrefixV6() + 1 : 128;
+                ? parent.getPrefixV6() + 1
+                : networkTreeModel.getRootIPv6PrefixLength();
         String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "IPv6 Network und Prefix (>=" + maxPrefix + "):",

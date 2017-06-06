@@ -1,5 +1,6 @@
 package de.itech.netcalc.gui;
 
+import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
 
 import javax.swing.tree.*;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 class NetworkTreeModel extends DefaultTreeModel {
     NetworkTreeModel() {
-        super(new DefaultMutableTreeNode("Netzwerke"));
+        super(new NetworkTreeRoot());
     }
 
     void addNetwork(Network network) {
@@ -43,8 +44,21 @@ class NetworkTreeModel extends DefaultTreeModel {
         return networks;
     }
 
-    private DefaultMutableTreeNode getRootNode() {
-        return (DefaultMutableTreeNode)getRoot();
+    private NetworkTreeRoot getRootNode() {
+        return (NetworkTreeRoot) getRoot();
+    }
+
+    int getRootIPv6PrefixLength() {
+        return getRootNode().getGlobalPrefix() == null ? 128 : getRootNode().getGlobalPrefixLength();
+    }
+
+    IPv6Address getRootIPv6Prefix() {
+        return getRootNode().getGlobalPrefix();
+    }
+
+    void setRootIPv6Prefix(IPv6Address iPv6Address, int prefixLength) {
+        getRootNode().setGlobalPrefix(iPv6Address, prefixLength);
+        nodeChanged(getRootNode());
     }
 
     NetworkTreeNode getNodeForNetwork(Network network) {
