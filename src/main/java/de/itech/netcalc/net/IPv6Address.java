@@ -12,9 +12,7 @@ public class IPv6Address extends IPAddress {
 
         IPv6Address that = (IPv6Address) o;
 
-        if (networkId != that.networkId) return false;
-        return interfaceId == that.interfaceId;
-
+        return networkId == that.networkId && interfaceId == that.interfaceId;
     }
 
     @Override
@@ -52,22 +50,22 @@ public class IPv6Address extends IPAddress {
             segments[i + 4] = (short) (interfaceId >> (3-i)*16);
         }
 
-        String address = shorthand
+        StringBuilder address = new StringBuilder(shorthand
                 ? Long.toString(Short.toUnsignedLong(segments[0]), 16)
-                : String.format("%04X", Short.toUnsignedLong(segments[0]));
+                : String.format("%04X", Short.toUnsignedLong(segments[0])));
 
         for(int i = 1; i < segments.length; i++){
-            address += shorthand
+            address.append(shorthand
                     ? ":" + Long.toString(Short.toUnsignedLong(segments[i]), 16)
-                    : ":" + String.format("%04X", Short.toUnsignedLong(segments[i]));
+                    : ":" + String.format("%04X", Short.toUnsignedLong(segments[i])));
         }
 
         if(shorthand){
-            address = address.replaceAll("((?::0\\b){2,}):?(?!\\S*\\b\\1:0\\b)(\\S*)", "::$2");
-            if(address.equals("0::")) address = "::";
+            address = new StringBuilder(address.toString().replaceAll("((?::0\\b){2,}):?(?!\\S*\\b\\1:0\\b)(\\S*)", "::$2"));
+            if(address.toString().equals("0::")) address = new StringBuilder("::");
         }
 
-        return address.toLowerCase();
+        return address.toString().toLowerCase();
     }
 
     private static long getRandomInterfaceAddress(){

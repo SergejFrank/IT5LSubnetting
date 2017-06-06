@@ -5,7 +5,7 @@ import de.itech.netcalc.net.*;
 import javax.swing.*;
 
 class GuiUtils {
-    public static void error(String msg){
+    static void error(String msg){
         JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
@@ -37,8 +37,7 @@ class GuiUtils {
             return iPv6AddressDialog(title, message, inputString);
         } else {
             try {
-                IPv6Address result = IPAddress.parseIPv6(inputString);
-                return result;
+                return IPAddress.parseIPv6(inputString);
             } catch(Exception e) {
                 error("Fehler beim Umwandeln der IPv6 Adresse.");
                 return iPv6AddressDialog(title, message, inputString);
@@ -56,8 +55,7 @@ class GuiUtils {
             return iPv4AddressDialog(title, message, inputString);
         } else {
             try {
-                IPv4Address result = IPAddress.parseIPv4(inputString);
-                return result;
+                return IPAddress.parseIPv4(inputString);
             } catch(Exception e) {
                 error("Fehler beim Umwandeln der IPv4 Adresse.");
                 return iPv4AddressDialog(title, message, inputString);

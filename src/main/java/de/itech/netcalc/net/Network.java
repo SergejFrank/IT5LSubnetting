@@ -293,7 +293,7 @@ public class Network {
             throw new UnsupportedOperationException("'value' is not a valid network identifier.");
         }
 
-        IPv4Address netmask = null;
+        IPv4Address netmask;
 
         if(splitted[1].chars().allMatch( Character::isDigit )){
             netmask = NetUtils.prefixToMask(Integer.valueOf(splitted[1]));
@@ -351,7 +351,7 @@ public class Network {
     }
 
     public IPv4Address getBroadcastAddress(){
-        return new IPv4Address((int) (getNetworkIdV4().getValue() + getMaxHosts() + 1));
+        return new IPv4Address(getNetworkIdV4().getValue() + getMaxHosts() + 1);
     }
 
     private void setNetworkMaskV4(IPv4Address networkMaskV4) {
@@ -419,10 +419,10 @@ public class Network {
 
         Network that = (Network) o;
 
-        if (prefixV6 != that.prefixV6) return false;
-        if (!networkIdV4.equals(that.networkIdV4)) return false;
-        if (!networkMaskV4.equals(that.networkMaskV4)) return false;
-        return networkIdV6 != null ? networkIdV6.equals(that.networkIdV6) : that.networkIdV6 == null;
+        return prefixV6 == that.prefixV6
+                && networkIdV4.equals(that.networkIdV4)
+                && networkMaskV4.equals(that.networkMaskV4)
+                && (networkIdV6 != null ? networkIdV6.equals(that.networkIdV6) : that.networkIdV6 == null);
     }
 
     @Override

@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
-import java.awt.dnd.InvalidDnDOperationException;
-import java.util.InvalidPropertiesFormatException;
 
 class HostPanel extends JPanel implements TableModelListener{
     private HostTableModel model;

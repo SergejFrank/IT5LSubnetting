@@ -49,24 +49,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             e.printStackTrace();
         }
 
-        Network testNetwork1 = Network.parse("192.168.254.0/24", null);
-        Network testNetwork2 = Network.parse("10.0.5.0/24", null);
-        Network testNetwork3 = Network.parse("178.34.0.0/16", null);
-        Network testNetwork4 = new Network(null, IPAddress.parseIPv4("1.2.3.0"),IPAddress.parseIPv4("255.255.255.0"), IPAddress.parseIPv6("2001:db8::"), 64);
-        testNetwork1.splitBySize(126);
-        testNetwork2.splitBySize(30);
-        testNetwork3.splitBySize(14);
-        testNetwork3.addSubnet(24);
-        networkTreeModel.addNetwork(testNetwork1);
-        networkTreeModel.addNetwork(testNetwork2);
-        networkTreeModel.addNetwork(testNetwork3);
-        networkTreeModel.addNetwork(testNetwork4);
-
         networkTree.expandRow(0);
 
     }
 
-    public void initWithLocalInterfaces() throws SocketException {
+    private void initWithLocalInterfaces() throws SocketException {
         for (NetworkInterface netint : getInterfacesWithIPv4()) {
             try {
                 addExternalNetwork(netint);
@@ -197,7 +184,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                     });
                     menu.add(new AbstractAction("Neues Subnetz nach Größe") {
                         public void actionPerformed (ActionEvent e) {
-                            handleCreateNetworkBySize(networkNode, null);
+                            handleCreateNetworkBySize(networkNode);
                         }
                     });
                     menu.add(new AbstractAction("Gleichmäßig nach Größe") {
@@ -433,9 +420,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
-    private void handleCreateNetworkBySize(NetworkTreeNode parent, String initialValue) {
-        ArrayList<Integer> deviders = parent.getNetwork().possibleDividers();
-
+    private void handleCreateNetworkBySize(NetworkTreeNode parent) {
         String input = (String)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Netzwerk Id und Prefix:",
@@ -443,10 +428,8 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                initialValue == null ? GuiUtils.getInitialSubnetString(parent.getNetwork()) : initialValue);
-
+                GuiUtils.getInitialSubnetString(parent.getNetwork()));
         if(input == null) return;
-
 
         networkTreeModel.addNetwork(parent,Integer.valueOf(input));
     }

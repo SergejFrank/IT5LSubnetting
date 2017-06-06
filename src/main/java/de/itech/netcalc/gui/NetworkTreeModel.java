@@ -38,7 +38,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         }
     }
 
-    ArrayList<Network> getNetworks(){
+    private ArrayList<Network> getNetworks(){
         ArrayList<Network> networks = new ArrayList<>();
         Collections.list(root.children()).stream().forEach(node -> networks.add(((NetworkTreeNode) node).getNetwork()));
         return networks;
@@ -59,15 +59,6 @@ class NetworkTreeModel extends DefaultTreeModel {
     void setRootIPv6Prefix(IPv6Address iPv6Address, int prefixLength) {
         getRootNode().setGlobalPrefix(iPv6Address, prefixLength);
         nodeChanged(getRootNode());
-    }
-
-    NetworkTreeNode getNodeForNetwork(Network network) {
-        for(int i=0; i<getRootNode().getChildCount();i++) {
-            NetworkTreeNode node = ((NetworkTreeNode)getRootNode().getChildAt(i));
-            if(node.getNetwork().equals(network))
-                return node;
-        }
-        return null;
     }
 
     void deleteNetwork(NetworkTreeNode networkNode) {

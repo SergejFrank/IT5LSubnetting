@@ -134,10 +134,6 @@ public class Host {
         }
     }
 
-    public int getIPv6Prefix() {
-        return subnet.getPrefixV6();
-    }
-
     /**
      * Gets if the host is physical reachable, using the ping protocol
      * @return true if the host returns a pong packet

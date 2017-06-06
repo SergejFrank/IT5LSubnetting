@@ -1,7 +1,5 @@
 package de.itech.netcalc.net;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class NetUtils {
 
     /**
