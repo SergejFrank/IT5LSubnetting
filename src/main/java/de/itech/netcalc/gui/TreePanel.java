@@ -375,7 +375,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
         networkTreeNode.getNetwork().possibleDividers()
                 .forEach(x -> sizes.add((networkTreeNode.getNetwork().getMaxHosts()+2) / (x+2)));
-        sizes.add(1);
+        //sizes.add(1);
 
         Object input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
