@@ -5,6 +5,7 @@ import de.itech.netcalc.net.*;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -291,13 +292,15 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleAssignGlobalIPv6(String initialValue) {
-        String input = JOptionPane.showInputDialog(
+        Object obj = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "IPv6 Network und Prefix:",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
-                null, null, initialValue)
-                .toString();
+                null, null, initialValue);
+        if(obj == null) return;
+
+        String input = obj.toString();
         if(!IPAddress.isValidIPv6WithPrefix(input, 0, 128)) {
             if(!IPAddress.isValidIPv6(input)) {
                 DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
@@ -352,13 +355,17 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         Network parentNetwork = networkNode.getNetwork().getParent();
         IPv6Address parentIPv6Address = parentNetwork == null ? null : parentNetwork.getNetworkIdV6();
         int parentPrefix = parentIPv6Address == null ? networkTreeModel.getRootIPv6PrefixLength() : parentNetwork.getPrefixV6();
-        String input = JOptionPane.showInputDialog(
+
+        Object obj = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "IPv6 Network und Prefix (>" + parentPrefix + "):",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
-                null, null, initialValue)
-                .toString();
+                null, null, initialValue);
+
+        if(obj == null) return;
+
+        String input = obj.toString();
         if(!IPAddress.isValidIPv6WithPrefix(input, parentPrefix + 1, 64)) {
             if(IPAddress.isValidIPv6(input)) {
                 DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
@@ -375,13 +382,18 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleCreateNetwork(String initialValue) {
-        String input = JOptionPane.showInputDialog(
+        Object obj = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
                 "Netzwerk Id und Prefix:",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE,
-                null, null, initialValue)
-                .toString();
+                null, null, initialValue);
+
+        if(obj == null) {
+            return;
+        }
+
+        String input = obj.toString();
         if(input == null) return;
         try{
             Network network = Network.parse(input, null);
