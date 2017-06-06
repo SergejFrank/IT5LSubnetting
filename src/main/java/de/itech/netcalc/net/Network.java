@@ -243,6 +243,15 @@ public class Network {
         return dividers;
     }
 
+    public void assginIPv6ToAllHosts() {
+        if(!isIPv6Enabled())
+            throw new UnsupportedOperationException("Configure IPv6 first.");
+        for (Host h : getHosts()) {
+            if(h.getIPv6Address() != null) continue;
+            h.setIpv6Address(IPv6Address.getAddressWithRandomHost(this.getNetworkIdV6()));
+        }
+    }
+
     public void splitBySize(int size) {
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("Can not add subnet to network with hosts");
         long length = getAmountIpAddresses();
