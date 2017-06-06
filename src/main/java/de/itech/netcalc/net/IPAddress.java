@@ -3,14 +3,27 @@ package de.itech.netcalc.net;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * The IPAddress represents a base class for IPv4 and IPv6 and provides validation and parsing methods for those.
+ */
 public abstract class IPAddress {
     private static final String validV6Regex ="(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))";
     private static final String validV4Regex = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
 
+    /**
+     * Validates against the IPv4 Address specification
+     * @param value the String input
+     * @return true, if the input String is a valid IPv4 Address
+     */
     public static boolean isValidIPv4(String value) {
         return value != null && value.matches(validV4Regex);
     }
 
+    /**
+     * Parses an IPv4 Address based on the IPv4 Address specification
+     * @param value the String input
+     * @return the parsed IPv4Address
+     */
     public static IPv4Address parseIPv4(String value) {
         if(!IPAddress.isValidIPv4(value))
             throw new IllegalArgumentException("'value' is not a valid IPv4 Address.");
@@ -18,10 +31,22 @@ public abstract class IPAddress {
         return new IPv4Address(Integer.parseInt(segments[0]),Integer.parseInt(segments[1]),Integer.parseInt(segments[2]),Integer.parseInt(segments[3]));
     }
 
+    /**
+     * Validates an String input against the IPv6 Address specification.
+     * @param value the String input
+     * @return true, if the input String is a valid IPv6 Address
+     */
     public static Boolean isValidIPv6(String value) {
         return value != null && value.matches(validV6Regex);
     }
 
+    /**
+     * Validates an String input against the IPv6 Address specification. Requires an valid Prefix.
+     * @param value the String input
+     * @param minValue the minimum value the prefix can have
+     * @param maxValue the maximum value the prefix can have
+     * @return true, if the input String is a valid IPv6 Address
+     */
     public static Boolean isValidIPv6WithPrefix(String value, Integer minValue, Integer maxValue) {
         if(value == null || !value.contains("/")) return false;
         String[] splitted = value.split("/");
@@ -36,6 +61,11 @@ public abstract class IPAddress {
         return splitted[0].matches(validV6Regex);
     }
 
+    /**
+     * Parses an IPv6 Address based on the IPv6 Address specification
+     * @param value the String input
+     * @return the parsed IPv6Address
+     */
     public static IPv6Address parseIPv6(String value) {
         try {
             if(value.contains("/"))
@@ -97,6 +127,11 @@ public abstract class IPAddress {
         }
     }
 
+    /**
+     * Parses an IPv6 Address with Prefix and returns the prefix
+     * @param value the input value to parse
+     * @return the prefix of the input
+     */
     public static int parseIPv6Prefix(String value) {
         if(!isValidIPv6WithPrefix(value, 0, 128))
             throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
