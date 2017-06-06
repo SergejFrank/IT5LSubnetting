@@ -3,6 +3,7 @@ package de.itech.netcalc.net;
 import java.util.*;
 
 public class Network {
+
     public enum SubnetStatus{
         UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS;
     }
@@ -354,6 +355,9 @@ public class Network {
         return status;
     }
 
+    public Network getParent() {
+        return parent;
+    }
 
     //overwridden methods
     @Override

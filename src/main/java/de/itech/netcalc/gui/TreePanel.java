@@ -1,9 +1,6 @@
 package de.itech.netcalc.gui;
 
-import de.itech.netcalc.net.Host;
-import de.itech.netcalc.net.IPAddress;
-import de.itech.netcalc.net.NetUtils;
-import de.itech.netcalc.net.Network;
+import de.itech.netcalc.net.*;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -207,7 +204,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 else {
                     menu.add(new AbstractAction("IPv6 ändern") {
                         public void actionPerformed (ActionEvent e) {
-                            handleEditIPv6(networkNode);
+                            handleAssignIPv6(networkNode, networkNode.getNetwork().getNetworkIdV6().toString(true) + "/" + networkNode.getNetwork().getPrefixV6());
                         }
                     });
                     menu.add(new AbstractAction("IPv6 entfernen") {
@@ -301,23 +298,31 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         network.setIPv6(null, 0);
     }
 
-    private void handleEditIPv6(NetworkTreeNode networkNode) {
-
-    }
-
     private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
+        Network network = networkNode.getNetwork();
+        Network parent = network.getParent();
+        int maxPrefix = parent != null && parent.getNetworkIdV6() != null
+                ? parent.getPrefixV6() + 1 : 128;
         String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
-                "IPv6 Network und Prefix:",
+                "IPv6 Network und Prefix (>=" + maxPrefix + "):",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
                 null, null, initialValue)
                 .toString();
-        if(!IPAddress.isValidIPv6(input)) {
-             DialogBox.error("Die eingebenene IPv6 Adresse ist ungültig.", null);
-             handleAssignIPv6(networkNode, input);
+        if(!IPAddress.isValidIPv6WithPrefix(input, maxPrefix)) {
+            if(!IPAddress.isValidIPv6(input)) {
+                DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
+            }
+            else {
+                DialogBox.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
+            }
+            handleAssignIPv6(networkNode, input);
         }
-
+        IPv6Address address = IPAddress.parseIPv6(input);
+        int prefix = IPAddress.parseIPv6Prefix(input);
+        network.setIPv6(address, prefix);
+        fillInfoPanel(network);
     }
 
     private void handleCreateNetwork(String initialValue) {
