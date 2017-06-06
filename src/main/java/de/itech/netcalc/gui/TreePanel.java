@@ -179,6 +179,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                             handleCreateNetwork(networkNode, null);
                         }
                     });
+                    menu.add(new AbstractAction("Neues Subnetz nach Größe") {
+                        public void actionPerformed (ActionEvent e) {
+                            handleCreateNetworkBySize(networkNode, null);
+                        }
+                    });
                     menu.add(new AbstractAction("Gleichmäßig nach Größe") {
                         public void actionPerformed (ActionEvent e) {
                             handleSplitBySize(networkNode);
@@ -350,6 +355,24 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             DialogBox.error(e.getMessage(),this);
             handleCreateNetwork(parent, input);
         }
+    }
+
+    private void handleCreateNetworkBySize(NetworkTreeNode parent, String initialValue) {
+        ArrayList<Integer> deviders = parent.getNetwork().possibleDividers();
+
+        String input = (String)JOptionPane.showInputDialog(
+                SubnetCalculatorFrame.Instance,
+                "Netzwerk Id und Prefix:",
+                "Subnetz hinzufügen",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                initialValue == null ? GuiUtils.getInitialSubnetString(parent.getNetwork()) : initialValue);
+
+        if(input == null) return;
+
+
+        networkTreeModel.addNetwork(parent,Integer.valueOf(input));
     }
 
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {

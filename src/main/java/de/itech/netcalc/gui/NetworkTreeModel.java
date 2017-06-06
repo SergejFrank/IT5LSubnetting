@@ -21,6 +21,12 @@ class NetworkTreeModel extends DefaultTreeModel {
         insertNetwork(network, parent);
     }
 
+    void addNetwork(NetworkTreeNode parent, int size) {
+        parent.getNetwork().addSubnet(size);
+        parent.refreshSubnets();
+        this.nodeStructureChanged(parent);
+    }
+
     private void insertNetwork(Network network, DefaultMutableTreeNode parent) {
         NetworkTreeNode networkNode = new NetworkTreeNode(network);
         Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
