@@ -302,10 +302,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         String input = obj.toString();
         if(!IPAddress.isValidIPv6WithPrefix(input, 0, 128)) {
             if(!IPAddress.isValidIPv6(input)) {
-                DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
+                GuiUtils.error("Bitte IPv6 Prefix angebenen.", null);
             }
             else {
-                DialogBox.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
+                GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
             }
             handleAssignGlobalIPv6(input);
         }
@@ -363,10 +363,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         String input = obj.toString();
         if(!IPAddress.isValidIPv6WithPrefix(input, parentPrefix + 1, 64)) {
             if(IPAddress.isValidIPv6(input)) {
-                DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
+                GuiUtils.error("Bitte IPv6 Prefix angebenen.", null);
             }
             else {
-                DialogBox.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
+                GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
             }
             handleAssignIPv6(networkNode, input);
         }
@@ -399,7 +399,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             Network network = Network.parse(input, null);
             networkTreeModel.addNetwork(network);
         }catch (UnsupportedOperationException e){
-            DialogBox.error(e.getMessage(),this);
+            GuiUtils.error(e.getMessage(),this);
             handleCreateNetwork(input);
         }
     }
@@ -418,7 +418,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             Network network = Network.parse(input, parent.getNetwork());
             networkTreeModel.addNetwork(network, parent);
         }catch (UnsupportedOperationException e){
-            DialogBox.error(e.getMessage(),this);
+            GuiUtils.error(e.getMessage(),this);
             handleCreateNetwork(parent, input);
         }
     }

@@ -3,8 +3,16 @@ package de.itech.netcalc.gui;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
+import java.awt.*;
 
 class GuiUtils {
+    public static void error(String msg, Component parentComponent){
+        JOptionPane.showMessageDialog(parentComponent,
+                msg,
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
     static String getInitialSubnetString(Network network) {
         IPv4Address networkId = network.getNetworkIdV4();
         Integer prefix = NetUtils.maskToPrefix(network.getNetworkMaskV4());
@@ -29,14 +37,14 @@ class GuiUtils {
         if(input == null) return null;
         String inputString = input.toString();
         if(!IPAddress.isValidIPv6(inputString)) {
-            DialogBox.error("Die angegebene IPv6 Adresse ist ungültig.", null);
+            error("Die angegebene IPv6 Adresse ist ungültig.", null);
             return iPv6AddressDialog(title, message, inputString);
         } else {
             try {
                 IPv6Address result = IPAddress.parseIPv6(inputString);
                 return result;
             } catch(Exception e) {
-                DialogBox.error("Fehler beim Umwandeln der IPv6 Adresse.", null);
+                error("Fehler beim Umwandeln der IPv6 Adresse.", null);
                 return iPv6AddressDialog(title, message, inputString);
             }
         }
@@ -48,14 +56,14 @@ class GuiUtils {
         if(input == null) return null;
         String inputString = input.toString();
         if(!IPAddress.isValidIPv4(inputString)) {
-            DialogBox.error("Die angegebene IPv4 Adresse ist ungültig.", null);
+            error("Die angegebene IPv4 Adresse ist ungültig.", null);
             return iPv4AddressDialog(title, message, inputString);
         } else {
             try {
                 IPv4Address result = IPAddress.parseIPv4(inputString);
                 return result;
             } catch(Exception e) {
-                DialogBox.error("Fehler beim Umwandeln der IPv4 Adresse.", null);
+                error("Fehler beim Umwandeln der IPv4 Adresse.", null);
                 return iPv4AddressDialog(title, message, inputString);
             }
         }

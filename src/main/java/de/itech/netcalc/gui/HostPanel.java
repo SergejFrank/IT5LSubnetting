@@ -61,16 +61,16 @@ class HostPanel extends JPanel implements TableModelListener{
                 host.setIpv6Address(null);
             } else {
                 if(network.getNetworkIdV6() == null) {
-                    DialogBox.error("Biite zuerst IPv6 im Netzwerk konfigurieren.", null);
+                    GuiUtils.error("Biite zuerst IPv6 im Netzwerk konfigurieren.", null);
                     throw new UnsupportedOperationException("Configure IPv6 on Network first.");
                 }
                 if (!IPAddress.isValidIPv6(input)) {
-                    DialogBox.error("Die eingegebene Adresse ist keine gültige IPv6 Adresse.", null);
+                    GuiUtils.error("Die eingegebene Adresse ist keine gültige IPv6 Adresse.", null);
                     throw new UnsupportedOperationException("Invalid IPv6 address.");
                 }
                 IPv6Address address = IPAddress.parseIPv6(input);
                 if(!NetUtils.isInSubnet(network.getNetworkIdV6(), address)) {
-                    DialogBox.error("Die eingegebene Adresse liegt nicht im IPv6 Subnetz.", null);
+                    GuiUtils.error("Die eingegebene Adresse liegt nicht im IPv6 Subnetz.", null);
                     throw new UnsupportedOperationException("Not in Network.");
                 }
                 if(address.equals(host.getIPv6Address())){
@@ -84,7 +84,7 @@ class HostPanel extends JPanel implements TableModelListener{
                     updatedProgrammatically = false;
                 } catch(Exception ex) {
                     updatedProgrammatically = false;
-                    DialogBox.error("Ein Fehler ist aufgetreten\n" + ex.getMessage(), null);
+                    GuiUtils.error("Ein Fehler ist aufgetreten\n" + ex.getMessage(), null);
                     throw new UnsupportedOperationException("Unexpected Exception", ex);
                 }
             }
