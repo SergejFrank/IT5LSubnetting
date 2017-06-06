@@ -17,15 +17,15 @@ public class NetworkTest {
         //given
         IPv4Address networkNetId = IPAddress.parseIPv4("192.168.178.0");
         IPv4Address networkMask = IPAddress.parseIPv4("255.255.255.0");
-        Network network = new Network(networkNetId,networkMask);
+        Network network = new Network(null, networkNetId,networkMask);
 
         IPv4Address subnet1NetId = IPAddress.parseIPv4("192.168.178.0");
         IPv4Address subnet1kMask = IPAddress.parseIPv4("255.255.255.128");
-        Network subnet1 = new Network(subnet1NetId,subnet1kMask);
+        Network subnet1 = new Network(null, subnet1NetId,subnet1kMask);
 
         IPv4Address subnet2NetId = IPAddress.parseIPv4("192.168.178.64");
         IPv4Address subnet2kMask = IPAddress.parseIPv4("255.255.255.192");
-        Network subnet2 = new Network(subnet2NetId,subnet2kMask);
+        Network subnet2 = new Network(null, subnet2NetId,subnet2kMask);
 
         //when
         network.addSubnet(subnet1);
@@ -41,7 +41,7 @@ public class NetworkTest {
         //given
         IPv4Address networkNetId = IPAddress.parseIPv4("192.168.178.0");
         IPv4Address networkMask = IPAddress.parseIPv4("255.255.255.0");
-        Network network = new Network(networkNetId,networkMask);
+        Network network = new Network(null, networkNetId,networkMask);
 
         //when
         network.splitBySize(62);
@@ -55,19 +55,19 @@ public class NetworkTest {
         //given
         IPv4Address networkNetId = IPAddress.parseIPv4("192.168.178.0");
         IPv4Address networkMask = IPAddress.parseIPv4("255.255.255.0");
-        Network network = new Network(networkNetId,networkMask);
+        Network network = new Network(null, networkNetId,networkMask);
 
         IPv4Address subnet1NetId = IPAddress.parseIPv4("192.168.178.0");
         IPv4Address subnet1kMask = IPAddress.parseIPv4("255.255.255.192");
-        Network subnet1 = new Network(subnet1NetId,subnet1kMask);
+        Network subnet1 = new Network(null, subnet1NetId,subnet1kMask);
 
         IPv4Address subnet2NetId = IPAddress.parseIPv4("192.168.178.64");
         IPv4Address subnet2kMask = IPAddress.parseIPv4("255.255.255.192");
-        Network subnet2 = new Network(subnet2NetId,subnet2kMask);
+        Network subnet2 = new Network(null, subnet2NetId,subnet2kMask);
 
         IPv4Address subnet3NetId = IPAddress.parseIPv4("192.168.178.128");
         IPv4Address subnet3kMask = IPAddress.parseIPv4("255.255.255.192");
-        Network subnet3 = new Network(subnet3NetId,subnet3kMask);
+        Network subnet3 = new Network(null, subnet3NetId,subnet3kMask);
 
         network.addSubnet(subnet1);
         network.addSubnet(subnet3);
@@ -89,11 +89,11 @@ public class NetworkTest {
         String net5input = "127.0.0.1/8";
 
         //when
-        Network net1Result =  Network.parse(net1input);
-        Network net2Result =  Network.parse(net2input);
-        Network net3Result =  Network.parse(net3input);
-        Network net4Result =  Network.parse(net4input);
-        Network net5Result =  Network.parse(net5input);
+        Network net1Result =  Network.parse(net1input, null);
+        Network net2Result =  Network.parse(net2input, null);
+        Network net3Result =  Network.parse(net3input, null);
+        Network net4Result =  Network.parse(net4input, null);
+        Network net5Result =  Network.parse(net5input, null);
 
         //then
         assertThat(net1Result.toString(), is("0.0.0.0/0"));
@@ -109,7 +109,7 @@ public class NetworkTest {
 
         for (int prefix = 32 ; prefix>= 1; prefix--){
             try{
-                Network network = new Network(netId,NetUtils.prefixToMask(prefix));
+                Network network = new Network(null, netId,NetUtils.prefixToMask(prefix));
                 assertThat(network.getAmountIpAddresses(), is((long)(Math.pow(2,32-prefix))));
             }catch (OutOfMemoryError e){
                 System.out.println("OutOfMemoryError for prefix:"+prefix);
