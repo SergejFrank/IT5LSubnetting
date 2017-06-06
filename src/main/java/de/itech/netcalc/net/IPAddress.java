@@ -97,7 +97,7 @@ public abstract class IPAddress {
         }
     }
 
-    public int parseIPv6Prefix(String value) {
+    public static int parseIPv6Prefix(String value) {
         if(!isValidIPv6WithPrefix(value, 128))
             throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
         String[] splitted = value.split("/");
