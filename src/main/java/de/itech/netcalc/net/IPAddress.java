@@ -92,14 +92,14 @@ public abstract class IPAddress {
             String currSegment;
             for (int i = 0; i < split.length; i++) {
                 currSegment = split[i];
-                if (isDelimiter(currSegment) && i != (split.length - 1) && isDelimiter(split[i+1])) { //Evtl nächstes Zeichen noch ein Trennzeichen?
+                if ((Objects.equals(currSegment, ":")) && i != (split.length - 1) && (Objects.equals(split[i + 1], ":"))) { //Evtl nächstes Zeichen noch ein Trennzeichen?
                     i++;
                     for (int j = 0; j < missingSegments; j++) {
                         parsedSegments.add(0);
                     }
-                } else if (isDelimiter(currSegment) && i == (split.length - 1)) //Spezialfall letzter Block ist Trennzeichen
+                } else if ((Objects.equals(currSegment, ":")) && i == (split.length - 1)) //Spezialfall letzter Block ist Trennzeichen
                     parsedSegments.add(0);
-                else if(!isDelimiter(currSegment)) //normales Segment
+                else if(!(Objects.equals(currSegment, ":"))) //normales Segment
                 {
                     if((i != 0 && Objects.equals(split[i - 1], ".")) || (i != split.length -1 && Objects.equals(split[i + 1], ".")))
                         parsedSegments.add(Integer.parseInt(currSegment));
@@ -140,9 +140,5 @@ public abstract class IPAddress {
             throw new IllegalArgumentException("Invalid IPv6Address");
         }
         return Integer.valueOf(splitted[1]);
-    }
-
-    private static boolean isDelimiter(String value) {
-        return Objects.equals(value, ":") || Objects.equals(value, ".");
     }
 }
