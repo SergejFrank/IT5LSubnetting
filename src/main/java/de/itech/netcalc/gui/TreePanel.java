@@ -348,8 +348,14 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
     private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
         Network parentNetwork = networkNode.getNetwork().getParent();
-        IPv6Address parentIPv6Address = parentNetwork == null ? null : parentNetwork.getNetworkIdV6();
-        int parentPrefix = parentIPv6Address == null ? networkTreeModel.getRootIPv6PrefixLength() : parentNetwork.getPrefixV6();
+        if(parentNetwork != null && !parentNetwork.isIPv6Enabled()) {
+            GuiUtils.error("Biite erst im übergeordneten Netzwerk IPv6 konfigurieren.", null);
+            return;
+        }
+        IPv6Address parentIPv6Address = parentNetwork != null
+                ? parentNetwork.getNetworkIdV6() : networkTreeModel.getRootIPv6Prefix();
+        int parentPrefix = parentNetwork != null
+                ? parentNetwork.getPrefixV6() : networkTreeModel.getRootIPv6PrefixLength();
 
         Object obj = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
@@ -357,7 +363,6 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
                 null, null, initialValue);
-
         if(obj == null) return;
 
         String input = obj.toString();
@@ -372,6 +377,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
         IPv6Address address = IPAddress.parseIPv6(input);
         int prefix = IPAddress.parseIPv6Prefix(input);
+        if(!NetUtils.isInSubnet(parentIPv6Address, parentPrefix, address)) {
+            GuiUtils.error("Die angegebene Adresse liegt nicht im übergeordneten Nezwerk.", null);
+            handleAssignIPv6(networkNode, input);
+        }
+
         networkNode.getNetwork().setIPv6(address, prefix);
         fillInfoPanel(networkNode.getNetwork());
         if(networkNode.getNetwork().getHosts().length > 0 && GuiUtils.confirmation(
