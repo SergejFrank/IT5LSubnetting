@@ -3,14 +3,10 @@ package de.itech.netcalc.gui;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
-import java.awt.*;
 
 class GuiUtils {
-    public static void error(String msg, Component parentComponent){
-        JOptionPane.showMessageDialog(parentComponent,
-                msg,
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+    public static void error(String msg){
+        JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     static String getInitialSubnetString(Network network) {
@@ -37,14 +33,14 @@ class GuiUtils {
         if(input == null) return null;
         String inputString = input.toString();
         if(!IPAddress.isValidIPv6(inputString)) {
-            error("Die angegebene IPv6 Adresse ist ungültig.", null);
+            error("Die angegebene IPv6 Adresse ist ungültig.");
             return iPv6AddressDialog(title, message, inputString);
         } else {
             try {
                 IPv6Address result = IPAddress.parseIPv6(inputString);
                 return result;
             } catch(Exception e) {
-                error("Fehler beim Umwandeln der IPv6 Adresse.", null);
+                error("Fehler beim Umwandeln der IPv6 Adresse.");
                 return iPv6AddressDialog(title, message, inputString);
             }
         }
@@ -56,14 +52,14 @@ class GuiUtils {
         if(input == null) return null;
         String inputString = input.toString();
         if(!IPAddress.isValidIPv4(inputString)) {
-            error("Die angegebene IPv4 Adresse ist ungültig.", null);
+            error("Die angegebene IPv4 Adresse ist ungültig.");
             return iPv4AddressDialog(title, message, inputString);
         } else {
             try {
                 IPv4Address result = IPAddress.parseIPv4(inputString);
                 return result;
             } catch(Exception e) {
-                error("Fehler beim Umwandeln der IPv4 Adresse.", null);
+                error("Fehler beim Umwandeln der IPv4 Adresse.");
                 return iPv4AddressDialog(title, message, inputString);
             }
         }

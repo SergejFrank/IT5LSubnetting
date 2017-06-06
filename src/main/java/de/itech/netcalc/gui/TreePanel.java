@@ -302,10 +302,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         String input = obj.toString();
         if(!IPAddress.isValidIPv6WithPrefix(input, 0, 128)) {
             if(!IPAddress.isValidIPv6(input)) {
-                GuiUtils.error("Bitte IPv6 Prefix angebenen.", null);
+                GuiUtils.error("Bitte IPv6 Prefix angebenen.");
             }
             else {
-                GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
+                GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.");
             }
             handleAssignGlobalIPv6(input);
         }
@@ -349,7 +349,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
         Network parentNetwork = networkNode.getNetwork().getParent();
         if(parentNetwork != null && !parentNetwork.isIPv6Enabled()) {
-            GuiUtils.error("Biite erst im übergeordneten Netzwerk IPv6 konfigurieren.", null);
+            GuiUtils.error("Biite erst im übergeordneten Netzwerk IPv6 konfigurieren.");
             return;
         }
         IPv6Address parentIPv6Address = parentNetwork != null
@@ -368,17 +368,17 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         String input = obj.toString();
         if(!IPAddress.isValidIPv6WithPrefix(input, parentPrefix + 1, 64)) {
             if(IPAddress.isValidIPv6(input)) {
-                GuiUtils.error("Bitte IPv6 Prefix angebenen.", null);
+                GuiUtils.error("Bitte IPv6 Prefix angebenen.");
             }
             else {
-                GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.", null);
+                GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.");
             }
             handleAssignIPv6(networkNode, input);
         }
         IPv6Address address = IPAddress.parseIPv6(input);
         int prefix = IPAddress.parseIPv6Prefix(input);
         if(!NetUtils.isInSubnet(parentIPv6Address, parentPrefix, address)) {
-            GuiUtils.error("Die angegebene Adresse liegt nicht im übergeordneten Nezwerk.", null);
+            GuiUtils.error("Die angegebene Adresse liegt nicht im übergeordneten Nezwerk.");
             handleAssignIPv6(networkNode, input);
         }
 
@@ -409,7 +409,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             Network network = Network.parse(input, null);
             networkTreeModel.addNetwork(network);
         }catch (UnsupportedOperationException e){
-            GuiUtils.error(e.getMessage(),this);
+            GuiUtils.error(e.getMessage());
             handleCreateNetwork(input);
         }
     }
@@ -428,7 +428,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
             Network network = Network.parse(input, parent.getNetwork());
             networkTreeModel.addNetwork(network, parent);
         }catch (UnsupportedOperationException e){
-            GuiUtils.error(e.getMessage(),this);
+            GuiUtils.error(e.getMessage());
             handleCreateNetwork(parent, input);
         }
     }
