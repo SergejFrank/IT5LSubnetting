@@ -390,9 +390,9 @@ public class Network {
         return parent;
     }
 
-    public String toString(boolean ipv6){
-        if(!ipv6){
-            toString();
+    public String toString(boolean ipv6IfEnabled){
+        if(!ipv6IfEnabled || !isIPv6Enabled()){
+            return toString();
         }
         return getNetworkIdV6().toString(true) + "/" + getPrefixV6();
     }
