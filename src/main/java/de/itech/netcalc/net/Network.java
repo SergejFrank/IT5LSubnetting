@@ -359,6 +359,13 @@ public class Network {
         return parent;
     }
 
+    public String toString(boolean ipv6){
+        if(!ipv6){
+            toString();
+        }
+        return getNetworkIdV6().toString(true) + "/" + getPrefixV6();
+    }
+
     //overwridden methods
     @Override
     public String toString(){

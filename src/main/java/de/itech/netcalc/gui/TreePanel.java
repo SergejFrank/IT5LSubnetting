@@ -204,7 +204,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
                 else {
                     menu.add(new AbstractAction("IPv6 ändern") {
                         public void actionPerformed (ActionEvent e) {
-                            handleAssignIPv6(networkNode, networkNode.getNetwork().getNetworkIdV6().toString(true) + "/" + networkNode.getNetwork().getPrefixV6());
+                            handleAssignIPv6(networkNode, networkNode.getNetwork().toString(true));
                         }
                     });
                     menu.add(new AbstractAction("IPv6 entfernen") {
