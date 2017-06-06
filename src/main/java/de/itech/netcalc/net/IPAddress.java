@@ -22,13 +22,13 @@ public abstract class IPAddress {
         return value != null && value.matches(validV6Regex);
     }
 
-    public static Boolean isValidIPv6WithPrefix(String value, Integer maxValue) {
+    public static Boolean isValidIPv6WithPrefix(String value, Integer minValue, Integer maxValue) {
         if(value == null || !value.contains("/")) return false;
         String[] splitted = value.split("/");
         if(splitted.length != 2) return false;
         try {
             Integer prefix = Integer.valueOf(splitted[1]);
-            if(prefix < 0 || prefix > maxValue)
+            if(prefix < minValue || prefix > maxValue || (prefix % 4) != 0)
                 return false;
         } catch(Exception e) {
             return false;
@@ -40,7 +40,7 @@ public abstract class IPAddress {
         try {
             if(value.contains("/"))
             {
-                if(!isValidIPv6WithPrefix(value, 128))
+                if(!isValidIPv6WithPrefix(value, 0, 128))
                     throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
                 value = value.split("/")[0];
             }
@@ -98,7 +98,7 @@ public abstract class IPAddress {
     }
 
     public static int parseIPv6Prefix(String value) {
-        if(!isValidIPv6WithPrefix(value, 128))
+        if(!isValidIPv6WithPrefix(value, 0, 128))
             throw new IllegalArgumentException("'value' is not a valid IPv6 Address.");
         String[] splitted = value.split("/");
         if(splitted.length != 2) {

@@ -293,12 +293,12 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     private void handleAssignGlobalIPv6(String initialValue) {
         String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
-                "IPv6 Network und Prefix (>=128):",
+                "IPv6 Network und Prefix:",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
                 null, null, initialValue)
                 .toString();
-        if(!IPAddress.isValidIPv6WithPrefix(input, 128)) {
+        if(!IPAddress.isValidIPv6WithPrefix(input, 0, 128)) {
             if(!IPAddress.isValidIPv6(input)) {
                 DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
             }
@@ -349,20 +349,18 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
-        Network network = networkNode.getNetwork();
-        Network parent = network.getParent();
-        int maxPrefix = parent != null && parent.getNetworkIdV6() != null
-                ? parent.getPrefixV6() + 1
-                : networkTreeModel.getRootIPv6PrefixLength();
+        Network parentNetwork = networkNode.getNetwork().getParent();
+        IPv6Address parentIPv6Address = parentNetwork == null ? null : parentNetwork.getNetworkIdV6();
+        int parentPrefix = parentIPv6Address == null ? networkTreeModel.getRootIPv6PrefixLength() : parentNetwork.getPrefixV6();
         String input = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
-                "IPv6 Network und Prefix (>=" + maxPrefix + "):",
+                "IPv6 Network und Prefix (>" + parentPrefix + "):",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
                 null, null, initialValue)
                 .toString();
-        if(!IPAddress.isValidIPv6WithPrefix(input, maxPrefix)) {
-            if(!IPAddress.isValidIPv6(input)) {
+        if(!IPAddress.isValidIPv6WithPrefix(input, parentPrefix + 1, 64)) {
+            if(IPAddress.isValidIPv6(input)) {
                 DialogBox.error("Bitte IPv6 Prefix angebenen.", null);
             }
             else {
@@ -372,8 +370,8 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
         IPv6Address address = IPAddress.parseIPv6(input);
         int prefix = IPAddress.parseIPv6Prefix(input);
-        network.setIPv6(address, prefix);
-        fillInfoPanel(network);
+        networkNode.getNetwork().setIPv6(address, prefix);
+        fillInfoPanel(networkNode.getNetwork());
     }
 
     private void handleCreateNetwork(String initialValue) {

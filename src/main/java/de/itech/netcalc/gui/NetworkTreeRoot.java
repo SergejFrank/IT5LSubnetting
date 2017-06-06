@@ -24,7 +24,7 @@ class NetworkTreeRoot extends DefaultMutableTreeNode {
         this.globalPrefix = globalPrefix;
         this.globalPrefixLength = globalPrefixLength;
         if(globalPrefix == null) {
-            this.globalPrefixLength = 128;
+            this.globalPrefixLength = 0;
             setUserObject("Netzwerke");
         } else {
             setUserObject("Netzwerke (" + globalPrefix.toString(true) + "/" + globalPrefixLength + ")");

@@ -49,7 +49,7 @@ class NetworkTreeModel extends DefaultTreeModel {
     }
 
     int getRootIPv6PrefixLength() {
-        return getRootNode().getGlobalPrefix() == null ? 128 : getRootNode().getGlobalPrefixLength();
+        return getRootNode().getGlobalPrefix() == null ? 0 : getRootNode().getGlobalPrefixLength();
     }
 
     IPv6Address getRootIPv6Prefix() {
