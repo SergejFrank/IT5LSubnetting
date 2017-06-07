@@ -1,6 +1,7 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.*;
+import sun.security.krb5.internal.crypto.NullEType;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -9,7 +10,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.net.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -200,6 +204,11 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                         handleCreateNetwork(null);
                     }
                 });
+                menu.add(new AbstractAction("Netzwerk laden") {
+                    public void actionPerformed (ActionEvent e) {
+                        handleLoadNetwork();
+                    }
+                });
                 menu.addSeparator();
                 if(networkTreeModel.getRootIPv6Prefix() == null) {
                     menu.add(new AbstractAction("Globalen IPv6 Prefix hinzufügen") {
@@ -213,12 +222,12 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                             handleAssignGlobalIPv6(networkTreeModel.getRootIPv6Prefix().toString(true) + "/" + networkTreeModel.getRootIPv6PrefixLength());
                         }
                     });
-                    menu.add(new AbstractAction("Globalen IPv6 Prefix entfernen") {
-                        public void actionPerformed (ActionEvent e) {
-                            handleRemoveGlobalIPv6();
-                        }
-                    });
                 }
+                menu.add(new AbstractAction("Globalen IPv6 Prefix entfernen") {
+                    public void actionPerformed (ActionEvent e) {
+                        handleRemoveGlobalIPv6();
+                    }
+                });
             }
             else if(element instanceof NetworkTreeNode)
             {
@@ -311,6 +320,12 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                     });
                     menu.addSeparator();
                 }
+                menu.add(new AbstractAction("Speichern unter...") {
+                    public void actionPerformed (ActionEvent e) {
+                        handleSaveNetworkAs(networkNode.getNetwork());
+                    }
+                });
+                menu.addSeparator();
                 menu.add(new AbstractAction("Umbenennen") {
                     public void actionPerformed (ActionEvent e) {
                         handleRename(networkNode);
@@ -324,6 +339,42 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             }
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
+    }
+
+    /**
+     * Handles the user input and file load progress to load a network from a file.
+     */
+    private void handleLoadNetwork() {
+        FileDialog dialog = new java.awt.FileDialog((Frame) null, "Netzwerk laden...", FileDialog.LOAD);
+        dialog.setVisible(true);
+        String fileName = dialog.getFile();
+        if(fileName == null) return;
+        File file = new File(dialog.getDirectory(), fileName);
+        if(!file.exists() || file.isDirectory()) {
+            GuiUtils.error("Die angegebene Datei konnte nicht gefunden werden.");
+            handleLoadNetwork();
+        } else {
+            Network network = Network.fromXML(file);
+            Optional<Network> colliding = networkTreeModel.getNetworks().stream().filter(n -> n.isColliding(network)).findFirst();
+            if(colliding.isPresent()) {
+                GuiUtils.error("Das Netzwerk überschneidet sich mit dem Netzwerk '" + colliding.get().toString(true) + "'");
+                return;
+            }
+            networkTreeModel.addNetwork(network);
+        }
+    }
+
+    /**
+     * Handles the user input and file save progress to store a network to a file.
+     */
+    private void handleSaveNetworkAs(Network network) {
+        FileDialog dialog = new FileDialog((Frame)null, "Netzwerk speichern unter...", FileDialog.SAVE);
+        dialog.setFile(network.getName() == null ? "Netzwerk.xml" : network.getName() + ".xml");
+        dialog.setVisible(true);
+        String fileName = dialog.getFile();
+        if(fileName == null) return;
+        Path filePath = Paths.get(dialog.getDirectory(), fileName);
+        network.save(filePath.toFile());
     }
 
     /**

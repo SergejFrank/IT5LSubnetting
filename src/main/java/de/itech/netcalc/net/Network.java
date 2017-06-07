@@ -199,7 +199,7 @@ public class Network {
             case HAS_SUBNETS:
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
-
+                if(hosts == null) hosts = new Host[getMaxHosts()];
                 if(isIPv6Enabled()){
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), random);
@@ -210,6 +210,7 @@ public class Network {
                 hosts[0] = newHost;
                 break;
             case HAS_HOSTS:
+                if(hosts == null) hosts = new Host[getMaxHosts()];
                 if(getHostCount() >= getMaxHosts()){
                     throw new UnsupportedOperationException("network already has maximum amount of hosts");
                 }
@@ -249,6 +250,7 @@ public class Network {
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
             case HAS_HOSTS:
+                if(hosts == null) hosts = new Host[getMaxHosts()];
                 if(getHostCount() >= getMaxHosts()){
                     throw new UnsupportedOperationException("network already has maximum amount of hosts");
                 }
@@ -618,7 +620,7 @@ public class Network {
      */
     public SubnetStatus getStatus(){
         if(subnets.size() > 0) return SubnetStatus.HAS_SUBNETS;
-        if(Arrays.stream(hosts).anyMatch(Objects::nonNull)) return SubnetStatus.HAS_HOSTS;
+        if(hosts != null && Arrays.stream(hosts).anyMatch(Objects::nonNull)) return SubnetStatus.HAS_HOSTS;
         return SubnetStatus.UNSPECIFIED;
     }
 

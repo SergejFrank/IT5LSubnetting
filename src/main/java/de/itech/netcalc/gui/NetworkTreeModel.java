@@ -2,8 +2,6 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.swing.tree.*;
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         }
     }
 
-    private ArrayList<Network> getNetworks(){
+    ArrayList<Network> getNetworks(){
         ArrayList<Network> networks = new ArrayList<>();
         Collections.list(root.children()).stream().forEach(node -> networks.add(((NetworkTreeNode) node).getNetwork()));
         return networks;
