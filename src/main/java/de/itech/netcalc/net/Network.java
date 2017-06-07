@@ -29,11 +29,6 @@ public class Network {
     private Host[] hosts;
 
     /**
-     * Backing field for the Status Property
-     */
-    private SubnetStatus status;
-
-    /**
      * Backing field for the Name property
      */
     private String name;
@@ -68,9 +63,7 @@ public class Network {
         this.parent = parent;
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
-        status = SubnetStatus.UNSPECIFIED;
         hosts = new Host[getMaxHosts()];
-        checkIsZeroNetmask(networkMaskV4);
     }
 
     /**
@@ -89,19 +82,16 @@ public class Network {
         this.setNetworkMaskV4(networkMaskV4);
         this.setNetworkIdV6(networkIdV6);
         this.setPrefixV6(prefixV6);
-        status = SubnetStatus.UNSPECIFIED;
         hosts = new Host[getMaxHosts()];
-        checkIsZeroNetmask(networkMaskV4);
     }
 
     /**
      * Fills all unused IPv4 addresses with empty hosts
      */
     public void addAllHosts(){
-        if(status == SubnetStatus.HAS_SUBNETS){
+        if(getStatus() == SubnetStatus.HAS_SUBNETS){
             throw new UnsupportedOperationException("can't add host to subnetted network");
         }
-        status = SubnetStatus.HAS_HOSTS;
         for(int i = 0; i < getMaxHosts(); i++) {
             if(hosts[i] == null){
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
@@ -152,7 +142,7 @@ public class Network {
      */
     public Host addHost(){
         Host newHost;
-        switch (status){
+        switch (getStatus()){
             case HAS_SUBNETS:
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
@@ -165,7 +155,6 @@ public class Network {
                 }
 
                 hosts[0] = newHost;
-                status = SubnetStatus.HAS_HOSTS;
                 break;
             case HAS_HOSTS:
                 if(getHostCount() >= getMaxHosts()){
@@ -202,7 +191,7 @@ public class Network {
             throw new IllegalArgumentException("IP adress must be in the specified network");
         }
 
-        switch (status){
+        switch (getStatus()){
             case HAS_SUBNETS:
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
@@ -233,8 +222,6 @@ public class Network {
      */
     public void clearHosts() {
         hosts = new Host[getMaxHosts()];
-        if(getStatus() == SubnetStatus.HAS_HOSTS)
-            status = SubnetStatus.UNSPECIFIED;
     }
 
     /**
@@ -243,12 +230,11 @@ public class Network {
      * @return the added subnet
      */
     public Network addSubnet(Network subnet) {
-        if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnet to network with hosts");
+        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnet to network with hosts");
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new UnsupportedOperationException("Subnet already exists.");
         if(!NetUtils.isInSubnet(this.getNetworkIdV4(), this.getNetworkMaskV4(), subnet.getNetworkIdV4()))
             throw new UnsupportedOperationException("Subnet is not in range of the parent network.");
-        status = SubnetStatus.HAS_SUBNETS;
 
         subnets.add(subnet);
         sortSubnets();
@@ -262,7 +248,7 @@ public class Network {
      * @return the created subnet
      */
     public Network addSubnet(int size) {
-        if(status == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
+        if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnets to network with hosts");
         int maskLength = (int)Math.ceil (Math.log( size + 2 ) / Math.log( 2.0 ));
         int realSize = (int)Math.pow(2, maskLength);
         IPv4Address subnetMask = NetUtils.prefixToMask(32 - maskLength);
@@ -292,9 +278,6 @@ public class Network {
      */
     public void removeSubnet(Network subnet) {
         subnets.remove(subnet);
-        if(subnets.size() == 0){
-            status = SubnetStatus.UNSPECIFIED;
-        }
     }
 
     /**
@@ -302,8 +285,6 @@ public class Network {
      */
     public void clearSubnets() {
         subnets.clear();
-        if(getStatus() == SubnetStatus.HAS_SUBNETS)
-            status = SubnetStatus.UNSPECIFIED;
     }
 
     /**
@@ -374,7 +355,6 @@ public class Network {
 
     private void split(int realSize, long count){
         subnets.clear();
-        status = SubnetStatus.HAS_SUBNETS;
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
@@ -424,12 +404,6 @@ public class Network {
     public Host getHost(Object iPv4Address) {
         Optional<Host> host = Arrays.stream(getHosts()).filter(h -> h != null && h.getIPv4Address().equals(iPv4Address)).findFirst();
         return host.orElse(null);
-    }
-
-    private void checkIsZeroNetmask(IPv4Address mask){
-        if(mask.getValue() == 0){
-            status = SubnetStatus.HAS_SUBNETS;
-        }
     }
 
     /**
@@ -590,7 +564,9 @@ public class Network {
      * @return the network status
      */
     public SubnetStatus getStatus(){
-        return status;
+        if(subnets.size() > 0) return SubnetStatus.HAS_SUBNETS;
+        if(Arrays.stream(hosts).anyMatch(Objects::nonNull)) return SubnetStatus.HAS_HOSTS;
+        return SubnetStatus.UNSPECIFIED;
     }
 
     /**
