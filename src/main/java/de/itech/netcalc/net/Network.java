@@ -108,7 +108,7 @@ public class Network {
                 Host host;
                 if(isIPv6Enabled()) {
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
-                    host = new Host(this, hostV4, random, null);
+                    host = new Host(this, hostV4, random);
                 }
                 else {
                     host = new Host(this, hostV4, null);
@@ -159,7 +159,7 @@ public class Network {
 
                 if(isIPv6Enabled()){
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
-                    newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), random, null);
+                    newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), random);
                 } else {
                     newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), null);
                 }
@@ -180,7 +180,7 @@ public class Network {
 
                 if(isIPv6Enabled()){
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
-                    newHost = new Host(this, new IPv4Address(addressValue), random, null);
+                    newHost = new Host(this, new IPv4Address(addressValue), random);
                 } else {
                     newHost = new Host(this, new IPv4Address(addressValue), null);
                 }
@@ -218,7 +218,7 @@ public class Network {
                 Host newHost;
                 if(isIPv6Enabled()){
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
-                    newHost = new Host(this, address, random, null);
+                    newHost = new Host(this, address, random);
                 } else {
                     newHost = new Host(this, address, null);
                 }
