@@ -440,7 +440,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
         networkNode.getNetwork().setIPv6(address, prefix);
         fillInfoPanel(networkNode.getNetwork());
-        if(networkNode.getNetwork().getHosts().length > 0 && GuiUtils.confirmation(
+        if(networkNode.getNetwork().getHostCount() > 0 && GuiUtils.confirmation(
                 "IPv6 anwenden,", "Soll allen Hosts eine IPv6 Adresse hinzugefügt werden?")) {
             networkNode.getNetwork().assginIPv6ToAllHosts();
             fillHostPanel(networkNode.getNetwork());
