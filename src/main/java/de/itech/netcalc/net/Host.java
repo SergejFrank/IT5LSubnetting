@@ -32,15 +32,13 @@ public class Host {
      * Creates a host in the given subnet with an IPv4Address and a name
      * @param subnet the subnet the host is assigned to
      * @param ipv4Address the IPv4Address of the host
-     * @param name the name of the host
      * @throws IllegalArgumentException if ipv4Address or name is null
      */
-    Host(Network subnet, IPv4Address ipv4Address, String name) throws IllegalArgumentException {
+    Host(Network subnet, IPv4Address ipv4Address) throws IllegalArgumentException {
         if(subnet == null) throw new IllegalArgumentException("Subnet can not be null.");
         if(ipv4Address == null) throw new IllegalArgumentException("ipv4Address can not be null");
         this.subnet = subnet;
         this.ipv4Address = ipv4Address.clone();
-        this.name = name;
     }
 
     /**
@@ -48,17 +46,15 @@ public class Host {
      * @param subnet the subnet the host is assigned to
      * @param ipv4Address the IPv4Address of the host
      * @param ipv6Address the IPv6Address of the host
-     * @param name the name of the host
      * @throws IllegalArgumentException if ipv4Address, ipv6Address or name is null
      */
-    Host(Network subnet, IPv4Address ipv4Address, IPv6Address ipv6Address, String name) throws IllegalArgumentException {
+    Host(Network subnet, IPv4Address ipv4Address, IPv6Address ipv6Address) throws IllegalArgumentException {
         if(subnet == null) throw new IllegalArgumentException("Subnet can not be null.");
         if(ipv4Address == null) throw new IllegalArgumentException("ipv4Address can not be null.");
         if(ipv6Address == null) throw new IllegalArgumentException("ipv6Address can not be null.");
         this.ipv4Address = ipv4Address.clone();
         this.subnet = subnet;
         this.ipv6Address = ipv6Address.clone();
-        this.name = name;
     }
 
     @Override
