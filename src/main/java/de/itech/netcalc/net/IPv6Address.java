@@ -1,20 +1,25 @@
 package de.itech.netcalc.net;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Random;
 
 /**
  * The IPv6Address class represents an IPv6 Address without implementing any network logic.
  */
+@XmlRootElement
 public class IPv6Address extends IPAddress {
     /**
      * stores the first 64 bits of the address
      */
-    private final long networkId;
+    @XmlAttribute
+    private long networkId;
 
     /**
      * stores the last 64 bits of the address
      */
-    private final long interfaceId;
+    @XmlAttribute
+    private long interfaceId;
 
     /**
      * Creates a new Instance of the IPv6 address with the passed values
@@ -25,6 +30,8 @@ public class IPv6Address extends IPAddress {
         this.networkId = networkId;
         this.interfaceId = interfaceId;
     }
+
+    private IPv6Address(){}
 
     /**
      * Compares an object with the IPv4 address

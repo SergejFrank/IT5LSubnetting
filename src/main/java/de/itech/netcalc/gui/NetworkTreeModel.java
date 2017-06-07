@@ -2,6 +2,8 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.IPv6Address;
 import de.itech.netcalc.net.Network;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.swing.tree.*;
 import java.util.ArrayList;
@@ -92,4 +94,5 @@ class NetworkTreeModel extends DefaultTreeModel {
         networkNode.refreshSubnets();
         this.nodeStructureChanged(networkNode);
     }
+
 }

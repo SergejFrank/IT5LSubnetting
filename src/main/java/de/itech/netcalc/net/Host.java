@@ -1,5 +1,8 @@
 package de.itech.netcalc.net;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Arrays;
@@ -7,20 +10,24 @@ import java.util.Arrays;
 /**
  * The host class can be used to configure a virtual ipv4 and ipv6 end point of a subnet
  */
+@XmlRootElement
 public class Host {
     /**
      * backing field for the Name property
      */
-    private String name;
+    @XmlAttribute
+    private String hostName;
 
     /**
      * backing field for the Ipv4Address property
      */
+    @XmlElement
     private IPv4Address ipv4Address;
 
     /**
      * backing field for the Ipv6Address property
      */
+    @XmlElement
     private IPv6Address ipv6Address;
 
     /**
@@ -29,10 +36,10 @@ public class Host {
     private Network subnet;
 
     /**
-     * Creates a host in the given subnet with an IPv4Address and a name
+     * Creates a host in the given subnet with an IPv4Address and a hostName
      * @param subnet the subnet the host is assigned to
      * @param ipv4Address the IPv4Address of the host
-     * @throws IllegalArgumentException if ipv4Address or name is null
+     * @throws IllegalArgumentException if ipv4Address or hostName is null
      */
     Host(Network subnet, IPv4Address ipv4Address) throws IllegalArgumentException {
         if(subnet == null) throw new IllegalArgumentException("Subnet can not be null.");
@@ -41,12 +48,14 @@ public class Host {
         this.ipv4Address = ipv4Address.clone();
     }
 
+    private Host(){}
+
     /**
-     * Creates a host in the given subnet with an IPv4Address, an IPv6Address and a name
+     * Creates a host in the given subnet with an IPv4Address, an IPv6Address and a hostName
      * @param subnet the subnet the host is assigned to
      * @param ipv4Address the IPv4Address of the host
      * @param ipv6Address the IPv6Address of the host
-     * @throws IllegalArgumentException if ipv4Address, ipv6Address or name is null
+     * @throws IllegalArgumentException if ipv4Address, ipv6Address or hostName is null
      */
     Host(Network subnet, IPv4Address ipv4Address, IPv6Address ipv6Address) throws IllegalArgumentException {
         if(subnet == null) throw new IllegalArgumentException("Subnet can not be null.");
@@ -59,7 +68,7 @@ public class Host {
 
     @Override
     public String toString(){
-        String result = "Host: " + name;
+        String result = "Host: " + hostName;
         if(ipv4Address == null)
             return result + " IPv6: " + ipv6Address;
         if(ipv6Address == null)
@@ -68,19 +77,19 @@ public class Host {
     }
 
     /**
-     * Gets the name of the host
-     * @return the name of the host
+     * Gets the hostName of the host
+     * @return the hostName of the host
      */
     public String getName() {
-        return name;
+        return hostName;
     }
 
     /**
-     * Sets the name of the host
-     * @param name the name to be set
+     * Sets the hostName of the host
+     * @param name the hostName to be set
      */
     public void setName(String name) {
-        this.name = name;
+        this.hostName = name;
     }
 
     /**

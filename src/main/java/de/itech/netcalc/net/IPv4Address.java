@@ -1,9 +1,21 @@
 package de.itech.netcalc.net;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+import java.io.File;
+
 /**
  * The IPv4Address class represents an IPv4 Address without implementing any network logic
  */
+@XmlRootElement
 public class IPv4Address extends IPAddress {
+
+    @XmlAttribute
     private int value;
 
     /**
@@ -20,6 +32,8 @@ public class IPv4Address extends IPAddress {
         if(oct4 < 0 || oct4 > 255) throw new IllegalArgumentException("Value '" + oct4 + "' for oct4 is out of range.");
         value =  (oct1 << 24) + (oct2 << 16) + (oct3 << 8) + oct4;
     }
+
+    private IPv4Address() {}
 
     /**
      * creates an ip address from an entire integer representation

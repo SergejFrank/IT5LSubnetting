@@ -1,10 +1,21 @@
 package de.itech.netcalc.net;
 
+import sun.nio.ch.Net;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.File;
 import java.util.*;
 
 /**
  * The Network class represents a logical network that can hold sub-networks and hosts.
  */
+@XmlRootElement
 public class Network {
     /**
      * Specifies, if a Network has Hosts or sub-networks
@@ -13,44 +24,84 @@ public class Network {
         UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS
     }
 
+    public static Network fromXML(File file){
+
+        //todo: set parent of host and network;
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Network network = (Network) jaxbUnmarshaller.unmarshal(file);
+            System.out.println(network);
+
+            return network;
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public void save(File file){
+        try {
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(this, file);
+            jaxbMarshaller.marshal(this, System.out);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     /**
      * Backing field for the Parent property
      */
-    private final Network parent;
+    private Network parent;
 
     /**
      * Backing field for all sub-networks hold by the network
      */
+    @XmlElement(name="subnet")
     private final ArrayList<Network> subnets = new ArrayList<>();
 
     /**
      * Backing field for all hosts hold by the network
      */
+    @XmlElement(name="host")
     private Host[] hosts;
 
     /**
      * Backing field for the Name property
      */
-    private String name;
+    @XmlAttribute
+    private String networkName;
 
     /**
      * Backing field for the IPv4 network ID
      */
+    @XmlElement
     private IPv4Address networkIdV4;
 
     /**
      * Backing field for the IPv4 network mask
      */
+    @XmlElement
     private IPv4Address networkMaskV4;
 
     /**
      * Backing field for the IPv6 network ID
      */
+    @XmlElement
     private IPv6Address networkIdV6;
 
     /**
      * Backing field for the IPv6 network prefix
      */
+    @XmlElement
     private int prefixV6;
 
     /**
@@ -65,6 +116,8 @@ public class Network {
         this.setNetworkMaskV4(networkMaskV4);
         hosts = new Host[getMaxHosts()];
     }
+
+    private Network(){}
 
     /**
      *
@@ -415,19 +468,19 @@ public class Network {
     }
 
     /**
-     * Gets the name of the network.
-     * @return the name
+     * Gets the networkName of the network.
+     * @return the networkName
      */
     public String getName() {
-        return name;
+        return networkName;
     }
 
     /**
-     * Sets the name of the network.
-     * @param name the name to set
+     * Sets the networkName of the network.
+     * @param name the networkName to set
      */
     public void setName(String name) {
-        this.name = name;
+        this.networkName = name;
     }
 
     /**
@@ -595,7 +648,7 @@ public class Network {
      */
     @Override
     public String toString(){
-        return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getNetworkMaskV4()) + (name == null ? "" : " (" + name + ")");
+        return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getNetworkMaskV4()) + (networkName == null ? "" : " (" + networkName + ")");
     }
 
     /**
