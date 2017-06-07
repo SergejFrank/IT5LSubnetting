@@ -10,7 +10,7 @@ public class Network {
      * Specifies, if a Network has Hosts or sub-networks
      */
     public enum SubnetStatus{
-        UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS;
+        UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS
     }
 
     /**
@@ -123,9 +123,11 @@ public class Network {
      * @param ip the IPv4 address of host to remove
      */
     public void removeHost(IPv4Address ip){
-        for (Host host:hosts) {
-            if(host != null && host.getIPv4Address().equals(ip)){
-                host = null;
+        for (int i = 0; i < hosts.length; i++) {
+            if(hosts[i].getIPv4Address().equals(ip))
+            {
+                hosts[i] = null;
+                return;
             }
         }
     }
@@ -135,9 +137,11 @@ public class Network {
      * @param host the host to remove
      */
     public void removeHost(Host host){
-        for (Host other:hosts) {
-            if(other != null && other.equals(host)){
-                other = null;
+        for (int i = 0; i < hosts.length; i++) {
+            if(hosts[i].equals(host))
+            {
+                hosts[i] = null;
+                return;
             }
         }
     }
@@ -430,7 +434,7 @@ public class Network {
 
     /**
      * Gets the Property indicating whether IPv6 is configured for this network.
-     * @return
+     * @return true, if IPv6 is configured
      */
     public boolean isIPv6Enabled(){
         return networkIdV6 != null;
@@ -455,7 +459,7 @@ public class Network {
     /**
      * Gets the possible amount of IPv4 addresses in the network.
      * Includes the network ID and broadcast address.
-     * @return
+     * @return the amount of IPv4 addresses
      */
     public long getAmountIpAddresses() {
         return ((~getNetworkMaskV4().getLValue()) & Integer.toUnsignedLong(-1)) + 1;
@@ -499,7 +503,7 @@ public class Network {
      * @return the host count
      */
     public int getHostCount() {
-        return (int)Arrays.stream(getHosts()).filter(h -> h != null).count();
+        return (int)Arrays.stream(getHosts()).filter(Objects::nonNull).count();
     }
 
     /**
