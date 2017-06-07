@@ -331,8 +331,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param initialValue the inout value to display
      */
     private void handleAssignGlobalIPv6(String initialValue) {
-        Object obj = JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        Object obj = JOptionPane.showInputDialog(null,
                 "IPv6 Network und Prefix:",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
@@ -413,8 +412,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         int parentPrefix = parentNetwork != null
                 ? parentNetwork.getPrefixV6() : networkTreeModel.getRootIPv6PrefixLength();
 
-        Object obj = JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        Object obj = JOptionPane.showInputDialog(null,
                 "IPv6 Network und Prefix (>" + parentPrefix + "):",
                 "IPv6 zuweisen",
                 JOptionPane.PLAIN_MESSAGE,
@@ -452,8 +450,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param initialValue the initial input value to display
      */
     private void handleCreateNetwork(String initialValue) {
-        Object obj = JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        Object obj = JOptionPane.showInputDialog(null,
                 "Netzwerk Id und Prefix:",
                 "Netzwerk hinzufügen",
                 JOptionPane.PLAIN_MESSAGE,
@@ -480,8 +477,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param initialValue the initial input value to display
      */
     private void handleCreateNetwork(NetworkTreeNode parent, String initialValue) {
-        String input = (String)JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        String input = (String)JOptionPane.showInputDialog(null,
                 "Netzwerk Id und Prefix:",
                 "Subnetz hinzufügen",
                 JOptionPane.PLAIN_MESSAGE,
@@ -503,8 +499,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param parent the parent network
      */
     private void handleCreateNetworkBySize(NetworkTreeNode parent) {
-        String input = (String)JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        String input = (String)JOptionPane.showInputDialog(null,
                 "Netzwerk Id und Prefix:",
                 "Subnetz hinzufügen",
                 JOptionPane.PLAIN_MESSAGE,
@@ -523,8 +518,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
         ArrayList<Integer> deviders = networkTreeNode.getNetwork().possibleDividers();
 
-        Object input = JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        Object input = JOptionPane.showInputDialog(null,
                 "Größe der Subnetze angeben",
                 "Netzwerk teilen",
                 JOptionPane.QUESTION_MESSAGE, null,
@@ -549,8 +543,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 .forEach(x -> sizes.add((networkTreeNode.getNetwork().getMaxHosts()+2) / (x+2)));
         //sizes.add(1);
 
-        Object input = JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        Object input = JOptionPane.showInputDialog(null,
                 "Anzahl der Subnetze angeben",
                 "Netzwerk teilen",
                 JOptionPane.QUESTION_MESSAGE, null,
@@ -581,8 +574,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         Network network = networkNode.getNetwork();
         String networkString = network.getNetworkIdV4().toString() + "/" +
                 NetUtils.maskToPrefix(network.getNetworkMaskV4());
-        String input = (String) JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        String input = (String) JOptionPane.showInputDialog(null,
                 "IP Adresse (" + networkString + ")",
                 "Host mit IP Adresse hinzufügen",
                 JOptionPane.PLAIN_MESSAGE,
@@ -626,8 +618,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      */
     private void handleRename(NetworkTreeNode networkNode) {
         String initialValue = networkNode.getNetwork().getName();
-        String input = (String) JOptionPane.showInputDialog(
-                SubnetCalculatorFrame.Instance,
+        String input = (String) JOptionPane.showInputDialog(null,
                 "Name",
                 "Netzwerk/Subnetz umbenennen",
                 JOptionPane.PLAIN_MESSAGE,

@@ -4,12 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SubnetCalculatorFrame extends JFrame {
-    static SubnetCalculatorFrame Instance;
-
     public SubnetCalculatorFrame(String title){
         super(title);
-
-        Instance = this;
 
         add(new TreePanel());
 
