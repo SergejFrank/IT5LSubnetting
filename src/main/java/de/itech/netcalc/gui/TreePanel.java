@@ -15,12 +15,33 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Optional;
 
+/**
+ * The TreePanel class defines the main work space.
+ */
 public class TreePanel extends JPanel implements TreeSelectionListener {
+    /**
+     * Stores the view model that contains all information about the networks.
+     */
     private NetworkTreeModel networkTreeModel;
+
+    /**
+     * Stores the info panel, that displays the information about the currently selected network.
+     */
     private JSplitPane infoPane;
+
+    /**
+     * Stores the JTree that displays the information from the networkTreeModel.
+     */
     private JTree networkTree;
+
+    /**
+     * Stores the host panel that displays the hosts of the currently selected network.
+     */
     private HostPanel hostPanel;
 
+    /**
+     * Creates and initializes a new TreePanel instance.
+     */
     TreePanel() {
         super(new GridLayout(1,0));
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -53,6 +74,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
     }
 
+    /**
+     * Fills the view model with all network interfaces provided by the operating system.
+     * @throws SocketException
+     */
     private void initWithLocalInterfaces() throws SocketException {
         for (NetworkInterface netint : getInterfacesWithIPv4()) {
             try {
@@ -64,6 +89,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Gets all network interfaces of the operating system that has IPv4 configured.
+     * @return IPv4 enabled OS network interfaces
+     */
     private ArrayList<NetworkInterface> getInterfacesWithIPv4() throws SocketException {
         ArrayList<NetworkInterface> interfaces = new ArrayList<>();
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
@@ -81,6 +110,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         return interfaces;
     }
 
+    /**
+     * Adds an OS network interface to the view model.
+     * @param netint the network interface to add
+     * @throws Exception gets thrown in interface loop back check
+     */
     private void addExternalNetwork(NetworkInterface netint) throws Exception {
         if(netint.isLoopback()) return;
         Optional<InterfaceAddress> address = netint.getInterfaceAddresses().stream().filter(a -> a.getAddress() instanceof Inet4Address).findFirst();
@@ -94,7 +128,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(network);
     }
 
-
+    /**
+     * Gets executed, when the JTree selection changes.
+     * @param e event data
+     */
     @Override
     public void valueChanged(TreeSelectionEvent e) {
         Object node = networkTree.getLastSelectedPathComponent();
@@ -110,6 +147,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Fills the info panel with the information from the given network.
+     * @param networkBase the network to display
+     */
     private void fillInfoPanel(Network networkBase) {
         JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
         infoPanel.add(new JLabel("Netzwerk"));
@@ -134,10 +175,19 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         infoPane.setBottomComponent(infoPanel);
     }
 
+    /**
+     * Fills the host panel with the hosts found in the passed network.
+     * @param network the network containing the hosts to display
+     */
     private void fillHostPanel(Network network) {
         hostPanel.setNetwork(network);
     }
 
+    /**
+     * Gets executed when a click on the JTree is detected.
+     * On right click creates a context menu containing the main actions of the application.
+     * @param e event data
+     */
     private void handleTreeRightClick(MouseEvent e){
         if (SwingUtilities.isRightMouseButton(e)) {
             int row = networkTree.getClosestRowForLocation(e.getX(), e.getY());
@@ -277,6 +327,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Handles the user input and assignment of global IPv6.
+     * @param initialValue the inout value to display
+     */
     private void handleAssignGlobalIPv6(String initialValue) {
         Object obj = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
@@ -301,6 +355,9 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.setRootIPv6Prefix(address, prefix);
     }
 
+    /**
+     * Handles the confirmation and removal of global IPv6.
+     */
     private void handleRemoveGlobalIPv6() {
         if(!GuiUtils.confirmation("Sicherheitsabfrage - IPv6 entfernen",
                 "Der globale IPv6 Prefix wird entfernt. Alle Netzwerke behalten ihre IPv6 Konfiguration."))
@@ -308,6 +365,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.setRootIPv6Prefix(null, 0);
     }
 
+    /**
+     * Handles the confirmation and removal of IPv6 from a network.
+     * @param networkNode the network node containing the network to change
+     */
     private void handleRemoveIPv6(NetworkTreeNode networkNode) {
         if(!GuiUtils.confirmation("Sicherheitsabfrage - IPv6 entfernen",
                 "IPv6 wird aus dem Netzwerk und allen Hosts entfernt."))
@@ -319,6 +380,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         fillInfoPanel(network);
     }
 
+    /**
+     * Removed the IPv6 configuration from a network.
+     * @param network the network to change
+     */
     private void removeIPv6FromNetwork(Network network) {
         if(network.getStatus() == Network.SubnetStatus.HAS_HOSTS) {
             for (Host host : network.getHosts()) {
@@ -333,6 +398,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         network.setIPv6(null, 0);
     }
 
+    /**
+     * Handles the user input and configuration of IPv6 to a network.
+     * @param networkNode the network node containing the network to change
+     * @param initialValue the initial input value to display
+     */
     private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
         Network parentNetwork = networkNode.getNetwork().getParent();
         if(parentNetwork != null && !parentNetwork.isIPv6Enabled()) {
@@ -378,6 +448,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Handles the user input and creation of a new root network.
+     * @param initialValue the initial input value to display
+     */
     private void handleCreateNetwork(String initialValue) {
         Object obj = JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
@@ -401,6 +475,11 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Handles the user input and creation of a sub-network.
+     * @param parent the parent network
+     * @param initialValue the initial input value to display
+     */
     private void handleCreateNetwork(NetworkTreeNode parent, String initialValue) {
         String input = (String)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
@@ -420,6 +499,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Handles the user input and creation of a sub-network specified by network size.
+     * @param parent the parent network
+     */
     private void handleCreateNetworkBySize(NetworkTreeNode parent) {
         String input = (String)JOptionPane.showInputDialog(
                 SubnetCalculatorFrame.Instance,
@@ -434,6 +517,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.addNetwork(parent,Integer.valueOf(input));
     }
 
+    /**
+     * Handles the user input and splitting of a network in sub-networks by sub-network size.
+     * @param networkTreeNode the network to split
+     */
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
         ArrayList<Integer> deviders = networkTreeNode.getNetwork().possibleDividers();
 
@@ -452,6 +539,10 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.splitBySize(networkTreeNode, (int)input);
     }
 
+    /**
+     * Handles the user input and splitting of a network in sub-networks by sub-network count.
+     * @param networkTreeNode the network to split
+     */
     private void handleSplitByCount(NetworkTreeNode networkTreeNode) {
         ArrayList<Integer> sizes = new ArrayList<>();
 
@@ -474,11 +565,19 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         networkTreeModel.splitByCount(networkTreeNode, (int) input);
     }
 
+    /**
+     * Adds a host to the passed network.
+     * @param networkNode the network to fill.
+     */
     private void handleAddHost(NetworkTreeNode networkNode) {
         networkNode.getNetwork().addHost();
         hostPanel.reloadHosts();
     }
 
+    /**
+     * Handles the user input and the creation of a host specified by an ip address.
+     * @param networkNode the network to fill with the host
+     */
     private void handleAddHostWithIP(NetworkTreeNode networkNode) {
         Network network = networkNode.getNetwork();
         String networkString = network.getNetworkIdV4().toString() + "/" +
@@ -496,20 +595,36 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
         hostPanel.reloadHosts();
     }
 
+    /**
+     * Fill all remaining slots in a network with their corresponding hosts.
+     * @param networkNode the network node to fill
+     */
     private void handleAddAllHosts(NetworkTreeNode networkNode) {
         networkNode.getNetwork().addAllHosts();
         hostPanel.reloadHosts();
     }
 
+    /**
+     * Removes all hosts from a network.
+     * @param networkNode the network to clear hosts from
+     */
     private void handleClearHosts(NetworkTreeNode networkNode) {
         networkNode.getNetwork().clearHosts();
         hostPanel.reloadHosts();
     }
 
+    /**
+     * Removes all sub-networks from a network.
+     * @param networkNode the network to clear subnets from
+     */
     private void handleClearSubnets(NetworkTreeNode networkNode) {
         networkTreeModel.clearSubnets(networkNode);
     }
 
+    /**
+     * Handles the user input and renaming of a network.
+     * @param networkNode the network node to rename
+     */
     private void handleRename(NetworkTreeNode networkNode) {
         String initialValue = networkNode.getNetwork().getName();
         String input = (String) JOptionPane.showInputDialog(
