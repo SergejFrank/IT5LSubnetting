@@ -124,7 +124,6 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
         Network network = Network.parse(ip+"/"+prefix, null);
         network.setName(netint.getDisplayName());
-        network.addAllHosts();
         networkTreeModel.addNetwork(network);
     }
 
