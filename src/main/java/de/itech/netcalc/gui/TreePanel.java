@@ -18,26 +18,26 @@ import java.util.Optional;
 /**
  * The TreePanel class defines the main work space.
  */
-public class TreePanel extends JPanel implements TreeSelectionListener {
+class TreePanel extends JPanel implements TreeSelectionListener {
     /**
      * Stores the view model that contains all information about the networks.
      */
-    private NetworkTreeModel networkTreeModel;
+    private final NetworkTreeModel networkTreeModel;
 
     /**
      * Stores the info panel, that displays the information about the currently selected network.
      */
-    private JSplitPane infoPane;
+    private final JSplitPane infoPane;
 
     /**
      * Stores the JTree that displays the information from the networkTreeModel.
      */
-    private JTree networkTree;
+    private final JTree networkTree;
 
     /**
      * Stores the host panel that displays the hosts of the currently selected network.
      */
-    private HostPanel hostPanel;
+    private final HostPanel hostPanel;
 
     /**
      * Creates and initializes a new TreePanel instance.
@@ -76,7 +76,7 @@ public class TreePanel extends JPanel implements TreeSelectionListener {
 
     /**
      * Fills the view model with all network interfaces provided by the operating system.
-     * @throws SocketException
+     * @throws SocketException internal os network interface error
      */
     private void initWithLocalInterfaces() throws SocketException {
         for (NetworkInterface netint : getInterfacesWithIPv4()) {

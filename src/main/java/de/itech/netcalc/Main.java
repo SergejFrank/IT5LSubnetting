@@ -5,7 +5,7 @@ import de.itech.netcalc.gui.SubnetCalculatorFrame;
 /**
  * The Main class provides the main() method as the entry point.
  */
-public class Main {
+class Main {
     /**
      * Creates a new SubnetCalculatorFrame and shows it.
      * @param args ignored

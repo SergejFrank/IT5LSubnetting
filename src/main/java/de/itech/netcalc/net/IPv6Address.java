@@ -9,7 +9,22 @@ public class IPv6Address extends IPAddress {
     /**
      * stores the first 64 bits of the address
      */
-    private long networkId;
+    private final long networkId;
+
+    /**
+     * stores the last 64 bits of the address
+     */
+    private final long interfaceId;
+
+    /**
+     * Creates a new Instance of the IPv6 address with the passed values
+     * @param networkId the first 64 bits of the IPv6 address
+     * @param interfaceId the last 64 bits of the IPv6 address
+     */
+    public IPv6Address(long networkId, long interfaceId){
+        this.networkId = networkId;
+        this.interfaceId = interfaceId;
+    }
 
     /**
      * Compares an object with the IPv4 address
@@ -35,21 +50,6 @@ public class IPv6Address extends IPAddress {
         int result = (int) (networkId ^ (networkId >>> 32));
         result = 31 * result + (int) (interfaceId ^ (interfaceId >>> 32));
         return result;
-    }
-
-    /**
-     * stores the last 64 bits of the address
-     */
-    private long interfaceId;
-
-    /**
-     * Createss a new Instance of the IPv6 address with the passed values
-     * @param networkId the first 64 bits of the IPv6 address
-     * @param interfaceId the last 64 bits of the IPv6 address
-     */
-    public IPv6Address(long networkId, long interfaceId){
-        this.networkId = networkId;
-        this.interfaceId = interfaceId;
     }
 
     /**
@@ -121,8 +121,8 @@ public class IPv6Address extends IPAddress {
 
     /**
      * Generates an IPv6 address based on the passed network ID which is populated with a random interface Id
-     * @param networkId
-     * @return
+     * @param networkId the network ID to use
+     * @return random IPv6 address
      */
     public static IPv6Address getAddressWithRandomHost(long networkId){
         return new IPv6Address(networkId, getRandomInterfaceAddress());
@@ -130,8 +130,8 @@ public class IPv6Address extends IPAddress {
 
     /**
      * Generates an IPv6 address based on the passed network ID which is populated with a random interface Id
-     * @param address
-     * @return
+     * @param address teh network ID to use
+     * @return random IPv6 address
      */
     public static IPv6Address getAddressWithRandomHost(IPv6Address address){
         return new IPv6Address(address.networkId, getRandomInterfaceAddress());

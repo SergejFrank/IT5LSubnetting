@@ -2,7 +2,7 @@ package de.itech.netcalc.gui;
 
 import javax.swing.*;
 
-public class FixedSplitPanel extends JSplitPane
+class FixedSplitPanel extends JSplitPane
 {
     FixedSplitPanel(int split)
     {

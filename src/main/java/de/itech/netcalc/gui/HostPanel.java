@@ -8,7 +8,7 @@ import javax.swing.event.TableModelListener;
 import java.awt.*;
 
 class HostPanel extends JPanel implements TableModelListener{
-    private HostTableModel model;
+    private final HostTableModel model;
     private Network network;
     private boolean updatedProgrammatically;
 
@@ -59,7 +59,7 @@ class HostPanel extends JPanel implements TableModelListener{
                 host.setIpv6Address(null);
             } else {
                 if(network.getNetworkIdV6() == null) {
-                    GuiUtils.error("Biite zuerst IPv6 im Netzwerk konfigurieren.");
+                    GuiUtils.error("Bitte zuerst IPv6 im Netzwerk konfigurieren.");
                     throw new UnsupportedOperationException("Configure IPv6 on Network first.");
                 }
                 if (!IPAddress.isValidIPv6(input)) {

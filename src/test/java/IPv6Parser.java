@@ -18,7 +18,7 @@ public class IPv6Parser {
 
     @RunWith(Parameterized.class)
     public static class ValidateeTests extends IPv6Parser{
-        @Parameter(value = 0)
+        @Parameter()
         public String in;
 
         @Parameter(value = 1)
@@ -48,7 +48,7 @@ public class IPv6Parser {
 
     @RunWith(Parameterized.class)
     public static class ValidatePrefixTests extends IPv6Parser{
-        @Parameter(value = 0)
+        @Parameter()
         public String in;
 
         @Parameter(value = 1)
@@ -77,7 +77,7 @@ public class IPv6Parser {
 
     @RunWith(Parameterized.class)
     public static class ParseTests extends IPv6Parser{
-        @Parameter(value = 0)
+        @Parameter()
         public String in;
 
         @Parameter(value = 1)
@@ -106,7 +106,7 @@ public class IPv6Parser {
 
     @RunWith(Parameterized.class)
     public static class ParsePrefixTests extends IPv6Parser{
-        @Parameter(value = 0)
+        @Parameter()
         public String in;
 
         @Parameter(value = 1)

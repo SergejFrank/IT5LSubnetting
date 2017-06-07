@@ -16,12 +16,12 @@ public class Network {
     /**
      * Backing field for the Parent property
      */
-    private Network parent;
+    private final Network parent;
 
     /**
      * Backing field for all sub-networks hold by the network
      */
-    private ArrayList<Network> subnets = new ArrayList<>();
+    private final ArrayList<Network> subnets = new ArrayList<>();
 
     /**
      * Backing field for all hosts hold by the network
@@ -111,7 +111,7 @@ public class Network {
                     host = new Host(this, hostV4, random);
                 }
                 else {
-                    host = new Host(this, hostV4, null);
+                    host = new Host(this, hostV4);
                 }
                 hosts[i] = host;
             }
@@ -161,7 +161,7 @@ public class Network {
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), random);
                 } else {
-                    newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1), null);
+                    newHost = new Host(this, new IPv4Address(getNetworkIdV4().getValue() + 1));
                 }
 
                 hosts[0] = newHost;
@@ -182,7 +182,7 @@ public class Network {
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     newHost = new Host(this, new IPv4Address(addressValue), random);
                 } else {
-                    newHost = new Host(this, new IPv4Address(addressValue), null);
+                    newHost = new Host(this, new IPv4Address(addressValue));
                 }
 
                 hosts[indexOfAdress] = newHost;
@@ -220,7 +220,7 @@ public class Network {
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     newHost = new Host(this, address, random);
                 } else {
-                    newHost = new Host(this, address, null);
+                    newHost = new Host(this, address);
                 }
                 hosts[indexOfAddress - 1] = newHost;
                 return newHost;
