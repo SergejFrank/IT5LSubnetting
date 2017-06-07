@@ -394,11 +394,22 @@ public class Network {
         }
     }
 
+    /**
+     * Calculates, if two networks have colliding network ranges.
+     * @param network the network to compare to
+     * @return true, if the networks collide
+     */
     public boolean isColliding(Network network) {
         return NetUtils.isInSubnet(getNetworkIdV4(), getNetworkMaskV4(), network.getNetworkIdV4())
                 || NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), getNetworkIdV4());
     }
 
+    /**
+     * Parse a network string representation to a network.
+     * @param value the string value
+     * @param parent the parent network
+     * @return the parsed network
+     */
     public static Network parse(String value, Network parent) {
         if(value == null) throw new IllegalArgumentException("'value' can not be null.");
         String[] splitted = value.split("/");
@@ -431,67 +442,134 @@ public class Network {
         }
     }
 
+    /**
+     * Gets the Property indicating whether IPv6 is configured for this network.
+     * @return
+     */
     public boolean isIPv6Enabled(){
         return networkIdV6 != null;
     }
-    //getter and setter
+
+    /**
+     * Gets the name of the network.
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the network.
+     * @param name the name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the possible amount of IPv4 addresses in the network.
+     * Includes the network ID and broadcast address.
+     * @return
+     */
     public long getAmountIpAddresses() {
         return ((~getNetworkMaskV4().getLValue()) & Integer.toUnsignedLong(-1)) + 1;
     }
 
+    /**
+     * Gets the IPv4 network ID of the network
+     * @return the network ID
+     */
     public IPv4Address getNetworkIdV4() {
         return networkIdV4.clone();
     }
 
+    /**
+     * Sets the IPv4 network ID of the network.
+     * @param networkIdV4 the IPv4 network ID to be set
+     */
     private void setNetworkIdV4(IPv4Address networkIdV4) {
         this.networkIdV4 = networkIdV4;
     }
 
+    /**
+     * Gets the IPv4 network mask of the network
+     * @return the IPv4 network mask
+     */
     public IPv4Address getNetworkMaskV4() {
         return networkMaskV4.clone();
     }
 
+    /**
+     * Gets the maximum amount of IPv4 host addresses for the network.
+     * Excludes the network ID and broadcast address.
+     * @return the maximum host amount
+     */
     public int getMaxHosts(){
         return Math.max((int) (getAmountIpAddresses() - 2), 0);
     }
 
+    /**
+     * Gets the IPv4 broadcast address of the network.
+     * @return the IPv4 broadcast address
+     */
     public IPv4Address getBroadcastAddress(){
         return new IPv4Address(getNetworkIdV4().getValue() + getMaxHosts() + 1);
     }
 
+    /**
+     * Sets the IPv4 network mask of the network.
+     * @param networkMaskV4 the IPv4 network mask to set
+     */
     private void setNetworkMaskV4(IPv4Address networkMaskV4) {
         this.networkMaskV4 = networkMaskV4;
     }
 
+    /**
+     * Gets the IPv6 network ID of the network
+     * @return the IPv6 network ID
+     */
     public IPv6Address getNetworkIdV6() {
         return networkIdV6;
     }
 
+    /**
+     * Sets the IPv6 network ID of the network
+     * @param networkIdV6 the IPv6 address to set
+     */
     private void setNetworkIdV6(IPv6Address networkIdV6) {
         this.networkIdV6 = networkIdV6;
     }
 
+    /**
+     * Gets the IPv6 network prefix of the network
+     * @return the IPv6 network prefix
+     */
     public int getPrefixV6() {
         return prefixV6;
     }
 
+    /**
+     * Sets the IPv6 network prefix of the network.
+     * @param prefixV6 the IPv6 network prefix to set
+     */
     private void setPrefixV6(int prefixV6) {
         this.prefixV6 = prefixV6;
     }
 
+    /**
+     * Configures IPv6 for the network.
+     * @param networkId the IPv6 network ID
+     * @param prefix the IPv6 network prefix
+     */
     public void setIPv6(IPv6Address networkId, int prefix) {
         setNetworkIdV6(networkId);
         setPrefixV6(networkId == null ? 0 : prefix);
     }
 
+    /**
+     * Gets a list of the sub-networks of the network.
+     * @return the sub-network
+     */
     public ArrayList<Network> getSubnets(){
         return subnets;
     }
@@ -500,18 +578,36 @@ public class Network {
         return (int)Math.ceil((double)position / (double)count) * count;
     }
 
+    /**
+     * Gets an Array of all host slots of the network. Each host is positioned depending on its IPv4 address.
+     * The array is always of size getMaxHosts(). This can lead to empty slots.
+     * @return the hosts of the network
+     */
     public Host[] getHosts(){
         return hosts;
     }
 
+    /**
+     * Gets the network status, describing if the network contains sub-networks of hosts.
+     * @return the network status
+     */
     public SubnetStatus getStatus(){
         return status;
     }
 
+    /**
+     * Gets the parent network of the network. Returns null, if this is a root network.
+     * @return the parent network
+     */
     public Network getParent() {
         return parent;
     }
 
+    /**
+     * Gets the string representation of the network either in IPv4 or IPv6 notation.
+     * @param ipv6IfEnabled use IPv6 notation
+     * @return the network's string representation
+     */
     public String toString(boolean ipv6IfEnabled){
         if(!ipv6IfEnabled || !isIPv6Enabled()){
             return toString();
@@ -519,12 +615,20 @@ public class Network {
         return getNetworkIdV6().toString(true) + "/" + getPrefixV6();
     }
 
-    //overwridden methods
+    /**
+     * Gets the string representation of the network in IPv4 notation.
+     * @return the network's string representation
+     */
     @Override
     public String toString(){
         return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getNetworkMaskV4()) + (name == null ? "" : " (" + name + ")");
     }
 
+    /**
+     * Compares the network to an object by reference and value.
+     * @param o the object to compare to
+     * @return true, if both references point to the same object, or both networks have the same values.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -538,6 +642,10 @@ public class Network {
                 && (networkIdV6 != null ? networkIdV6.equals(that.networkIdV6) : that.networkIdV6 == null);
     }
 
+    /**
+     * Calculates a hash code for the network.
+     * @return the hash code of the the network.
+     */
     @Override
     public int hashCode() {
         int result = networkIdV4.hashCode();
