@@ -24,11 +24,6 @@ public class Network {
     private ArrayList<Network> subnets = new ArrayList<>();
 
     /**
-     * Counts the amount of hosts hold by the network
-     */
-    private int hostCount;
-
-    /**
      * Backing field for all hosts hold by the network
      */
     private Host[] hosts;
@@ -74,7 +69,6 @@ public class Network {
         this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
         this.setNetworkMaskV4(networkMaskV4);
         status = SubnetStatus.UNSPECIFIED;
-        hostCount = 0;
         hosts = new Host[getMaxHosts()];
         checkIsZeroNetmask(networkMaskV4);
     }
@@ -96,7 +90,6 @@ public class Network {
         this.setNetworkIdV6(networkIdV6);
         this.setPrefixV6(prefixV6);
         status = SubnetStatus.UNSPECIFIED;
-        hostCount = 0;
         hosts = new Host[getMaxHosts()];
         checkIsZeroNetmask(networkMaskV4);
     }
@@ -109,7 +102,6 @@ public class Network {
             throw new UnsupportedOperationException("can't add host to subnetted network");
         }
         status = SubnetStatus.HAS_HOSTS;
-        hostCount = getMaxHosts();
         for(int i = 0; i < getMaxHosts(); i++) {
             if(hosts[i] == null){
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
@@ -134,7 +126,6 @@ public class Network {
         for (Host host:hosts) {
             if(host != null && host.getIPv4Address().equals(ip)){
                 host = null;
-                hostCount--;
             }
         }
     }
@@ -147,7 +138,6 @@ public class Network {
         for (Host other:hosts) {
             if(other != null && other.equals(host)){
                 other = null;
-                hostCount--;
             }
         }
     }
@@ -172,10 +162,9 @@ public class Network {
 
                 hosts[0] = newHost;
                 status = SubnetStatus.HAS_HOSTS;
-                hostCount = 1;
                 break;
             case HAS_HOSTS:
-                if(hostCount >= getMaxHosts()){
+                if(getHostCount() >= getMaxHosts()){
                     throw new UnsupportedOperationException("network already has maximum amount of hosts");
                 }
                 int indexOfAdress = 0;
@@ -193,7 +182,6 @@ public class Network {
                 }
 
                 hosts[indexOfAdress] = newHost;
-                hostCount++;
                 return newHost;
         }
         return null;
@@ -215,7 +203,7 @@ public class Network {
                 throw new UnsupportedOperationException("can't add host to subnetted network");
             case UNSPECIFIED:
             case HAS_HOSTS:
-                if(hostCount >= getMaxHosts()){
+                if(getHostCount() >= getMaxHosts()){
                     throw new UnsupportedOperationException("network already has maximum amount of hosts");
                 }
                 if(Arrays.stream(hosts).anyMatch(h -> h != null && h.getIPv4Address().equals(address))){
@@ -231,7 +219,6 @@ public class Network {
                     newHost = new Host(this, address, null);
                 }
                 hosts[indexOfAddress - 1] = newHost;
-                hostCount++;
                 return newHost;
         }
         return null;
@@ -242,7 +229,6 @@ public class Network {
      */
     public void clearHosts() {
         hosts = new Host[getMaxHosts()];
-        hostCount = 0;
         if(getStatus() == SubnetStatus.HAS_HOSTS)
             status = SubnetStatus.UNSPECIFIED;
     }
@@ -506,6 +492,14 @@ public class Network {
      */
     public int getMaxHosts(){
         return Math.max((int) (getAmountIpAddresses() - 2), 0);
+    }
+
+    /**
+     * Gets the amount of initialized hosts of the network.
+     * @return the host count
+     */
+    public int getHostCount() {
+        return (int)Arrays.stream(getHosts()).filter(h -> h != null).count();
     }
 
     /**
