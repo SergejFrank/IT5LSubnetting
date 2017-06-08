@@ -42,7 +42,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         return networks;
     }
 
-    private NetworkTreeRoot getRootNode() {
+    public NetworkTreeRoot getRootNode() {
         return (NetworkTreeRoot) getRoot();
     }
 

@@ -5,6 +5,7 @@ import de.itech.netcalc.net.*;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -190,12 +191,29 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     /**
+     * Refresh all elements in the Panel.
+     */
+    void refresh() {
+        networkTreeModel.nodeStructureChanged(networkTreeModel.getRootNode());
+        NetworkTreeNode selected = getSelectedNetworkTreeNode();
+        if(selected == null) {
+            infoPane.setBottomComponent(null);
+            fillHostPanel(null);
+        } else {
+            fillInfoPanel(selected.getNetwork());
+            fillHostPanel(selected.getNetwork());
+        }
+    }
+
+    /**
      * Gets the currently selected NetworkTreeNode. Returns null, if root or nothing is selected.
      * @return the selected NetworkTreeNode
      */
     private NetworkTreeNode getSelectedNetworkTreeNode() {
         int row = networkTree.getMinSelectionRow();
-        Object element = networkTree.getPathForRow(row).getLastPathComponent();
+        TreePath treePath = networkTree.getPathForRow(row);
+        if(treePath == null) return null;
+        Object element = treePath.getLastPathComponent();
         return element instanceof NetworkTreeNode ? (NetworkTreeNode)element : null;
     }
 
