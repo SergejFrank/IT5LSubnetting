@@ -345,6 +345,10 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Handles the user input and file load progress to load a network from a file to a sub node.
+     * @param networkTreeNode the node to load the network to
+     */
     private void handleLoadNetworkToNode(NetworkTreeNode networkTreeNode) {
         FileDialog dialog = new java.awt.FileDialog((Frame) null, "Netzwerk laden...", FileDialog.LOAD);
         dialog.setVisible(true);
