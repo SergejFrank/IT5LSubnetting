@@ -12,7 +12,7 @@ public class SubnetCalculatorFrame extends JFrame {
     public SubnetCalculatorFrame(String title){
         super(title);
 
-        initialiteMenu();
+        initializeMenu();
 
         add(treePanel);
 
@@ -25,7 +25,7 @@ public class SubnetCalculatorFrame extends JFrame {
         setVisible(true);
     }
 
-    private void initialiteMenu() {
+    private void initializeMenu() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("Datei");
