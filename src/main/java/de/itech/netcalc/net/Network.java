@@ -654,7 +654,7 @@ public class Network {
         if(!ipv6IfEnabled || !isIPv6Enabled()){
             return toString();
         }
-        return getNetworkIdV6().toString(true) + "/" + getPrefixV6();
+        return getNetworkIdV6().toString(true) + "/" + getPrefixV6() + (networkName == null ? "" : " (" + networkName + ")");
     }
 
     /**
