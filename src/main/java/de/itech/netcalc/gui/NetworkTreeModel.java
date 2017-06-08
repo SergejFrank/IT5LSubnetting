@@ -59,7 +59,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         nodeChanged(getRootNode());
     }
 
-    void deleteNetwork(NetworkTreeNode networkNode) {
+    void removeNetwork(NetworkTreeNode networkNode) {
         TreeNode parent = networkNode.getParent();
         if(parent instanceof NetworkTreeNode) {
             Network network = ((NetworkTreeNode)parent).getNetwork();

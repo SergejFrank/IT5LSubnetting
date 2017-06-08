@@ -1,8 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.*;
-import javafx.scene.input.KeyCode;
-import sun.nio.ch.Net;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -200,7 +198,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         int row = networkTree.getMinSelectionRow();
         Object element = networkTree.getPathForRow(row).getLastPathComponent();
         if(!(element instanceof NetworkTreeNode)) return;
-        networkTreeModel.deleteNetwork((NetworkTreeNode) element);
+        networkTreeModel.removeNetwork((NetworkTreeNode) element);
     }
 
     /**
@@ -355,7 +353,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 });
                 menu.add(new AbstractAction("Netzwerk/Subnetz löschen") {
                     public void actionPerformed (ActionEvent e) {
-                        networkTreeModel.deleteNetwork(networkNode);
+                        networkTreeModel.removeNetwork(networkNode);
                     }
                 });
             }
