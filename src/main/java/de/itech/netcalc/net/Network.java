@@ -23,48 +23,6 @@ public class Network {
     }
 
     /**
-     * Parse a Network from an XML file.
-     * @param file file containing the XML
-     * @return the parsed network
-     */
-    public static Network fromXML(File file){
-
-        //todo: set parent of host and network;
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
-
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Network network = (Network) jaxbUnmarshaller.unmarshal(file);
-            System.out.println(network);
-
-            return network;
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Saves a Network to an XML file.
-     * @param file the file to save to
-     */
-    public void save(File file){
-        try {
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-            // output pretty printed
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            jaxbMarshaller.marshal(this, file);
-            jaxbMarshaller.marshal(this, System.out);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Backing field for the Parent property
      */
     private Network parent;
@@ -643,6 +601,48 @@ public class Network {
      */
     public Network getParent() {
         return parent;
+    }
+
+    /**
+     * Parse a Network from an XML file.
+     * @param file file containing the XML
+     * @return the parsed network
+     */
+    public static Network fromXML(File file){
+
+        //todo: set parent of host and network;
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Network network = (Network) jaxbUnmarshaller.unmarshal(file);
+            System.out.println(network);
+
+            return network;
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Saves a Network to an XML file.
+     * @param file the file to save to
+     */
+    public void save(File file){
+        try {
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(this, file);
+            jaxbMarshaller.marshal(this, System.out);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
