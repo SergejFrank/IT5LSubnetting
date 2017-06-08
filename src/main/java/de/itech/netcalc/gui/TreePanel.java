@@ -194,7 +194,8 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         JTextArea area = new JTextArea(value);
         area.setLineWrap(true);
         area.setEditable(false);
-        area.setOpaque(true);
+        area.setOpaque(false);
+        area.setBackground(new Color(0,0,0,0));
         return area;
     }
 
