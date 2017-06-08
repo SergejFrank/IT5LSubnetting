@@ -1,0 +1,22 @@
+\section{Projektentwurf}
+Dieser Abschnitt dokumentiert die Entwurfsphase des Projektes.
+
+\subsection{Komponentenentwurf}
+Zunächst entwarfen wir einen Plan bezüglich der einzelnen Komponenten der Anwendung.
+Dabei handelt es sich um die Netzwerklogik, sowie die Frontendlogik bzw. das GUI.
+Wir definierten für beide Komponenten jeweils ein Java Package um diese logisch zu trennen.
+
+\subsection{Entwurf der Netzwerklogik}
+Zunächst definierten wir eine Klasse um den elementaren Baustein der Anwendungslogik zu speichern;
+Die Klasse \Klasse{IPAddress} stellt alle Daten einer IPv4 Adresse zur verfügung,
+wobei sie keine Logik implementiert. Desweiteren entwarfen wir die Klassen \Klasse{Network} und \Klasse{Subnet}.
+Als letztes entwarfen wir die Klasse \Klasse{Host} um Endpunkte in den Netzwerken darstellen zu können.
+Die drei Klassen sollten alle die Klasse \Klasse{IPAddress} nutzen um verschiedenste Informationen
+zu speichern z.B. Netzwerk ID order Subnetmaske.
+Als Sammlung verschiedenster Funktionen definierten wir die Klasse \Klasse{NetUtils}.
+
+\subsection{Entwurf der GUI}
+Der erste Entwurf der GUI sah ein Tab-Layout vor, wie es in den Beispielen zu sehen ist,
+die dem Projektauftrag beiliegen. Dabei sollte sich der Workflow nacheinander durch eine
+Übersicht der Netzwerke, über eine Übersichte der jeweiligen Subnetze, bis zu einer der
+dazugehörigen Hosts bewegen.

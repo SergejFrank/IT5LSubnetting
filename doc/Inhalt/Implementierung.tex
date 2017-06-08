@@ -1,0 +1,60 @@
+\section{Implentierung}
+Die größte Phase unseres Projektes bestand darin, die nun geplante Anwendung zu implementieren.
+Die folgenden Schritte dokumentieren diesen Vorgang. Die einzelnen Vorgänge sind chronologisch geordnet.
+
+\subsection{Logik I - Implementierung}
+Als erstes implementierten wir die Logik der IPv4 Adresse. Dabei stellten sich uns viele
+Probleme. So hatten wir größere Probleme mit der Sprache Jave, da diese im Umgang mit
+Zahlen und Binären Operationen mehrere Schwächen aufweist. So fehlen zum Beispiel die
+unsigned Datentypen, wodurch viele Operationen zunächst sehr provisorisch implementiert
+werden mussten.
+
+Aufbauend auf der IPv4 Adresse wurden die Klassen \Klasse{Network} und \Klasse{Subnet} implementiert.
+Während der Implementierung dieser, entschieden wir uns dafür beide von einer gemeinsamen Basisklasse
+\Klasse{NetworkBase} erben zu lassen um viele gemeinsame Eigenschaften und Methoden nicht doppelt
+implementieren zu müssen.
+Dieser Schritt ersparte uns auch in vielen weiteren Bereichen Arbeit, da es für viele Operationen
+irrelevant ist, ob es sich um ein Netzwerk, oder ein Subnetz handelt.
+
+\subsection{GUI I - Implementierung}
+Durch unsere Trennung der Logik und GUI wurde es uns ermöglicht beides getrennt von einander
+zu entwickeln. So konnte ein Großteil der GUI ohne Funktion erstellt und erst in einem nächsten Schritt
+mit der Logik verbunden werden.
+
+\subsection{Tests}
+Um unsere Implementierung der Methoden zum Parsen von IP Adressen und Netzwerken zu testen entwickelten
+wir erste Tests. Diese halfen uns entscheident bei der Suche nach Fehlern, sowie bei der Pflege des Codes.
+Um eine möglichst stabile Software zu entwickeln, erstellen wir weitere Tests für die meisten Funktionen
+im Netzwerk Logik Bereich. 
+
+\subsection{GUI II - Neuentwurf}
+Bei der Implementierung der Logik kamen weitere Ideen zur Umsetzungen auf und nach einiger Recherche
+legten wir ein neues Konzept zugrunde. In diesem sollten alle Netzwerke und Subnetze ein einer
+Baumstruktur abgebildet werden. Dies führte zu einer deutlich aufgeräumteren und
+verständlicheren Oberfläche.
+Die Overflöche wurde schnell umgestaltet und nach anfänglichen Problemen mit der Datenbindung
+funktionierten die grundlegeneden Funktionen schon nach kurzer Zeit und ohne großen Aufwand.
+
+\subsection{Logik II - Zusammenführung von Network und Subnet}
+Durch die Entwicklung einer Baumstruktur stellen wir fest, dass eine rekursiv aufgebaute Logik der
+Netzwerke dafür deutlich besser geeigent war als die aktuelle Trennung in Netzwerke und Subnetzen.
+Außerdem ist eine solche rekursive Implementierung deutlich eleganter und ebenso realitätsnäher
+als die vorhandene.
+Die Zusammenführung gestaltete sich durch unsere bereits vorhandene \Klasse{NetzwerkBase} Klasse einfach.
+
+\subsection{Logik III - Implementierung von IPv6}
+Teil der Aufgabenstellung war es, allen Netzwerken und Hosts IPv6 Adressen zuweisen zu können.
+Die Entwicklung einer \Klasse{IPv6Address} Klasse gestaltete sich zunächst als schwierig, da wir nur
+wenig Erfahrung im Umgang mit IPv6 hatten und viele Probleme zunächst recherchiert werden mussten.
+
+Im Laufe der Implementierung von IPv6 benannten wir die schon bestehende IPv4 Adress-Klasse in \Klasse{IPv4Address},
+da nun beide Adress-Klassen von einer gemeinsamen Basisklasse \Klasse{IPAddress} erben sollten.
+Die \Klasse{Network} Klasse versahen wir ebenso mit den IPv6 Eigenschaften, wie die \Klasse{Host} Klasse.
+
+\subsection{Fazit}
+Das in \ref{sec:Entwicklungsprozess} festgelegte agile Vorgehen haben wir in vielen Situationen
+genutzt. Die Wahl hat sich dabei defintiv ausgezahlt.
+Da wir von Anfang an einen sehr Modularen und Abstrakten Ansatz verfolgt haben,
+mussten wir selbst bei größeren Änderungen nur wenig Probleme lösen. So ließ sich beispielsweise
+die Zusammenführung von Network und Subnet ohne Logik Änderungen in der GUI bewerkstelligen. Die
+Änderungen beschränkten sich auf das Umbennen der Klassennamen.

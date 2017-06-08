@@ -1,0 +1,22 @@
+\usepackage[automark,headsepline,ilines]{scrpage2}
+
+\pagestyle{scrheadings}
+
+% Kopfzeile
+\ihead{\large{\textsc{\titel}}\\[2ex] \textit{\headmark}}
+\chead{}
+\ohead{}
+\setlength{\headheight}{15mm}
+
+% Fußzeile
+\ifoot{\autoren}
+\cfoot{}
+\ofoot{\pagemark}
+
+\onehalfspacing % Zeilenabstand 1,5 Zeilen
+\frenchspacing % erzeugt ein wenig mehr Platz hinter einem Punkt
+
+% Schusterjungen und Hurenkinder vermeiden
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
