@@ -1,14 +1,14 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.*;
+import javafx.scene.input.KeyCode;
+import sun.nio.ch.Net;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.net.*;
 import java.nio.file.Path;
@@ -62,6 +62,12 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 handleTreeRightClick(e);
+            }
+        });
+        networkTree.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                handleTreeKeyTyped(e);
             }
         });
         infoPane.setTopComponent(new JScrollPane(networkTree));
@@ -183,6 +189,18 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      */
     private void fillHostPanel(Network network) {
         hostPanel.setNetwork(network);
+    }
+
+    /**
+     * Gets executed when a key is typed with JTree focused.
+     * @param e event data
+     */
+    private void handleTreeKeyTyped(KeyEvent e) {
+        if(e.getKeyCode() != KeyEvent.VK_DELETE) return;
+        int row = networkTree.getMinSelectionRow();
+        Object element = networkTree.getPathForRow(row).getLastPathComponent();
+        if(!(element instanceof NetworkTreeNode)) return;
+        networkTreeModel.deleteNetwork((NetworkTreeNode) element);
     }
 
     /**
