@@ -22,6 +22,11 @@ public class Network {
         UNSPECIFIED, HAS_HOSTS, HAS_SUBNETS
     }
 
+    /**
+     * Parse a Network from an XML file.
+     * @param file file containing the XML
+     * @return the parsed network
+     */
     public static Network fromXML(File file){
 
         //todo: set parent of host and network;
@@ -39,7 +44,10 @@ public class Network {
         return null;
     }
 
-
+    /**
+     * Saves a Network to an XML file.
+     * @param file the file to save to
+     */
     public void save(File file){
         try {
 
@@ -55,6 +63,7 @@ public class Network {
             e.printStackTrace();
         }
     }
+
     /**
      * Backing field for the Parent property
      */
@@ -115,6 +124,9 @@ public class Network {
         hosts = new Host[getMaxHosts()];
     }
 
+    /**
+     * Creates an empty Network instance.
+     */
     private Network(){}
 
     /**
