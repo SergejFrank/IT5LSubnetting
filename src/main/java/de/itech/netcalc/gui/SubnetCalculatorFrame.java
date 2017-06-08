@@ -77,12 +77,12 @@ public class SubnetCalculatorFrame extends JFrame {
         JRadioButtonMenuItem notV6Hex = new JRadioButtonMenuItem("Hexadezimal", true);
         JRadioButtonMenuItem notV6Bin = new JRadioButtonMenuItem("Binär");
         notV6Hex.addActionListener(e -> {
-            Config.setIpv4Notation(notV6Hex.isSelected() ? Config.IPNotation.HEXADECEMAL : Config.IPNotation.BINARY);
+            Config.setIpv6Notation(notV6Hex.isSelected() ? Config.IPNotation.HEXADECEMAL : Config.IPNotation.BINARY);
             notV6Bin.setSelected(!notV6Hex.isSelected());
             treePanel.refresh();
         });
         notV6Bin.addActionListener(e -> {
-            Config.setIpv4Notation(notV6Bin.isSelected() ? Config.IPNotation.BINARY : Config.IPNotation.HEXADECEMAL);
+            Config.setIpv6Notation(notV6Bin.isSelected() ? Config.IPNotation.BINARY : Config.IPNotation.HEXADECEMAL);
             notV6Hex.setSelected(!notV6Bin.isSelected());
             treePanel.refresh();
         });
