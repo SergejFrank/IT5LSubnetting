@@ -1,7 +1,6 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.net.*;
-import sun.security.krb5.internal.crypto.NullEType;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -206,7 +205,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 });
                 menu.add(new AbstractAction("Netzwerk laden") {
                     public void actionPerformed (ActionEvent e) {
-                        handleLoadNetwork();
+                        handleLoadNetworkToRoot();
                     }
                 });
                 menu.addSeparator();
@@ -320,6 +319,11 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                     });
                     menu.addSeparator();
                 }
+                menu.add(new AbstractAction("Netzwerk laden") {
+                    public void actionPerformed (ActionEvent e) {
+                        handleLoadNetworkToNode(networkNode);
+                    }
+                });
                 menu.add(new AbstractAction("Speichern unter...") {
                     public void actionPerformed (ActionEvent e) {
                         handleSaveNetworkAs(networkNode.getNetwork());
@@ -341,10 +345,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
-    /**
-     * Handles the user input and file load progress to load a network from a file.
-     */
-    private void handleLoadNetwork() {
+    private void handleLoadNetworkToNode(NetworkTreeNode networkTreeNode) {
         FileDialog dialog = new java.awt.FileDialog((Frame) null, "Netzwerk laden...", FileDialog.LOAD);
         dialog.setVisible(true);
         String fileName = dialog.getFile();
@@ -352,7 +353,36 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         File file = new File(dialog.getDirectory(), fileName);
         if(!file.exists() || file.isDirectory()) {
             GuiUtils.error("Die angegebene Datei konnte nicht gefunden werden.");
-            handleLoadNetwork();
+            handleLoadNetworkToNode(networkTreeNode);
+        } else {
+            Network network = Network.fromXML(file);
+            if(network == null) return;
+            Network parent = networkTreeNode.getNetwork();
+            if(!NetUtils.isInSubnet(parent.getNetworkIdV4(), parent.getNetworkMaskV4(), network.getNetworkIdV4())) {
+                GuiUtils.error("Das Netzwerk liegt nicht im übergeordneten Netzwerk.");
+                return;
+            }
+            Optional<Network> colliding = networkTreeNode.getNetwork().getSubnets().stream().filter(n -> n.isColliding(network)).findFirst();
+            if(colliding.isPresent()) {
+                GuiUtils.error("Das Netzwerk überschneidet sich mit dem Netzwerk '" + colliding.get().toString(true) + "'");
+                return;
+            }
+            networkTreeModel.addNetwork(network, networkTreeNode);
+        }
+    }
+
+    /**
+     * Handles the user input and file load progress to load a network from a file.
+     */
+    private void handleLoadNetworkToRoot() {
+        FileDialog dialog = new java.awt.FileDialog((Frame) null, "Netzwerk laden...", FileDialog.LOAD);
+        dialog.setVisible(true);
+        String fileName = dialog.getFile();
+        if(fileName == null) return;
+        File file = new File(dialog.getDirectory(), fileName);
+        if(!file.exists() || file.isDirectory()) {
+            GuiUtils.error("Die angegebene Datei konnte nicht gefunden werden.");
+            handleLoadNetworkToRoot();
         } else {
             Network network = Network.fromXML(file);
             Optional<Network> colliding = networkTreeModel.getNetworks().stream().filter(n -> n.isColliding(network)).findFirst();

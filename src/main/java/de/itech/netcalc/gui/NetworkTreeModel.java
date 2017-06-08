@@ -14,6 +14,9 @@ class NetworkTreeModel extends DefaultTreeModel {
     }
 
     void addNetwork(Network network) {
+        Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
+        if(collidingNetwork.isPresent())
+            throw new UnsupportedOperationException("Network is Colliding with "+collidingNetwork.get());
         insertNetwork(network, getRootNode());
     }
 
@@ -30,12 +33,7 @@ class NetworkTreeModel extends DefaultTreeModel {
 
     private void insertNetwork(Network network, DefaultMutableTreeNode parent) {
         NetworkTreeNode networkNode = new NetworkTreeNode(network);
-        Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
-        if(collidingNetwork.isPresent()){
-            throw new UnsupportedOperationException("Network is Colliding with "+collidingNetwork.get());
-        }else{
-            insertNodeInto(networkNode, parent, parent.getChildCount());
-        }
+        insertNodeInto(networkNode, parent, parent.getChildCount());
     }
 
     ArrayList<Network> getNetworks(){

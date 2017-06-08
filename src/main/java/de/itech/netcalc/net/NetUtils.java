@@ -24,7 +24,7 @@ public class NetUtils {
      * @param host the host address
      * @return true, if the host address is located in the network
      */
-    static boolean isInSubnet(IPv4Address networkId, IPv4Address networkMask, IPv4Address host) {
+    public static boolean isInSubnet(IPv4Address networkId, IPv4Address networkMask, IPv4Address host) {
         int valIp = host.getValue();
         int valSub = networkMask.getValue();
         int valNet = networkId.getValue();

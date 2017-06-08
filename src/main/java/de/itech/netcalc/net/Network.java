@@ -1,7 +1,5 @@
 package de.itech.netcalc.net;
 
-import sun.nio.ch.Net;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -290,6 +288,9 @@ public class Network {
             throw new UnsupportedOperationException("Subnet already exists.");
         if(!NetUtils.isInSubnet(this.getNetworkIdV4(), this.getNetworkMaskV4(), subnet.getNetworkIdV4()))
             throw new UnsupportedOperationException("Subnet is not in range of the parent network.");
+        Optional<Network> collidingNetwork = getSubnets().stream().filter(other -> other.isColliding(subnet)).findFirst();
+        if(collidingNetwork.isPresent())
+            throw new UnsupportedOperationException("Subnet is Colliding with "+collidingNetwork.get());
 
         subnets.add(subnet);
         sortSubnets();
