@@ -26,4 +26,9 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
             setAllowsChildren(false);
         }
     }
+
+    @Override
+    public String toString() {
+        return ((Network)userObject).toString();
+    }
 }
