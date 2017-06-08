@@ -48,7 +48,7 @@ public class SubnetCalculatorFrame extends JFrame {
         fileMenu.add(new AbstractAction("Beenden") {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                System.exit(0);
             }
         });
 
