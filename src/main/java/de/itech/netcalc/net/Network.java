@@ -375,7 +375,7 @@ public class Network {
     /**
      * Assigns random IPv6 Address to all hosts of the network
      */
-    public void assginIPv6ToAllHosts() {
+    public void assignIPv6ToAllHosts() {
         if(!isIPv6Enabled())
             throw new UnsupportedOperationException("Configure IPv6 first.");
         for (Host h : getHosts()) {
