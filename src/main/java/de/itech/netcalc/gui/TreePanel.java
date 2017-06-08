@@ -194,7 +194,6 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * Refresh all elements in the Panel.
      */
     void refresh() {
-        networkTreeModel.nodeStructureChanged(networkTreeModel.getRootNode());
         NetworkTreeNode selected = getSelectedNetworkTreeNode();
         if(selected == null) {
             infoPane.setBottomComponent(null);
