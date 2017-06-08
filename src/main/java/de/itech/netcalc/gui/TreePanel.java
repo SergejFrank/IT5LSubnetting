@@ -407,6 +407,10 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    /**
+     * Handles the confirmation and removal of a network node.
+     * @param networkTreeNode the network to remove
+     */
     private void handleRemoveNetwork(NetworkTreeNode networkTreeNode) {
         if(!GuiUtils.confirmation("Netzwerk löschen.", "Soll das Netzwerk wirklich gelöscht werden?"))
             return;
