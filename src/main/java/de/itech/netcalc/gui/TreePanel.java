@@ -190,15 +190,31 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     }
 
     /**
+     * Gets the currently selected NetworkTreeNode. Returns null, if root or nothing is selected.
+     * @return the selected NetworkTreeNode
+     */
+    private NetworkTreeNode getSelectedNetworkTreeNode() {
+        int row = networkTree.getMinSelectionRow();
+        Object element = networkTree.getPathForRow(row).getLastPathComponent();
+        return element instanceof NetworkTreeNode ? (NetworkTreeNode)element : null;
+    }
+
+    /**
      * Gets executed when a key is typed with JTree focused.
      * @param e event data
      */
     private void handleTreeKeyTyped(KeyEvent e) {
-        if(e.getKeyCode() != KeyEvent.VK_DELETE) return;
-        int row = networkTree.getMinSelectionRow();
-        Object element = networkTree.getPathForRow(row).getLastPathComponent();
-        if(!(element instanceof NetworkTreeNode)) return;
-        networkTreeModel.removeNetwork((NetworkTreeNode) element);
+        NetworkTreeNode networkTreeNode = getSelectedNetworkTreeNode();
+        if(e.getKeyCode() == KeyEvent.VK_DELETE) {
+            if(networkTreeNode == null) return;
+            handleRemoveNetwork(networkTreeNode);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_N && e.getModifiers() == InputEvent.CTRL_MASK) {
+            if(networkTreeNode == null)
+                handleCreateNetwork(null);
+            else
+                handleCreateNetwork(networkTreeNode, null);
+        }
     }
 
     /**
@@ -353,7 +369,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 });
                 menu.add(new AbstractAction("Netzwerk/Subnetz löschen") {
                     public void actionPerformed (ActionEvent e) {
-                        networkTreeModel.removeNetwork(networkNode);
+                        handleRemoveNetwork(networkNode);
                     }
                 });
             }
@@ -389,6 +405,12 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             }
             networkTreeModel.addNetwork(network, networkTreeNode);
         }
+    }
+
+    private void handleRemoveNetwork(NetworkTreeNode networkTreeNode) {
+        if(!GuiUtils.confirmation("Netzwerk löschen.", "Soll das Netzwerk wirklich gelöscht werden?"))
+            return;
+        networkTreeModel.removeNetwork(networkTreeNode);
     }
 
     /**
