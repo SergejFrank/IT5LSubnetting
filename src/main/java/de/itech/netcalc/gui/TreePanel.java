@@ -97,6 +97,10 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    public NetworkTreeModel getNetworkTreeModel(){
+        return networkTreeModel;
+    }
+
     /**
      * Gets all network interfaces of the operating system that has IPv4 configured.
      * @return IPv4 enabled OS network interfaces
