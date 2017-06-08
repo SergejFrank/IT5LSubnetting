@@ -32,7 +32,8 @@ public class SubnetCalculatorFrame extends JFrame {
         fileMenu.add(new AbstractAction("Neu") {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if(!GuiUtils.confirmation("Neue Ntzwerkplanung", "Soll eine neue Netzwerkplanung erstellt werden?")) return;
+                treePanel.clear();
             }
         });
         fileMenu.addSeparator();

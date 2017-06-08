@@ -91,4 +91,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         this.nodeStructureChanged(networkNode);
     }
 
+    void clear() {
+        setRoot(new NetworkTreeRoot());
+    }
 }

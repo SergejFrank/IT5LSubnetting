@@ -204,6 +204,12 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
+    void clear() {
+        networkTreeModel.clear();
+        infoPane.setBottomComponent(null);
+        fillHostPanel(null);
+    }
+
     /**
      * Gets the currently selected NetworkTreeNode. Returns null, if root or nothing is selected.
      * @return the selected NetworkTreeNode
