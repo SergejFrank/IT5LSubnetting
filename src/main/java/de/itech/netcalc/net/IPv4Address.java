@@ -131,8 +131,17 @@ public class IPv4Address extends IPAddress {
      * Every block is displayed as an integer
      * @return the string representation of the ip address
      */
+
     @Override
     public String toString(){
+        return toString(false);
+    }
+
+
+    public String toString(boolean asBinaryString){
+        if(asBinaryString){
+            return toBinary();
+        }
         return getOct1()+"."+getOct2()+"."+getOct3()+"."+getOct4();
     }
 

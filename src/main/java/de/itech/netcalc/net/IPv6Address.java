@@ -76,12 +76,22 @@ public class IPv6Address extends IPAddress {
     }
 
     /**
+     * Gets the Binary representation of the IPv6 Address
+     * @return Binary String
+     */
+    public String asBinary(){
+        String[] elements = (String.format("%64s", Long.toBinaryString(networkId)).replace(' ', '0') +
+                String.format("%64s", Long.toBinaryString(interfaceId)).replace(' ', '0')).split("(?<=\\G.{8})");
+        return String.join(" ", elements);
+    }
+
+    /**
      * Gets the string representation of the IPv6 address in longhand notation.
      * @return the longhand representation
      */
     @Override
     public String toString() {
-        return toString(false);
+        return toString(false, false);
     }
 
     /**
@@ -89,7 +99,18 @@ public class IPv6Address extends IPAddress {
      * @param shorthand determines, whether to use the shorthand notation
      * @return the IPv6 address string representation
      */
-    public String toString(Boolean shorthand) {
+    public String toString(boolean shorthand) {
+        return toString(shorthand, false);
+    }
+
+    /**
+     * Gets the string representation of the IPv6 address in either short- or longhand notation.
+     * @param shorthand determines, whether to use the shorthand notation
+     * @param asBinaryString whether to return the Address as Binary String
+     * @return the IPv6 address string representation
+     */
+    public String toString(Boolean shorthand, boolean asBinaryString) {
+        if(asBinaryString) return asBinary();
         Short[] segments = new Short[8];
 
         for(int i = 0; i < 4; i++){

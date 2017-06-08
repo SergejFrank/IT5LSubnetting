@@ -1,10 +1,13 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.Config;
+import de.itech.netcalc.net.Network;
+import de.itech.netcalc.net.NetworkCollection;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public class SubnetCalculatorFrame extends JFrame {
     private TreePanel treePanel = new TreePanel();
@@ -32,7 +35,7 @@ public class SubnetCalculatorFrame extends JFrame {
         fileMenu.add(new AbstractAction("Neu") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!GuiUtils.confirmation("Neue Ntzwerkplanung", "Soll eine neue Netzwerkplanung erstellt werden?")) return;
+                if(!GuiUtils.confirmation("Neue Netzwerkplanung", "Soll eine neue Netzwerkplanung erstellt werden?")) return;
                 treePanel.clear();
             }
         });
@@ -40,12 +43,18 @@ public class SubnetCalculatorFrame extends JFrame {
         fileMenu.add(new AbstractAction("Öffnen") {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //NetworkCollection collection = NetworkCollection.fromXML(file);
+                //ArrayList<Network> networks = collection.getNetworks();
+                //todo load dialog;
             }
         });
         fileMenu.add(new AbstractAction("Speichern unter...") {
             @Override
             public void actionPerformed(ActionEvent e) {
+                NetworkCollection collection = new NetworkCollection();
+                ArrayList<Network> networks = treePanel.getNetworkTreeModel().getNetworks();
+                collection.setNetworks(networks);
+                //todo save dialog;
 
             }
         });
