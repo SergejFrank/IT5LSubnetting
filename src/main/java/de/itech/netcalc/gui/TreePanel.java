@@ -1,5 +1,6 @@
 package de.itech.netcalc.gui;
 
+import de.itech.netcalc.Config;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
@@ -134,7 +135,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         String ip = address.get().getAddress().getHostAddress();
         String prefix = String.valueOf(address.get().getNetworkPrefixLength());
 
-        Network network = Network.parse(ip+"/"+prefix, null);
+        Network network = Network.parse(ip + "/" + prefix, null);
         network.setName(netint.getDisplayName());
         networkTreeModel.addNetwork(network);
     }
@@ -163,27 +164,38 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkBase the network to display
      */
     private void fillInfoPanel(Network networkBase) {
+        boolean IPv4asBinary = Config.getIpv4Notation() == Config.IPNotation.BINARY;
+        boolean IPv6asBinary = Config.getIpv6Notation() == Config.IPNotation.BINARY;
+
         JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
         infoPanel.add(new JLabel("Netzwerk"));
-        infoPanel.add(new JLabel(networkBase.getName()));
+        infoPanel.add(createTextArea(networkBase.getName()));
         infoPanel.add(new JLabel("IPv4"));
         infoPanel.add(new JLabel());
         infoPanel.add(new JLabel("Netzwerk Id:"));
-        infoPanel.add(new JLabel(networkBase.getNetworkIdV4().toString()));
+        infoPanel.add(createTextArea(networkBase.getNetworkIdV4().toString(IPv4asBinary)));
         infoPanel.add(new JLabel("Subnetzmaske:"));
-        infoPanel.add(new JLabel(networkBase.getNetworkIdV4().toString()));
+        infoPanel.add(createTextArea(networkBase.getNetworkIdV4().toString(IPv4asBinary)));
         infoPanel.add(new JLabel("Broadcastaddresse:"));
-        infoPanel.add(new JLabel(networkBase.getBroadcastAddress().toString()));
+        infoPanel.add(createTextArea(networkBase.getBroadcastAddress().toString(IPv4asBinary)));
         if(networkBase.getNetworkIdV6() != null)
         {
             infoPanel.add(new JLabel("IPv6"));
             infoPanel.add(new JLabel());
             infoPanel.add(new JLabel("Netzwerk Id:"));
-            infoPanel.add(new JLabel(networkBase.getNetworkIdV6().toString()));
+            infoPanel.add(createTextArea(networkBase.getNetworkIdV6().toString(false, IPv6asBinary)));
             infoPanel.add(new JLabel("Prefix:"));
-            infoPanel.add(new JLabel(String.valueOf(networkBase.getPrefixV6())));
+            infoPanel.add(createTextArea(String.valueOf(networkBase.getPrefixV6())));
         }
         infoPane.setBottomComponent(infoPanel);
+    }
+
+    private JTextArea createTextArea(String value){
+        JTextArea area = new JTextArea(value);
+        area.setLineWrap(true);
+        area.setEditable(false);
+        area.setOpaque(true);
+        return area;
     }
 
     /**
