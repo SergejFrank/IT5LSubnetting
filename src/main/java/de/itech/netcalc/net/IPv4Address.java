@@ -1,13 +1,7 @@
 package de.itech.netcalc.net;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-
-
-import java.io.File;
 
 /**
  * The IPv4Address class represents an IPv4 Address without implementing any network logic

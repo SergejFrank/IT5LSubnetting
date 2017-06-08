@@ -38,7 +38,7 @@ class NetworkTreeModel extends DefaultTreeModel {
 
     ArrayList<Network> getNetworks(){
         ArrayList<Network> networks = new ArrayList<>();
-        Collections.list(root.children()).stream().forEach(node -> networks.add(((NetworkTreeNode) node).getNetwork()));
+        Collections.list(root.children()).forEach(node -> networks.add(((NetworkTreeNode) node).getNetwork()));
         return networks;
     }
 
