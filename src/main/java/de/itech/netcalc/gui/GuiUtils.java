@@ -3,6 +3,9 @@ package de.itech.netcalc.gui;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class GuiUtils {
     static void error(String msg){
@@ -22,16 +25,11 @@ class GuiUtils {
     }
 
     static String getInitialSubnetV6String(IPv6Address networkId, int networkPrefix) {
-        IPv6Address initialAddress;
-        if(networkPrefix <= 64) {
-            initialAddress =  new IPv6Address((networkId.getNetworkId() & NetUtils.ipv6PrefixLengthToValue(networkPrefix)), 0);
-        } else {
-            long interfacePrefix = NetUtils.ipv6PrefixLengthToValue(networkPrefix - 64);
-            initialAddress = new IPv6Address(networkId.getNetworkId(), (networkId.getInterfaceId() & interfacePrefix));
-        }
-        String value = Format.format(initialAddress,Format.IPv6Format.SHORTHAND);
-        if(value.endsWith("::")) value = value.replace("::", ":");
-        return value;
+        String[] values = Format.format(networkId, Format.IPv6Format.HIDELEADINGZEROS).split(":");
+        int segments = (int)Math.floor((double)networkPrefix / 16);
+        System.out.println(segments);
+        values = Arrays.stream(values).limit(segments).collect(Collectors.toList()).toArray(new String[segments]);
+        return String.join(":", values) + ":";
     }
 
     static boolean confirmation(String title, String message) {
