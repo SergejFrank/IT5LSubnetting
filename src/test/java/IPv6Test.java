@@ -1,3 +1,4 @@
+import de.itech.netcalc.net.Format;
 import de.itech.netcalc.net.IPv6Address;
 import org.junit.Test;
 
@@ -44,10 +45,10 @@ public class IPv6Test {
         IPv6Address address3 = new IPv6Address(0xFFFF_FFFF_0000_0000L, 0x0000_0000_FFFF_FFFFL);
         IPv6Address address4 = new IPv6Address(0xFFFF_0000_FFFF_0000L, 0x0000_0000_FFFF_FFFFL);
 
-        assertThat(address.toString(true), is("::"));
-        assertThat(address1.toString(true), is("0:0:0:ff::ff"));
-        assertThat(address2.toString(true), is("7fff:ffff:ffff:ffff:7fff:ffff:ffff:ffff"));
-        assertThat(address3.toString(true), is("ffff:ffff::ffff:ffff"));
-        assertThat(address4.toString(true), is("ffff:0:ffff::ffff:ffff"));
+        assertThat(address.toString(Format.IPv6Format.SHORTHAND), is("::"));
+        assertThat(address1.toString(Format.IPv6Format.SHORTHAND), is("0:0:0:ff::ff"));
+        assertThat(address2.toString(Format.IPv6Format.SHORTHAND), is("7fff:ffff:ffff:ffff:7fff:ffff:ffff:ffff"));
+        assertThat(address3.toString(Format.IPv6Format.SHORTHAND), is("ffff:ffff::ffff:ffff"));
+        assertThat(address4.toString(Format.IPv6Format.SHORTHAND), is("ffff:0:ffff::ffff:ffff"));
     }
 }

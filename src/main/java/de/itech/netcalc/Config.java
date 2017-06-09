@@ -1,5 +1,7 @@
 package de.itech.netcalc;
 
+import de.itech.netcalc.net.Format;
+
 /**
  * Provides global configuration.
  */
@@ -19,7 +21,7 @@ public class Config {
     /**
      * Backing field for the IPv6Notation property.
      */
-    private static IPNotation ipv6Notation = IPNotation.HEXADECEMAL;
+    private static Format.IPv6Format ipv6Notation = Format.IPv6Format.SHORTHAND;
 
     /**
      * Gets the IPv4 notation setting.
@@ -41,7 +43,7 @@ public class Config {
      * Gets the IPv6 notation setting.
      * @return the IPv6 notation
      */
-    public static IPNotation getIpv6Notation() {
+    public static Format.IPv6Format getIpv6Notation() {
         return ipv6Notation;
     }
 
@@ -49,7 +51,7 @@ public class Config {
      * Sets the IPv6 notation settings.
      * @param notation the notation to set
      */
-    public static void setIpv6Notation(IPNotation notation) {
+    public static void setIpv6Notation(Format.IPv6Format notation) {
         ipv6Notation = notation;
     }
 }

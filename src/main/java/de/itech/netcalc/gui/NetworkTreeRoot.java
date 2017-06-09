@@ -1,5 +1,6 @@
 package de.itech.netcalc.gui;
 
+import de.itech.netcalc.net.Format;
 import de.itech.netcalc.net.IPv6Address;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -27,7 +28,7 @@ class NetworkTreeRoot extends DefaultMutableTreeNode {
             this.globalPrefixLength = 0;
             setUserObject("Netzwerke");
         } else {
-            setUserObject("Netzwerke (" + globalPrefix.toString(true) + "/" + globalPrefixLength + ")");
+            setUserObject("Netzwerke (" + globalPrefix.toString(Format.IPv6Format.SHORTHAND) + "/" + globalPrefixLength + ")");
         }
     }
 

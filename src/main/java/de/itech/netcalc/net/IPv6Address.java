@@ -76,64 +76,21 @@ public class IPv6Address extends IPAddress {
     }
 
     /**
-     * Gets the Binary representation of the IPv6 Address
-     * @return Binary String
+     * Gets the string representation of the IPv6 address using the specified notation.
+     * @param format determines, which format to use
+     * @return the IPv6 address string representation
      */
-    public String asBinary(){
-        String[] elements = (String.format("%64s", Long.toBinaryString(networkId)).replace(' ', '0') +
-                String.format("%64s", Long.toBinaryString(interfaceId)).replace(' ', '0')).split("(?<=\\G.{8})");
-        return String.join(" ", elements);
+    public String toString(Format.IPv6Format format) {
+        return Format.format(this, format);
     }
 
     /**
-     * Gets the string representation of the IPv6 address in longhand notation.
-     * @return the longhand representation
+     * Gets the string representation of the IPv6 address in normal notation.
+     * @return the IPv6 address string representation
      */
     @Override
     public String toString() {
-        return toString(false, false);
-    }
-
-    /**
-     * Gets the string representation of the IPv6 address in either short- or longhand notation.
-     * @param shorthand determines, whether to use the shorthand notation
-     * @return the IPv6 address string representation
-     */
-    public String toString(boolean shorthand) {
-        return toString(shorthand, false);
-    }
-
-    /**
-     * Gets the string representation of the IPv6 address in either short- or longhand notation.
-     * @param shorthand determines, whether to use the shorthand notation
-     * @param asBinaryString whether to return the Address as Binary String
-     * @return the IPv6 address string representation
-     */
-    public String toString(Boolean shorthand, boolean asBinaryString) {
-        if(asBinaryString) return asBinary();
-        Short[] segments = new Short[8];
-
-        for(int i = 0; i < 4; i++){
-            segments[i] = (short) (networkId >> (3-i)*16);
-            segments[i + 4] = (short) (interfaceId >> (3-i)*16);
-        }
-
-        StringBuilder address = new StringBuilder(shorthand
-                ? Long.toString(Short.toUnsignedLong(segments[0]), 16)
-                : String.format("%04X", Short.toUnsignedLong(segments[0])));
-
-        for(int i = 1; i < segments.length; i++){
-            address.append(shorthand
-                    ? ":" + Long.toString(Short.toUnsignedLong(segments[i]), 16)
-                    : ":" + String.format("%04X", Short.toUnsignedLong(segments[i])));
-        }
-
-        if(shorthand){
-            address = new StringBuilder(address.toString().replaceAll("((?::0\\b){2,}):?(?!\\S*\\b\\1:0\\b)(\\S*)", "::$2"));
-            if(address.toString().equals("0::")) address = new StringBuilder("::");
-        }
-
-        return address.toString().toLowerCase();
+        return Format.format(this, Format.IPv6Format.NORMAL);
     }
 
     /**

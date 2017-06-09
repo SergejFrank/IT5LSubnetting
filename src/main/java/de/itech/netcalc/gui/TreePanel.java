@@ -165,7 +165,6 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      */
     private void fillInfoPanel(Network networkBase) {
         boolean IPv4asBinary = Config.getIpv4Notation() == Config.IPNotation.BINARY;
-        boolean IPv6asBinary = Config.getIpv6Notation() == Config.IPNotation.BINARY;
 
         JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
         infoPanel.add(new JLabel("Netzwerk"));
@@ -183,7 +182,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             infoPanel.add(new JLabel("IPv6"));
             infoPanel.add(new JLabel());
             infoPanel.add(new JLabel("Netzwerk Id:"));
-            infoPanel.add(createTextArea(networkBase.getNetworkIdV6().toString(false, IPv6asBinary)));
+            infoPanel.add(createTextArea(networkBase.getNetworkIdV6().toString(Config.getIpv6Notation())));
             infoPanel.add(new JLabel("Prefix:"));
             infoPanel.add(createTextArea(String.valueOf(networkBase.getPrefixV6())));
         }
@@ -290,7 +289,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 } else {
                     menu.add(new AbstractAction("Globalen IPv6 Prefix bearbeiten") {
                         public void actionPerformed (ActionEvent e) {
-                            handleAssignGlobalIPv6(networkTreeModel.getRootIPv6Prefix().toString(true) + "/" + networkTreeModel.getRootIPv6PrefixLength());
+                            handleAssignGlobalIPv6(networkTreeModel.getRootIPv6Prefix().toString(Format.IPv6Format.SHORTHAND) + "/" + networkTreeModel.getRootIPv6PrefixLength());
                         }
                     });
                 }

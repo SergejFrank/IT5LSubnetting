@@ -1,6 +1,7 @@
 package de.itech.netcalc.gui;
 
 import de.itech.netcalc.Config;
+import de.itech.netcalc.net.Format;
 import de.itech.netcalc.net.Network;
 import de.itech.netcalc.net.NetworkCollection;
 
@@ -86,12 +87,12 @@ public class SubnetCalculatorFrame extends JFrame {
         JRadioButtonMenuItem notV6Hex = new JRadioButtonMenuItem("Hexadezimal", true);
         JRadioButtonMenuItem notV6Bin = new JRadioButtonMenuItem("Binär");
         notV6Hex.addActionListener(e -> {
-            Config.setIpv6Notation(notV6Hex.isSelected() ? Config.IPNotation.HEXADECEMAL : Config.IPNotation.BINARY);
+            Config.setIpv6Notation(notV6Hex.isSelected() ? Format.IPv6Format.NORMAL : Format.IPv6Format.BINARY);
             notV6Bin.setSelected(!notV6Hex.isSelected());
             treePanel.refresh();
         });
         notV6Bin.addActionListener(e -> {
-            Config.setIpv6Notation(notV6Bin.isSelected() ? Config.IPNotation.BINARY : Config.IPNotation.HEXADECEMAL);
+            Config.setIpv6Notation(notV6Bin.isSelected() ? Format.IPv6Format.BINARY : Format.IPv6Format.NORMAL);
             notV6Hex.setSelected(!notV6Bin.isSelected());
             treePanel.refresh();
         });
