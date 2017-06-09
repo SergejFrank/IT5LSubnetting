@@ -66,7 +66,7 @@ public class NetUtils {
      */
     public static long ipv6PrefixLengthToValue(int prefix) {
         if(prefix < 0 || prefix > 64) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
-        return (long) (prefix == 0 ? 0 : -1 << (32 - prefix));
+        return (long) (prefix == 0 ? 0 : -1L << (64 - prefix));
     }
 
     /**
@@ -75,7 +75,8 @@ public class NetUtils {
      * @return the IPv4 network prefix
      */
     public static int maskToPrefix(IPv4Address mask) {
-        return 0;
+        int logValue = (int) (Math.log10((Integer.toUnsignedLong(~mask.getValue()) + 1)) / Math.log10(2));
+        return 32 -logValue;
     }
 
     /**
