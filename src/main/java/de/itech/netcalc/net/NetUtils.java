@@ -75,8 +75,7 @@ public class NetUtils {
      * @return the IPv4 network prefix
      */
     public static int maskToPrefix(IPv4Address mask) {
-        int index = mask.toBinary().indexOf("0");
-        return index == -1 ? 32 : index;
+        return 0;
     }
 
     /**

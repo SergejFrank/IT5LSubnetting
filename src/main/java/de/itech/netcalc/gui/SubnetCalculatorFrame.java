@@ -72,12 +72,12 @@ public class SubnetCalculatorFrame extends JFrame {
         JRadioButtonMenuItem notV4Dec = new JRadioButtonMenuItem("Dezimal", true);
         JRadioButtonMenuItem notV4Bin = new JRadioButtonMenuItem("Binär");
         notV4Dec.addActionListener(e -> {
-            Config.setIpv4Notation(notV4Dec.isSelected() ? Config.IPNotation.DECIMAL : Config.IPNotation.BINARY);
+            Config.setIpv4Notation(notV4Dec.isSelected() ? Format.IPv4Format.DECIMAL : Format.IPv4Format.BINARY);
             notV4Bin.setSelected(!notV4Dec.isSelected());
             treePanel.refresh();
         });
         notV4Bin.addActionListener(e -> {
-            Config.setIpv4Notation(notV4Bin.isSelected() ? Config.IPNotation.BINARY : Config.IPNotation.DECIMAL);
+            Config.setIpv4Notation(notV4Bin.isSelected() ? Format.IPv4Format.BINARY : Format.IPv4Format.DECIMAL);
             notV4Dec.setSelected(!notV4Bin.isSelected());
             treePanel.refresh();
         });

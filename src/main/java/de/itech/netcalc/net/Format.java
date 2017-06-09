@@ -5,12 +5,20 @@ package de.itech.netcalc.net;
  */
 public class Format {
     /**
-     * Specifies, how an IPv6 Address can be formatted.
+     * Specifies, how an IPv6 address can be formatted.
      */
     public enum IPv6Format {
         NORMAL,
         HIDELEADINGZEROS,
         SHORTHAND,
+        BINARY
+    }
+
+    /**
+     * Specifies, how an IPv4 address can be formatted.
+     */
+    public enum IPv4Format {
+        DECIMAL,
         BINARY
     }
 
@@ -53,5 +61,35 @@ public class Format {
             if(resultBuilder.toString().equals("0::")) resultBuilder = new StringBuilder("::");
         }
         return resultBuilder.toString().toLowerCase();
+    }
+
+    /**
+     * Format an IPv4 address with the given parameters.
+     * @param address the IPv4 address to format
+     * @param format the notation to use
+     * @return the IPv4 address string representation
+     */
+    public static String format(IPv4Address address, IPv4Format format) {
+        switch (format) {
+            case DECIMAL:
+                return address.getOct1()+"."
+                        +address.getOct2()+"."
+                        +address.getOct3()+"."
+                        +address.getOct4();
+            case BINARY:
+                String bin = "";
+                String zeroPad = "00000000";
+                String oct1Bin = Integer.toBinaryString(address.getOct1());
+                String oct2Bin = Integer.toBinaryString(address.getOct2());
+                String oct3Bin = Integer.toBinaryString(address.getOct3());
+                String oct4Bin = Integer.toBinaryString(address.getOct4());
+
+                bin += zeroPad.substring(oct1Bin.length()) + oct1Bin + " ";
+                bin += zeroPad.substring(oct2Bin.length()) + oct2Bin + " ";
+                bin += zeroPad.substring(oct3Bin.length()) + oct3Bin + " ";
+                bin += zeroPad.substring(oct4Bin.length()) + oct4Bin;
+                return bin;
+        }
+        throw new IllegalArgumentException("'format' is not a valid IPv4Format.");
     }
 }

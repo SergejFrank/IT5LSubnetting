@@ -164,19 +164,17 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkBase the network to display
      */
     private void fillInfoPanel(Network networkBase) {
-        boolean IPv4asBinary = Config.getIpv4Notation() == Config.IPNotation.BINARY;
-
         JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
         infoPanel.add(new JLabel("Netzwerk"));
         infoPanel.add(createTextArea(networkBase.getName()));
         infoPanel.add(new JLabel("IPv4"));
         infoPanel.add(new JLabel());
         infoPanel.add(new JLabel("Netzwerk Id:"));
-        infoPanel.add(createTextArea(networkBase.getNetworkIdV4().toString(IPv4asBinary)));
+        infoPanel.add(createTextArea(Format.format(networkBase.getNetworkIdV4(), Config.getIpv4Notation())));
         infoPanel.add(new JLabel("Subnetzmaske:"));
-        infoPanel.add(createTextArea(networkBase.getNetworkIdV4().toString(IPv4asBinary)));
+        infoPanel.add(createTextArea(Format.format(networkBase.getNetworkIdV4(), Config.getIpv4Notation())));
         infoPanel.add(new JLabel("Broadcastaddresse:"));
-        infoPanel.add(createTextArea(networkBase.getBroadcastAddress().toString(IPv4asBinary)));
+        infoPanel.add(createTextArea(Format.format(networkBase.getBroadcastAddress(), Config.getIpv4Notation())));
         if(networkBase.getNetworkIdV6() != null)
         {
             infoPanel.add(new JLabel("IPv6"));

@@ -7,16 +7,9 @@ import de.itech.netcalc.net.Format;
  */
 public class Config {
     /**
-     * Describes how an IPAddress is notated.
-     */
-    public enum IPNotation {
-        BINARY, DECIMAL, HEXADECEMAL
-    }
-
-    /**
      * Backing field for the IPv4Notation property.
      */
-    private static IPNotation ipv4Notation = IPNotation.DECIMAL;
+    private static Format.IPv4Format ipv4Notation = Format.IPv4Format.DECIMAL;
 
     /**
      * Backing field for the IPv6Notation property.
@@ -27,7 +20,7 @@ public class Config {
      * Gets the IPv4 notation setting.
      * @return the IPv4 notation
      */
-    public static IPNotation getIpv4Notation() {
+    public static Format.IPv4Format getIpv4Notation() {
         return ipv4Notation;
     }
 
@@ -35,7 +28,7 @@ public class Config {
      * Sets the IPv4 notation settings.
      * @param notation the notation to set
      */
-    public static void setIpv4Notation(IPNotation notation) {
+    public static void setIpv4Notation(Format.IPv4Format notation) {
         ipv4Notation = notation;
     }
 
