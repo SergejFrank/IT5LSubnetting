@@ -4,8 +4,8 @@ Die folgenden Schritte dokumentieren diesen Vorgang. Die einzelnen Vorgänge sin
 
 \subsection{Logik I - Implementierung}
 Als erstes implementierten wir die Logik der IPv4 Adresse. Dabei stellten sich uns viele
-Probleme. So hatten wir größere Probleme mit der Sprache Jave, da diese im Umgang mit
-Zahlen und Binären Operationen mehrere Schwächen aufweist. So fehlen zum Beispiel die
+Probleme. So hatten wir größere Probleme mit der Sprache Java, da diese im Umgang mit
+Zahlen und binären Operationen mehrere Schwächen aufweist. So fehlen zum Beispiel die
 unsigned Datentypen, wodurch viele Operationen zunächst sehr provisorisch implementiert
 werden mussten.
 
@@ -18,7 +18,7 @@ irrelevant ist, ob es sich um ein Netzwerk, oder ein Subnetz handelt.
 
 \subsection{GUI I - Implementierung}
 Durch unsere Trennung der Logik und GUI wurde es uns ermöglicht beides getrennt von einander
-zu entwickeln. So konnte ein Großteil der GUI ohne Funktion erstellt und erst in einem nächsten Schritt
+zu entwickeln. So konnte ein Großteil der GUI ohne Funktion erstellt und erst nachträglich
 mit der Logik verbunden werden.
 
 \subsection{Tests}
@@ -32,7 +32,7 @@ Bei der Implementierung der Logik kamen weitere Ideen zur Umsetzungen auf und na
 legten wir ein neues Konzept zugrunde. In diesem sollten alle Netzwerke und Subnetze ein einer
 Baumstruktur abgebildet werden. Dies führte zu einer deutlich aufgeräumteren und
 verständlicheren Oberfläche.
-Die Overflöche wurde schnell umgestaltet und nach anfänglichen Problemen mit der Datenbindung
+Die Oberfläche wurde schnell umgestaltet und nach anfänglichen Problemen mit der Datenbindung
 funktionierten die grundlegeneden Funktionen schon nach kurzer Zeit und ohne großen Aufwand.
 
 \subsection{Logik II - Zusammenführung von Network und Subnet}
@@ -54,7 +54,7 @@ Die \Klasse{Network} Klasse versahen wir ebenso mit den IPv6 Eigenschaften, wie 
 \subsection{Fazit}
 Das in \ref{sec:Entwicklungsprozess} festgelegte agile Vorgehen haben wir in vielen Situationen
 genutzt. Die Wahl hat sich dabei defintiv ausgezahlt.
-Da wir von Anfang an einen sehr Modularen und Abstrakten Ansatz verfolgt haben,
+Da wir von Anfang an einen sehr modularen und abstrakten Ansatz verfolgt haben,
 mussten wir selbst bei größeren Änderungen nur wenig Probleme lösen. So ließ sich beispielsweise
-die Zusammenführung von Network und Subnet ohne Logik Änderungen in der GUI bewerkstelligen. Die
+die Zusammenführung von Network und Subnet ohne Änderungen der Logik in der GUI bewerkstelligen. Die
 Änderungen beschränkten sich auf das Umbennen der Klassennamen.
