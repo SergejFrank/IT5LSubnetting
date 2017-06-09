@@ -21,6 +21,19 @@ class GuiUtils {
         return "";
     }
 
+    static String getInitialSubnetV6String(IPv6Address networkId, int networkPrefix) {
+        IPv6Address initialAddress;
+        if(networkPrefix <= 64) {
+            initialAddress =  new IPv6Address((networkId.getNetworkId() & NetUtils.ipv6PrefixLengthToValue(networkPrefix)), 0);
+        } else {
+            long interfacePrefix = NetUtils.ipv6PrefixLengthToValue(networkPrefix - 64);
+            initialAddress = new IPv6Address(networkId.getNetworkId(), (networkId.getInterfaceId() & interfacePrefix));
+        }
+        String value = initialAddress.toString(true);
+        if(value.endsWith("::")) value = value.replace("::", ":");
+        return value;
+    }
+
     static boolean confirmation(String title, String message) {
         int input = JOptionPane.showConfirmDialog(null, message, title,
                 JOptionPane.OK_CANCEL_OPTION);

@@ -579,6 +579,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         int parentPrefix = parentNetwork != null
                 ? parentNetwork.getPrefixV6() : networkTreeModel.getRootIPv6PrefixLength();
 
+        if(initialValue == null) initialValue = GuiUtils.getInitialSubnetV6String(parentIPv6Address, parentPrefix);
         Object obj = JOptionPane.showInputDialog(null,
                 "IPv6 Network und Prefix (>" + parentPrefix + "):",
                 "IPv6 zuweisen",
@@ -595,12 +596,14 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 GuiUtils.error("Die eingebenene IPv6 Adresse order der Prefix sind ungültig.");
             }
             handleAssignIPv6(networkNode, input);
+            return;
         }
         IPv6Address address = IPAddress.parseIPv6(input);
         int prefix = IPAddress.parseIPv6Prefix(input);
         if(!NetUtils.isInSubnet(parentIPv6Address, parentPrefix, address)) {
             GuiUtils.error("Die angegebene Adresse liegt nicht im übergeordneten Nezwerk.");
             handleAssignIPv6(networkNode, input);
+            return;
         }
 
         networkNode.getNetwork().setIPv6(address, prefix);

@@ -64,7 +64,7 @@ public class NetUtils {
      * @param prefix the prefix to convert
      * @return the converted value
      */
-    static long ipv6PrefixLengthToValue(int prefix) {
+    public static long ipv6PrefixLengthToValue(int prefix) {
         if(prefix < 0 || prefix > 64) throw new IllegalArgumentException("Illegal prefix '" + prefix + "'");
         return (long) (prefix == 0 ? 0 : -1 << (32 - prefix));
     }
