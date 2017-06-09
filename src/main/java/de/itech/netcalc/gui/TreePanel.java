@@ -687,6 +687,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      */
     private void handleSplitBySize(NetworkTreeNode networkTreeNode) {
         ArrayList<Integer> deviders = networkTreeNode.getNetwork().possibleDividers();
+        Collections.reverse(deviders);
 
         Object input = JOptionPane.showInputDialog(null,
                 "Größe der Subnetze angeben",
@@ -711,7 +712,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
 
         networkTreeNode.getNetwork().possibleDividers()
                 .forEach(x -> sizes.add((networkTreeNode.getNetwork().getMaxHosts()+2) / (x+2)));
-        //sizes.add(1);
+        Collections.reverse(sizes);
 
         Object input = JOptionPane.showInputDialog(null,
                 "Anzahl der Subnetze angeben",
