@@ -53,7 +53,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
         mainPane.setRightComponent(hostPanel = new HostPanel());
-        mainPane.setResizeWeight(0.3);
+        mainPane.setResizeWeight(0.35);
         infoPane.setResizeWeight(0.5);
 
         networkTree = new JTree(networkTreeModel = new NetworkTreeModel());
