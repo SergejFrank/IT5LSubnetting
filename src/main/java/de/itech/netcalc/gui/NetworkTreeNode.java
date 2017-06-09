@@ -19,11 +19,9 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
 
     void refreshSubnets() {
         if(network.getStatus() == Network.SubnetStatus.HAS_SUBNETS){
-            setAllowsChildren(true);
             for(Network s : network.getSubnets())
                 add(new NetworkTreeNode(s));
         } else {
-            setAllowsChildren(false);
         }
     }
 }
