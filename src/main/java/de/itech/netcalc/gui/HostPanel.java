@@ -36,7 +36,7 @@ class HostPanel extends JPanel implements TableModelListener{
                 if(h == null) continue;
                 Object[] data = new Object[] {
                         h.getIPv4Address(),
-                        h.getIPv6Address() == null ? null : h.getIPv6Address().toString(Format.IPv6Format.SHORTHAND),
+                        h.getIPv6Address() == null ? null : Format.format(h.getIPv6Address(),Format.IPv6Format.SHORTHAND),
                         h.getName()
                 };
                 model.addRow(data);

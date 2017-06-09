@@ -28,7 +28,7 @@ public class Format {
      * @param format the notation to use
      * @return the IPv6 address string representation
      */
-    static String format(IPv6Address address, IPv6Format format) {
+    public static String format(IPv6Address address, IPv6Format format) {
         long networkId = address.getNetworkId();
         long interfaceId = address.getInterfaceId();
 

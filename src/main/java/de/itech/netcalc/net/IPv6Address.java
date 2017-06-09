@@ -76,15 +76,6 @@ public class IPv6Address extends IPAddress {
     }
 
     /**
-     * Gets the string representation of the IPv6 address using the specified notation.
-     * @param format determines, which format to use
-     * @return the IPv6 address string representation
-     */
-    public String toString(Format.IPv6Format format) {
-        return Format.format(this, format);
-    }
-
-    /**
      * Gets the string representation of the IPv6 address in normal notation.
      * @return the IPv6 address string representation
      */

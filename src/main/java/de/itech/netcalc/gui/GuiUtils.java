@@ -29,7 +29,7 @@ class GuiUtils {
             long interfacePrefix = NetUtils.ipv6PrefixLengthToValue(networkPrefix - 64);
             initialAddress = new IPv6Address(networkId.getNetworkId(), (networkId.getInterfaceId() & interfacePrefix));
         }
-        String value = initialAddress.toString(Format.IPv6Format.SHORTHAND);
+        String value = Format.format(initialAddress,Format.IPv6Format.SHORTHAND);
         if(value.endsWith("::")) value = value.replace("::", ":");
         return value;
     }

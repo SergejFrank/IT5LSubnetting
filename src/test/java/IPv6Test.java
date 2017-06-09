@@ -45,10 +45,10 @@ public class IPv6Test {
         IPv6Address address3 = new IPv6Address(0xFFFF_FFFF_0000_0000L, 0x0000_0000_FFFF_FFFFL);
         IPv6Address address4 = new IPv6Address(0xFFFF_0000_FFFF_0000L, 0x0000_0000_FFFF_FFFFL);
 
-        assertThat(address.toString(Format.IPv6Format.SHORTHAND), is("::"));
-        assertThat(address1.toString(Format.IPv6Format.SHORTHAND), is("0:0:0:ff::ff"));
-        assertThat(address2.toString(Format.IPv6Format.SHORTHAND), is("7fff:ffff:ffff:ffff:7fff:ffff:ffff:ffff"));
-        assertThat(address3.toString(Format.IPv6Format.SHORTHAND), is("ffff:ffff::ffff:ffff"));
-        assertThat(address4.toString(Format.IPv6Format.SHORTHAND), is("ffff:0:ffff::ffff:ffff"));
+        assertThat(Format.format(address,Format.IPv6Format.SHORTHAND), is("::"));
+        assertThat(Format.format(address1, Format.IPv6Format.SHORTHAND), is("0:0:0:ff::ff"));
+        assertThat(Format.format(address2, Format.IPv6Format.SHORTHAND), is("7fff:ffff:ffff:ffff:7fff:ffff:ffff:ffff"));
+        assertThat(Format.format(address3, Format.IPv6Format.SHORTHAND), is("ffff:ffff::ffff:ffff"));
+        assertThat(Format.format(address4, Format.IPv6Format.SHORTHAND), is("ffff:0:ffff::ffff:ffff"));
     }
 }

@@ -180,7 +180,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             infoPanel.add(new JLabel("IPv6"));
             infoPanel.add(new JLabel());
             infoPanel.add(new JLabel("Netzwerk Id:"));
-            infoPanel.add(createTextArea(networkBase.getNetworkIdV6().toString(Config.getIpv6Notation())));
+            infoPanel.add(createTextArea(Format.format(networkBase.getNetworkIdV6(),Config.getIpv6Notation())));
             infoPanel.add(new JLabel("Prefix:"));
             infoPanel.add(createTextArea(String.valueOf(networkBase.getPrefixV6())));
         }
@@ -287,7 +287,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 } else {
                     menu.add(new AbstractAction("Globalen IPv6 Prefix bearbeiten") {
                         public void actionPerformed (ActionEvent e) {
-                            handleAssignGlobalIPv6(networkTreeModel.getRootIPv6Prefix().toString(Format.IPv6Format.SHORTHAND) + "/" + networkTreeModel.getRootIPv6PrefixLength());
+                            handleAssignGlobalIPv6(Format.format(networkTreeModel.getRootIPv6Prefix(),Format.IPv6Format.SHORTHAND) + "/" + networkTreeModel.getRootIPv6PrefixLength());
                         }
                     });
                 }
