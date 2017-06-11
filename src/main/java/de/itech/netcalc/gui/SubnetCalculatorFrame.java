@@ -8,6 +8,7 @@ import de.itech.netcalc.net.NetworkCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 public class SubnetCalculatorFrame extends JFrame {
@@ -44,19 +45,25 @@ public class SubnetCalculatorFrame extends JFrame {
         fileMenu.add(new AbstractAction("Öffnen") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //NetworkCollection collection = NetworkCollection.fromXML(file);
-                //ArrayList<Network> networks = collection.getNetworks();
-                //todo load dialog;
+                File file = GuiUtils.getFileOpen("Planung öffnen");
+                if(file == null) return;
+                NetworkCollection networkCollection =  NetworkCollection.fromXML(file);
+                treePanel.getNetworkTreeModel().clear();
+                treePanel.getNetworkTreeModel().setRootIPv6Prefix(networkCollection.getGlobalIPv6Prefix(), networkCollection.getGlobalIPv6PrefixLength());
+                treePanel.getNetworkTreeModel().addNetworkRange(networkCollection.getNetworks());
             }
         });
         fileMenu.add(new AbstractAction("Speichern unter...") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NetworkCollection collection = new NetworkCollection();
+                File file = GuiUtils.getSaveFile("Planung speichern untert...", "Planung.xml");
+                if(file == null) return;
+                NetworkCollection networkCollection = new NetworkCollection();
                 ArrayList<Network> networks = treePanel.getNetworkTreeModel().getNetworks();
-                collection.setNetworks(networks);
-                //todo save dialog;
-
+                networkCollection.setNetworks(networks);
+                networkCollection.setGlobalIPv6Prefix(treePanel.getNetworkTreeModel().getRootIPv6Prefix());
+                networkCollection.setGlobalIPv6PrefixLength(treePanel.getNetworkTreeModel().getRootIPv6PrefixLength());
+                networkCollection.save(file);
             }
         });
         fileMenu.addSeparator();

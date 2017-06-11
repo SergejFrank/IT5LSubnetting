@@ -11,18 +11,37 @@ import java.util.ArrayList;
 
 @XmlRootElement
 public class NetworkCollection {
+    private ArrayList<Network> networks = new ArrayList<>();
 
-    @XmlElement
-    ArrayList<Network> networks = new ArrayList<>();
+    private IPv6Address globalIPv6Prefix;
+
+    private int globalIPv6PrefixLength;
 
     public NetworkCollection(){}
 
+    @XmlElement(name = "Network")
     public ArrayList<Network> getNetworks() {
         return networks;
     }
 
     public void setNetworks(ArrayList<Network> networks) {
         this.networks = networks;
+    }
+
+    public IPv6Address getGlobalIPv6Prefix() {
+        return globalIPv6Prefix;
+    }
+
+    public void setGlobalIPv6Prefix(IPv6Address globalIPv6Prefix) {
+        this.globalIPv6Prefix = globalIPv6Prefix;
+    }
+
+    public int getGlobalIPv6PrefixLength() {
+        return globalIPv6PrefixLength;
+    }
+
+    public void setGlobalIPv6PrefixLength(int globalIPv6PrefixLength) {
+        this.globalIPv6PrefixLength = globalIPv6PrefixLength;
     }
 
     public void save(File file){
@@ -43,7 +62,7 @@ public class NetworkCollection {
 
     public static NetworkCollection fromXML(File file){
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Network.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(NetworkCollection.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             NetworkCollection networkCollection = (NetworkCollection) jaxbUnmarshaller.unmarshal(file);

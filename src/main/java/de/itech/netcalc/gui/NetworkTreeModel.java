@@ -6,6 +6,7 @@ import de.itech.netcalc.net.Network;
 import javax.swing.tree.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 class NetworkTreeModel extends DefaultTreeModel {
@@ -29,6 +30,16 @@ class NetworkTreeModel extends DefaultTreeModel {
         parent.getNetwork().addSubnet(size);
         parent.refreshSubnets();
         this.nodeStructureChanged(parent);
+    }
+
+    void addNetworkRange(List<Network> networks) {
+        if(networks == null) throw new IllegalArgumentException("networks can not be null.");
+        for (Network network:networks) {
+            Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
+            if(collidingNetwork.isPresent())
+                throw new UnsupportedOperationException("Network" + network + " is Colliding with "+collidingNetwork.get());
+            insertNetwork(network, getRootNode());
+        }
     }
 
     private void insertNetwork(Network network, DefaultMutableTreeNode parent) {
