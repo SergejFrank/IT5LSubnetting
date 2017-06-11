@@ -667,15 +667,24 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      */
     private void handleCreateNetworkBySize(NetworkTreeNode parent) {
         String input = (String)JOptionPane.showInputDialog(null,
-                "Netzwerk Id und Prefix:",
+                "Host Anzahl (1-" + parent.getNetwork().getMaxHosts() +  "):",
                 "Subnetz hinzufügen",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                GuiUtils.getInitialSubnetString(parent.getNetwork()));
+                JOptionPane.PLAIN_MESSAGE);
         if(input == null) return;
-
-        networkTreeModel.addNetwork(parent,Integer.valueOf(input));
+        int value;
+        try {
+            value = Integer.valueOf(input);
+        } catch (NumberFormatException e) {
+            GuiUtils.error("Bitte geben Sie eine gültige Anzahl an.");
+            handleCreateNetworkBySize(parent);
+            return;
+        }
+        if(value < 1 || value > parent.getNetwork().getMaxHosts()) {
+            GuiUtils.error("Bitte geben Sie eine gültige Anzahl an.");
+            handleCreateNetworkBySize(parent);
+            return;
+        }
+        networkTreeModel.addNetwork(parent,value);
     }
 
     /**
