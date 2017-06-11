@@ -358,24 +358,29 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 }
                 if(status != Network.SubnetStatus.HAS_SUBNETS)
                 {
-                    menu.add(new AbstractAction("Host hinzufügen") {
+                    JMenuItem addHost = menu.add(new AbstractAction("Host hinzufügen") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             handleAddHost(networkNode);
                         }
                     });
-                    menu.add(new AbstractAction("Host mit IP Adresse hinzufügen") {
+                    JMenuItem addHostWithIp = menu.add(new AbstractAction("Host mit IP Adresse hinzufügen") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             handleAddHostWithIP(networkNode);
                         }
                     });
-                    menu.add(new AbstractAction("Alle Hosts hinzufügen") {
+                    JMenuItem addAllHosts = menu.add(new AbstractAction("Alle Hosts hinzufügen") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             handleAddAllHosts(networkNode);
                         }
                     });
+                    if(networkNode.getNetwork().getHostCount() >= networkNode.getNetwork().getMaxHosts()) {
+                        addHost.setEnabled(false);
+                        addHostWithIp.setEnabled(false);
+                        addAllHosts.setEnabled(false);
+                    }
                     menu.addSeparator();
                 }
                 if(status == Network.SubnetStatus.HAS_HOSTS)
@@ -739,6 +744,10 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkNode the network to fill.
      */
     private void handleAddHost(NetworkTreeNode networkNode) {
+        if(networkNode.getNetwork().getMaxHosts() >= networkNode.getNetwork().getHostCount()) {
+            GuiUtils.error("Zu diesem Netzwerk können keine weiteren Hosts mehr hinzugefügt werden.");
+            return;
+        }
         networkNode.getNetwork().addHost();
         hostPanel.reloadHosts();
     }
@@ -748,6 +757,10 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkNode the network to fill with the host
      */
     private void handleAddHostWithIP(NetworkTreeNode networkNode) {
+        if(networkNode.getNetwork().getMaxHosts() >= networkNode.getNetwork().getHostCount()) {
+            GuiUtils.error("Zu diesem Netzwerk können keine weiteren Hosts mehr hinzugefügt werden.");
+            return;
+        }
         Network network = networkNode.getNetwork();
         String networkString = network.getNetworkIdV4().toString() + "/" +
                 NetUtils.maskToPrefix(network.getNetworkMaskV4());
