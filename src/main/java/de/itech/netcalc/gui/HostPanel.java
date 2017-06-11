@@ -20,7 +20,7 @@ class HostPanel extends JPanel implements TableModelListener{
     HostPanel() {
         super(new BorderLayout());
         setMinimumSize(new Dimension(400, 500));
-        hostTable = new JTable(model = new HostTableModel(null));
+        hostTable = new JTable(model = new HostTableModel());
         hostTable.setFont(new Font("monospaced", Font.PLAIN, 12));
         model.addColumn("IPv4 Adresse");
         model.addColumn("IPv6 Adresse");

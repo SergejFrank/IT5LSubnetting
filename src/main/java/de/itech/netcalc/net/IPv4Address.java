@@ -2,7 +2,6 @@ package de.itech.netcalc.net;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.text.Normalizer;
 
 /**
  * The IPv4Address class represents an IPv4 Address without implementing any network logic

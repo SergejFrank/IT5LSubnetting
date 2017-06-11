@@ -1,7 +1,5 @@
 package de.itech.netcalc.net;
 
-import sun.nio.ch.Net;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;

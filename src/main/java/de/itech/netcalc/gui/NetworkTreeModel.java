@@ -16,8 +16,9 @@ class NetworkTreeModel extends DefaultTreeModel {
 
     void addNetwork(Network network) {
         Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
-        if(collidingNetwork.isPresent())
-            throw new UnsupportedOperationException("Network is Colliding with "+collidingNetwork.get());
+        collidingNetwork.ifPresent(n -> {
+            throw new UnsupportedOperationException("Network is Colliding with "+n);
+        });
         insertNetwork(network, getRootNode());
     }
 
@@ -36,8 +37,9 @@ class NetworkTreeModel extends DefaultTreeModel {
         if(networks == null) throw new IllegalArgumentException("networks can not be null.");
         for (Network network:networks) {
             Optional<Network> collidingNetwork = getNetworks().stream().filter(other -> other.isColliding(network)).findFirst();
-            if(collidingNetwork.isPresent())
+            collidingNetwork.ifPresent(n -> {
                 throw new UnsupportedOperationException("Network" + network + " is Colliding with "+collidingNetwork.get());
+            });
             insertNetwork(network, getRootNode());
         }
     }
@@ -53,7 +55,7 @@ class NetworkTreeModel extends DefaultTreeModel {
         return networks;
     }
 
-    public NetworkTreeRoot getRootNode() {
+    private NetworkTreeRoot getRootNode() {
         return (NetworkTreeRoot) getRoot();
     }
 

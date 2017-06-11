@@ -11,10 +11,6 @@ class HostTableModel extends DefaultTableModel {
         this.network = network;
     }
 
-    HostTableModel(Network network) {
-        this.network = network;
-    }
-
     @Override
     public boolean isCellEditable(int row, int column) {
         return column != 0 && (column != 1 || network.isIPv6Enabled());

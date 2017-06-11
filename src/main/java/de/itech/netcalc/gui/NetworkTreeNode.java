@@ -21,7 +21,6 @@ class NetworkTreeNode extends DefaultMutableTreeNode {
         if(network.getStatus() == Network.SubnetStatus.HAS_SUBNETS){
             for(Network s : network.getSubnets())
                 add(new NetworkTreeNode(s));
-        } else {
         }
     }
 }

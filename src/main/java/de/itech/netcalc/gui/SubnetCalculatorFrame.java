@@ -12,10 +12,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class SubnetCalculatorFrame extends JFrame {
-    private TreePanel treePanel = new TreePanel();
+    private final TreePanel treePanel = new TreePanel();
 
-    public SubnetCalculatorFrame(String title){
-        super(title);
+    public SubnetCalculatorFrame(){
+        super("Netzwerkplaner - BS14 IT5l");
 
         initializeMenu();
 
@@ -45,25 +45,33 @@ public class SubnetCalculatorFrame extends JFrame {
         fileMenu.add(new AbstractAction("Öffnen") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File file = GuiUtils.getFileOpen("Planung öffnen");
-                if(file == null) return;
-                NetworkCollection networkCollection =  NetworkCollection.fromXML(file);
-                treePanel.getNetworkTreeModel().clear();
-                treePanel.getNetworkTreeModel().setRootIPv6Prefix(networkCollection.getGlobalIPv6Prefix(), networkCollection.getGlobalIPv6PrefixLength());
-                treePanel.getNetworkTreeModel().addNetworkRange(networkCollection.getNetworks());
+                try {
+                    File file = GuiUtils.getFileOpen("Planung öffnen");
+                    if(file == null) return;
+                    NetworkCollection networkCollection =  NetworkCollection.fromXML(file);
+                    treePanel.getNetworkTreeModel().clear();
+                    treePanel.getNetworkTreeModel().setRootIPv6Prefix(networkCollection.getGlobalIPv6Prefix(), networkCollection.getGlobalIPv6PrefixLength());
+                    treePanel.getNetworkTreeModel().addNetworkRange(networkCollection.getNetworks());
+                } catch(Exception ex) {
+                    GuiUtils.error("Beim Öffnen der Planung ist ein Fehler aufgetreten.");
+                }
             }
         });
         fileMenu.add(new AbstractAction("Speichern unter...") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File file = GuiUtils.getSaveFile("Planung speichern untert...", "Planung.xml");
-                if(file == null) return;
-                NetworkCollection networkCollection = new NetworkCollection();
-                ArrayList<Network> networks = treePanel.getNetworkTreeModel().getNetworks();
-                networkCollection.setNetworks(networks);
-                networkCollection.setGlobalIPv6Prefix(treePanel.getNetworkTreeModel().getRootIPv6Prefix());
-                networkCollection.setGlobalIPv6PrefixLength(treePanel.getNetworkTreeModel().getRootIPv6PrefixLength());
-                networkCollection.save(file);
+                try {
+                    File file = GuiUtils.getSaveFile("Planung speichern untert...", "Planung.xml");
+                    if(file == null) return;
+                    NetworkCollection networkCollection = new NetworkCollection();
+                    ArrayList<Network> networks = treePanel.getNetworkTreeModel().getNetworks();
+                    networkCollection.setNetworks(networks);
+                    networkCollection.setGlobalIPv6Prefix(treePanel.getNetworkTreeModel().getRootIPv6Prefix());
+                    networkCollection.setGlobalIPv6PrefixLength(treePanel.getNetworkTreeModel().getRootIPv6PrefixLength());
+                    networkCollection.save(file);
+                } catch (Exception ex) {
+                    GuiUtils.error("Beim Speichern der Planung ist ein Fehler aufgetreten.");
+                }
             }
         });
         fileMenu.addSeparator();

@@ -65,9 +65,8 @@ public class NetworkCollection {
             JAXBContext jaxbContext = JAXBContext.newInstance(NetworkCollection.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            NetworkCollection networkCollection = (NetworkCollection) jaxbUnmarshaller.unmarshal(file);
 
-            return networkCollection;
+            return (NetworkCollection) jaxbUnmarshaller.unmarshal(file);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
