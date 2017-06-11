@@ -135,7 +135,7 @@ public class Network {
      */
     public void removeHost(IPv4Address ip){
         for (int i = 0; i < hosts.length; i++) {
-            if(hosts[i].getIPv4Address().equals(ip))
+            if(hosts[i] != null && hosts[i].getIPv4Address().equals(ip))
             {
                 hosts[i] = null;
                 return;
@@ -149,7 +149,7 @@ public class Network {
      */
     public void removeHost(Host host){
         for (int i = 0; i < hosts.length; i++) {
-            if(hosts[i].equals(host))
+            if(hosts[i] != null && hosts[i].equals(host))
             {
                 hosts[i] = null;
                 return;
