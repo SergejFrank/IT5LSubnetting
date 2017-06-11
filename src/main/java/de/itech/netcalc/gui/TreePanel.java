@@ -772,6 +772,8 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 null,
                 GuiUtils.getInitialSubnetString(network));
 
+        if(input == null) return;
+
         IPv4Address address;
         try {
             address = IPAddress.parseIPv4(input);
