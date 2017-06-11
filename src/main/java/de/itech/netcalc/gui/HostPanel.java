@@ -4,10 +4,7 @@ import de.itech.netcalc.Config;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
@@ -16,18 +13,31 @@ import java.util.stream.IntStream;
 class HostPanel extends JPanel implements TableModelListener{
     private final HostTableModel model;
     private final JTable hostTable;
+    private final HostInfoPanel hostInfoPanel;
     private Network network;
     private boolean updatedProgrammatically;
 
     HostPanel() {
-        super(new GridLayout());
+        super(new BorderLayout());
+        setMinimumSize(new Dimension(400, 500));
         hostTable = new JTable(model = new HostTableModel(null));
         hostTable.setFont(new Font("monospaced", Font.PLAIN, 12));
         model.addColumn("IPv4 Adresse");
         model.addColumn("IPv6 Adresse");
         model.addColumn("Name");
         model.addTableModelListener(this);
-        this.add(new JScrollPane(hostTable));
+        this.add(new JScrollPane(hostTable), BorderLayout.CENTER);
+        this.add(hostInfoPanel = new HostInfoPanel(), BorderLayout.PAGE_END);
+
+        hostTable.getSelectionModel().addListSelectionListener(e -> {
+            if(hostTable.getSelectedRows().length != 1) {
+                hostInfoPanel.fill(null);
+            } else {
+                String value = model.getValueAt(hostTable.getSelectedRow(),0).toString();
+                Host host = network.getHost(IPAddress.parseIPv4(value));
+                hostInfoPanel.fill(host);
+            }
+        });
     }
 
     public void setNetwork(Network network) {
@@ -51,7 +61,7 @@ class HostPanel extends JPanel implements TableModelListener{
     private Object[] getData(Host host) {
         return new Object[] {
                 host.getIPv4Address(),
-                host.getIPv6Address() == null ? null : Format.format(host.getIPv6Address(), Config.getIpv6Notation()),
+                host.getIPv6Address() == null ? null : Format.format(host.getIPv6Address(), Format.IPv6Format.SHORTHAND),
                 host.getName()
         };
     }
