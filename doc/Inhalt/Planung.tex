@@ -5,26 +5,35 @@ Im folgenden zeigen wir auf, wie wir die Durchführung des Projekts geplant habe
 Die folgenden Projektphasen wurden von uns in erster Hand festgelegt.
 
 \subsubsection{Planungsphase}
-Um einen groben Überblick über das Projekt, die Ziele und die Durchführung zu erlangen,
-haben wir zunächst eine ausgiebige Brainstormingrunde veranstaltet. Dies führte zu vielen Ideen
-und verbesserte unseren Ausblick auf das Projekt sowie unsere Vorstellung unseres Endergebnisses
-enorm.
-In dieser Phasen legten wir die in \ref{sec:Entwicklungsprozess} aufgezeigte Methodik und die in
-\ref{sec:Resourcenplanung} dargestellten Resourcen.
+Die Planungsphase soll uns einen Überblick über das Projekt, die Ziele und unsere
+Durchführung schaffen. Dabei setzen wir zum Großteil auf Brainstormingrunden, die unsere
+Planung am effektivsten unterstützen.
+In dieser Phasen legen wir die in \ref{sec:Entwicklungsprozess} aufgezeigte Methodik und die in
+\ref{sec:Resourcenplanung} dargestellten Resourcen fest.
 
 \subsubsection{Entwurfsphase}
-In der Entwurfsphase haben wir die Komponeten der Anwendungs geplant und erste Klassendefinitionen
-erstellt. Diese halfen uns während der Implementierung, da die wichtigsten Eigenschaften und Methoden
-bereits vorgegeben waren.
+\label{PhasenEntwurf}
+In der Entwurfsphase planen wir alle Komponenten der Software. Dabei versuchen wir unter
+anderem folgende Fragen zu beantworten:
+
+\textit{Soll die Software modularisiert werden?\\}
+\textit{Wenn ja, wie soll die Modularisierung erfolgen?\\}
+\textit{Auf welcher Basis soll die Netzwerklogik entstehen?\\}
+\textit{Welche Codekonventionen wollen wir als Grundlage nehmen?\\}
+\textit{Sollen Tests eingesetzt werden?\\}
+\textit{Wenn ja, welche Tests und wie ausgiebig?\\}
+\textit{Wie soll unsere Klassenstruktur aussehen?}
+
+Aus dieser Phase entsteht ein Klassendiagramm, welches einen ersten Überblick über unsere
+Implementierung darstellt. Die Antworten auf diese Fragen bilden die Grundlage für die
+nächste Phase; die Implementierung.
 
 \subsubsection{Implementierungsphase}
-%\subsubsection{Implementierungsphase der Logik}
-%In der folgenden Arbeitszeit folgte die Implementierung der Logik. Um einen guten Programmierstil zu wahren
-%und eine leichte Pflege im Laufe des Projektes zu ermöglichen wurde die Logik komplett
-%unabhängig zur GUI entwickelt.
-
-%\subsubsection{Implementierungsphase des GUI}
-%Durch die logische Trennung der Logik und der GUI war es uns möglich 
+In der Implementierungsphase beginnen wir damit die Logik und Benutzeroberfläche zu
+entwickeln. Auf Grundlage der in \ref{PhasenEntwurf} festgelegten Klassenstruktur und
+Modularisierung können wir in einem agilen Entwicklungsprozess (siehe
+\ref{sec:Entwicklungsprozess}) beginnen die einzelnen Funktionen und Komponenten zu
+implementieren.
 
 \subsection{Entwicklungsprozess}
 \label{sec:Entwicklungsprozess}
