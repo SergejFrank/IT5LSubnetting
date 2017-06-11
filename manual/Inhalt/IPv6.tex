@@ -1,0 +1,62 @@
+\section{IPv6}
+Der \subnetcalc\ unterstützt das Internet Protokoll in der Version 6.
+
+\subsection{Globaler IPv6 Präfix}
+Bei der Planung wird ein globaler IPv6 Präfix genutzt. Dieser ist optional und
+kann z.B. einen Präfix repräsentieren, den Sie von Ihrem Internet Provider
+erhalten haben.
+Beim Start der Software ist der globale IPv6 Präfix auf \ipAddress{2001:db8::/32}
+gesetzt. 
+
+\subsubsection{Globalen Präfix anlegen}
+\label{IPv6GlobalZuweisen}
+Den globalen IPv6 Präfix können Sie anlegen, oder bearbeiten indem Sie das
+Kontextmenü des Stammeintrages "`Netzwerke"' aufrufen und den Menüpunkt
+"`Globalen IPv6 Präfix hinzufügen"' oder "`Globalen IPv6 Präfix bearbeiten"'
+auswählen. geben Sie eine gültige IPv6 Netzwerk ID sowie eine IPv6 Präfixlänge
+an. Stellen Sie sicher, dass alle IPv6 konfigurierten Netzwerke im
+angegebenen IPv6 Präfix liegen.
+Beispielhaft wären folgende Eingaben gültig:\\
+\ipAddress{2001:db8:3b::/48}\\
+\ipAddress{c11:29ad:0:49bf::/64}
+
+\subsubsection{Globalen Präfix entfernen}
+Um den Globalen IPv6 Präfix zu entfernen, rufen Sie das Kontextmenü des
+Stammeintrages auf und wählen Sie den Menüpunkt "`Globalen IPv6 Präfix entfernen"'.
+Alle IPv6 konfigurierten Netzwerke behalten ihre IPv6 Konfiguration.
+
+\subsection{IPv6 in Netzwerken}
+Um Netzwerke mit IPv6 zu konfigurieren gehen Sie wie folgt vor:
+
+\subsubsection{IPv6 für Netzwerk konfigurieren}
+Stellen Sie zunächst sicher, dass ein evtl. vorhandenes übergeordnetes Netzwerk
+eine IPv6 Konfiguration besitzt. Anschließend wählen Sie den Menüpunkt
+"`IPv6 zuweisen"' order "`IPv6 bearbeiten"' im Kontextmenü des Netzwerkes und
+fahren Sie wie in \ref{IPv6GlobalZuweisen} beschrieben fort.
+
+Sollte das Netzwerk bereits Hosts besitzen, können Sie allen Hosts eine zufällige
+IPv6 Adresse zuweisen. Bestätigen Sie dafür die entsprechende Abfrage mit \key{Ja}.
+
+\subsubsection{IPv6 aus Netzwerk entfernen}
+Wenn Sie die IPv6 Konfiguration von einem Netzwerk entfernen wollen,
+wählen sie den Menüpunkt "`IPv6 entfernen"' im Kontextmenü des Netzwerkes.
+Beachten Sie, dass anders als beim globalen IPv6 Präfix auch alle Subnetzwerke
+und Hosts ihre IPv6 Konfiguration verlieren.
+
+\subsection{IPv6 Adressen fpr Hosts}
+Um Hosts für IPv6 zu konfigurieren, muss zuerst das Netzwerk eine IPv6 Konfiguration besitzen.
+
+\subsubsection{IPv6 Adresse zu Hosts hinzufügen}
+\label{HostIPv6Hinzufuegen}
+Wie bereits in \ref{HostBearbeiten} beschrieben, können Sie die IPv6 Adresse eines Hosts
+durch die Hosttabelle ändern.
+Stellen Sie sicher, dass eine eingegebene IPv6 Adresse im Bereich des Netzwerkes liegt und
+noch nicht vergeben ist.
+
+Alternativ können Sie auch für einen order mehrere Hosts automatisiert IPv6 Adressen
+vergeben lassen. Markieren Sie dafür die Hosts in der Tabelle und wählen Sie im Kontextmenü
+den Menüpunkt "`Zufällige IPv6 Adresse zuweisen"'.
+
+\subsubsection{IPv6 Adresse von Host entfernen}
+Um die IPv6 Adresse von einem Host zu entfernen, gehen Sie vor wie in
+\ref{HostIPv6Hinzufuegen} beschrieben und lassen Sie die Tabellenzelle leer.

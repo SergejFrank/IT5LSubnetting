@@ -1,0 +1,71 @@
+\section{Netzwerke}
+Im folgenden wird der Umgang mit Netzwerken und ihrer Unterteilung in Subnetze
+beschrieben.
+Falls Sie die beschriebenen Kontextmenüeinträge nicht sehen können, stellen Sie sicher,
+dass das Netzwerk noch keine Hosts enthält. Falls dies doch der Fall ist, entfernen Sie
+diese, wie in \ref{AlleHostsEntfernen} beschrieben.
+
+\subsection{Netzwerke anlegen}
+\label{NetzwerkAnlegen}
+Zum anlegen eines neuen Netzwerkes klicken Sie mit der rechten Maustaste auf den
+Stammeintrag "`Netzwerke"'. Wählen sie im Kontextmenü den Menüpunkt
+"`Neues Netzwerk"'. Bei fokusiertem Stammeintrag können Sie auch die
+Tastenkombination \key{Strg+N} nutzen.
+Es erscheint die Aufforderung die Netzwerk ID, sowie den Netzwerkpräfix anzugeben.
+Alternativ können Sie auch die Netzwerkmaske angeben. Folgende Eingaben sind z.B.
+möglich:
+
+\ipAddress{10.5.0.0/24}\\
+\ipAddress{192.168.178.0/255.255.255.0}
+
+Achten Sie darauf, dass das eingegebene Netzwerk sich nicht mit bereits vorhanden
+überschneidet. In diesem Falle erhalten Sie eine Fehlermeldung.
+
+\subsection{Netzwerk in Subnetze teilen}
+Die folgenden Punkte beschreiben Ihre Möglichkeiten Subnetze zu einem Netwerk
+hinzuzufügen.
+
+\subsubsection{Einzelnes Subnetz anlegen}
+Zum anlegen eines einzelnen Subnetzes wählen sie im Kontextmenü des Netzwerkes den
+Menüpunkt "`Neues Subnetz"'. Danach fahren Sie wie in \ref{NetzwerkAnlegen}
+beschrieben fort.
+Auch hier können Sie bei fokusiertem Netzwerk die Tastenkombination \key{Strg+N}
+nutzen.
+
+\subsubsection{Subnetz nach Anzahl der Hosts hinzufügen}
+Wenn Sie die Anzahl der zu erwartenen Hosts in einem Subnetz kennen kann der
+\subnetcalc\ ein möglichst kleines Subnetzwerk erstellen und es an der erstmöglichen
+Position einfügen. Dafür gehen Sie wie folgt vor:
+
+Wählen Sie im Kontextmenü des Netwerkes den Punkt "`Neues Subnetz nach Größe"' und tragen
+Sie die Ihnen bekannte Anzahl an Hosts ein. Das neue Subnetzwerk wird automatisch erstellt 
+und eingefügt.
+
+\subsubsection{Netzwerke gleichmäßig in Subnetze teilen}
+Sie können ein Netzwerk gleichmäßig in Subnetze teilen. Dafür stehen Ihnen zwei
+Verfahren zur Verfügung: nach Größe und nach Anzahl.
+
+\paragraph{Nach Größe}
+Um ein Netzwerk nach der Größe der Subnetze zu teilen wählen Sie im Kontextmenü
+des Netzwerkes den Menüpunkt "`Gleichmäßig nach Größe"'. Wählen Sie nun aus,
+wie viele Hosts die Subnetze beinhalten sollen.
+
+\paragraph{Nach Anzahl}
+Um ein Netzwerk nach der Anzahl der Subnetze zu teilen wählen Sie im Kontextmenü
+des Netzwerkes den Menüpunkt "`Gleichmäßig nach Anzahl"'. Wählen Sie nun aus, wie
+in viele Subnetze das Netzwerk geteilt werden soll.
+
+\textbf{Beachten Sie: Bei der gleichmäßigen Unterteilung eines Subnetzes werden alle
+vorhandenen Subnetze überschrieben.}
+
+\subsection{Netzwerk entfernen}
+Um ein Netzwerk zu entfernen, wählen sie im Kontextmenü den Eintrag
+"`Netzwerk/Subnetz löschen"', oder drücken Sie bei fokusiertem Netzwerk die
+\key{Entfernen} Taste.
+
+\subsection{Netzwerk unbenennen}
+Sie können Netzwerken Namen geben. Um einem Netzwerk einen Namen zuzuweisen, oder
+es umzubenennen, wählen Sie im Kontextmenü des Netwerkes den Menüpunkt
+"`Umbenennen"'.
+Wenn Sie den Namen eines Netzwerkes entfernen möchten, verfahren Sie genau so und lassen
+Sie das Eingabefeld leer.

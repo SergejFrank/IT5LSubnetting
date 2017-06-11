@@ -1,0 +1,48 @@
+\documentclass[parskip=half]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{relsize}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\newcommand{\autoren}{Jan-Luca Gutsch, Sergej Frank, Valentin Beller, Marcel Schmidt, Jasmin Teller}
+\newcommand{\titel}{Bedienungsanleitung}
+\newcommand{\untertitel}{Netzwerkplaner}
+\newcommand{\Projekt}{Projekt 04}
+\newcommand{\subnetcalc}{\textsc{Netzwerkplaner}}
+\newcommand{\key}[1]{{\fontfamily{pcr}\selectfont #1}}
+\newcommand{\ipAddress}[1]{{\fontfamily{pcr}\selectfont #1}}
+
+\begin{document}
+
+\input{Stil.tex}
+
+% Deckblatt
+\begin{titlepage}
+\begin{center}
+\Large{\titel}\\[12ex]
+\Large{\textbf{\untertitel}}\\[2ex]
+\huge{\textbf{\Projekt}}\\[1.5ex]
+\normalsize
+Abgabetermin: Montag 12. Juni 2017\\[3em]
+\textbf{Gruppenmitglieder:}\\
+\autoren \\[5ex]
+\end{center}
+\end{titlepage}
+\tableofcontents
+\clearpage
+
+\input{Inhalt/Einleitung.tex}
+\input{Inhalt/Installation.tex}
+\input{Inhalt/Grundlagen.tex}
+\input{Inhalt/Netzwerke.tex}
+\input{Inhalt/Hosts.tex}
+\input{Inhalt/IPv6.tex}
+\input{Inhalt/Ansicht.tex}
+\input{Inhalt/SpeichernUndLaden.tex}
+\input{Inhalt/Quellcode.tex}
+
+\end{document}
