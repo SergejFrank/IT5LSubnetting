@@ -3,6 +3,10 @@ package de.itech.netcalc.gui;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,5 +76,28 @@ class GuiUtils {
                 return iPv4AddressDialog(title, message, inputString);
             }
         }
+    }
+
+    static File getFileOpen(String title) {
+        FileDialog dialog = new java.awt.FileDialog((Frame) null, title, FileDialog.LOAD);
+        dialog.setVisible(true);
+        String fileName = dialog.getFile();
+        if(fileName == null) return null;
+        File file = new File(dialog.getDirectory(), fileName);
+        if(!file.exists() || file.isDirectory()) {
+            GuiUtils.error("Die angegebene Datei konnte nicht gefunden werden.");
+            return getFileOpen(title);
+        }
+        return file;
+    }
+
+    static File getSaveFile(String title, String initialFileName) {
+        FileDialog dialog = new FileDialog((Frame)null, title, FileDialog.SAVE);
+        dialog.setFile(initialFileName);
+        dialog.setVisible(true);
+        String fileName = dialog.getFile();
+        if(fileName == null) return null;
+        Path filePath = Paths.get(dialog.getDirectory(), fileName);
+        return filePath.toFile();
     }
 }
