@@ -109,7 +109,7 @@ public class Network {
     /**
      * Fills all unused IPv4 addresses with empty hosts
      */
-    public void addAllHosts(){
+    public void addAllHosts(boolean assignIPv6){
         if(getStatus() == SubnetStatus.HAS_SUBNETS){
             throw new UnsupportedOperationException("can't add host to subnetted network");
         }
@@ -117,7 +117,7 @@ public class Network {
             if(hosts[i] == null){
                 IPv4Address hostV4 = new IPv4Address(getNetworkIdV4().getValue() + i + 1);
                 Host host;
-                if(isIPv6Enabled()) {
+                if(isIPv6Enabled() && assignIPv6) {
                     IPv6Address random = IPv6Address.getAddressWithRandomHost(networkIdV6.getNetworkId());
                     host = new Host(this, hostV4, random);
                 }

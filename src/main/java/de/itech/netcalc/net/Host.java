@@ -41,7 +41,7 @@ public class Host {
      * @param ipv4Address the IPv4Address of the host
      * @throws IllegalArgumentException if ipv4Address or hostName is null
      */
-    Host(Network subnet, IPv4Address ipv4Address) throws IllegalArgumentException {
+    public Host(Network subnet, IPv4Address ipv4Address) throws IllegalArgumentException {
         if(subnet == null) throw new IllegalArgumentException("Subnet can not be null.");
         if(ipv4Address == null) throw new IllegalArgumentException("ipv4Address can not be null");
         this.subnet = subnet;
@@ -57,7 +57,7 @@ public class Host {
      * @param ipv6Address the IPv6Address of the host
      * @throws IllegalArgumentException if ipv4Address, ipv6Address or hostName is null
      */
-    Host(Network subnet, IPv4Address ipv4Address, IPv6Address ipv6Address) throws IllegalArgumentException {
+    public Host(Network subnet, IPv4Address ipv4Address, IPv6Address ipv6Address) throws IllegalArgumentException {
         if(subnet == null) throw new IllegalArgumentException("Subnet can not be null.");
         if(ipv4Address == null) throw new IllegalArgumentException("ipv4Address can not be null.");
         if(ipv6Address == null) throw new IllegalArgumentException("ipv6Address can not be null.");

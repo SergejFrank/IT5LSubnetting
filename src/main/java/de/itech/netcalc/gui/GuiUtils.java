@@ -42,6 +42,12 @@ class GuiUtils {
         return input == JOptionPane.OK_OPTION;
     }
 
+    static boolean confirmationYesNo(String title, String message) {
+        int input = JOptionPane.showConfirmDialog(null, message, title,
+                JOptionPane.YES_NO_OPTION);
+        return input == JOptionPane.YES_OPTION;
+    }
+
     static IPv6Address iPv6AddressDialog(String title, String message, String initialValue) {
         Object input = JOptionPane.showInputDialog(null, message, title,
                 JOptionPane.PLAIN_MESSAGE, null, null, initialValue);

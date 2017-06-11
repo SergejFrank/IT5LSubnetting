@@ -1,58 +1,120 @@
 package de.itech.netcalc.gui;
 
+import de.itech.netcalc.Config;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 class HostPanel extends JPanel implements TableModelListener{
     private final HostTableModel model;
+    private final JTable hostTable;
     private Network network;
     private boolean updatedProgrammatically;
 
     HostPanel() {
         super(new GridLayout());
-        JTable table = new JTable(model = new HostTableModel());
-        table.setFont(new Font("monospaced", Font.PLAIN, 12));
+        hostTable = new JTable(model = new HostTableModel(null));
+        hostTable.setFont(new Font("monospaced", Font.PLAIN, 12));
         model.addColumn("IPv4 Adresse");
         model.addColumn("IPv6 Adresse");
         model.addColumn("Name");
         model.addTableModelListener(this);
-        this.add(new JScrollPane(table));
+        this.add(new JScrollPane(hostTable));
     }
 
     public void setNetwork(Network network) {
         this.network = network;
-        reloadHosts();
+        model.setNetwork(network);
+        reload();
     }
 
-    void reloadHosts() {
+    void reload() {
+        setupContextMenu();
         model.setRowCount(0);
         if(network != null && network.getHosts() != null)
         {
             for(Host h : network.getHosts()) {
                 if(h == null) continue;
-                Object[] data = new Object[] {
-                        h.getIPv4Address(),
-                        h.getIPv6Address() == null ? null : Format.format(h.getIPv6Address(),Format.IPv6Format.SHORTHAND),
-                        h.getName()
-                };
-                model.addRow(data);
+                model.addRow(getData(h));
             }
         }
+    }
+
+    private Object[] getData(Host host) {
+        return new Object[] {
+                host.getIPv4Address(),
+                host.getIPv6Address() == null ? null : Format.format(host.getIPv6Address(), Config.getIpv6Notation()),
+                host.getName()
+        };
+    }
+
+    private void setupContextMenu() {
+        if(network == null) return;
+        final JPopupMenu popupMenu = new JPopupMenu();
+        if(network.isIPv6Enabled()) {
+            popupMenu.add(new AbstractAction("Zufällige IPv6 Adresse zuweisen") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int[] rows = hostTable.getSelectedRows();
+                    Arrays.sort(rows);
+                    for (int i=rows.length-1;i>=0;i--) {
+                        int row = rows[i];
+                        IPv4Address address = IPAddress.parseIPv4(model.getValueAt(row, 0).toString());
+                        Host host = network.getHost(address);
+                        host.setIpv6Address(IPv6Address.getAddressWithRandomHost(network.getNetworkIdV6()));
+                        model.setValueAt(Format.format(host.getIPv6Address(), Config.getIpv6Notation()), row, 1);
+                    }
+                }
+            });
+        }
+        popupMenu.add(new AbstractAction("Host entfernen") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[] rows = hostTable.getSelectedRows();
+                Arrays.sort(rows);
+                for (int i=rows.length-1;i>=0;i--) {
+                    int row = rows[i];
+                    IPv4Address address = IPAddress.parseIPv4(model.getValueAt(row, 0).toString());
+                    network.removeHost(address);
+                    model.removeRow(row);
+                }
+            }
+        });
+        popupMenu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    int rowAtPoint = hostTable.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), hostTable));
+                    if (rowAtPoint > -1 && IntStream.of(hostTable.getSelectedRows()).noneMatch(x -> x == rowAtPoint)) {
+                        hostTable.setRowSelectionInterval(rowAtPoint, rowAtPoint);
+                    }
+                });
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+        });
+
+        hostTable.setComponentPopupMenu(popupMenu);
     }
 
     @Override
     public void tableChanged(TableModelEvent e) {
         if(e.getType() != TableModelEvent.UPDATE || updatedProgrammatically) return;
-        if(e.getColumn() == 2) {
-            Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
-            String newName = model.getValueAt(e.getFirstRow(), 2).toString();
-            host.setName(newName);
-        }
-        else if(e.getColumn() == 1) {
+        if(e.getColumn() == 1) {
             String input = model.getValueAt(e.getFirstRow(), 1).toString();
             Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
             if (input == null || input.equals("")) {
@@ -86,6 +148,10 @@ class HostPanel extends JPanel implements TableModelListener{
                     throw new UnsupportedOperationException("Unexpected Exception", ex);
                 }
             }
+        } else if(e.getColumn() == 2) {
+            Host host = network.getHost(IPAddress.parseIPv4(model.getValueAt(e.getFirstRow(), 0).toString()));
+            String newName = model.getValueAt(e.getFirstRow(), 2).toString();
+            host.setName(newName);
         }
     }
 }

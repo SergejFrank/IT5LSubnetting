@@ -98,7 +98,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
     }
 
-    public NetworkTreeModel getNetworkTreeModel(){
+    NetworkTreeModel getNetworkTreeModel(){
         return networkTreeModel;
     }
 
@@ -156,6 +156,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         else
         {
             infoPane.setBottomComponent(null);
+            hostPanel.setNetwork(null);
         }
     }
 
@@ -543,7 +544,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         Network network = networkNode.getNetwork();
         removeIPv6FromNetwork(network);
         networkTreeModel.nodeStructureChanged(networkNode);
-        hostPanel.reloadHosts();
+        hostPanel.reload();
         fillInfoPanel(network);
     }
 
@@ -671,7 +672,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param parent the parent network
      */
     private void handleCreateNetworkBySize(NetworkTreeNode parent) {
-        String input = (String)JOptionPane.showInputDialog(null,
+        String input = JOptionPane.showInputDialog(null,
                 "Host Anzahl (1-" + parent.getNetwork().getMaxHosts() +  "):",
                 "Subnetz hinzufügen",
                 JOptionPane.PLAIN_MESSAGE);
@@ -749,7 +750,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             return;
         }
         networkNode.getNetwork().addHost();
-        hostPanel.reloadHosts();
+        hostPanel.reload();
     }
 
     /**
@@ -797,7 +798,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             handleAddHostWithIP(networkNode);
         } else {
             network.addHost(IPAddress.parseIPv4(input));
-            hostPanel.reloadHosts();
+            hostPanel.reload();
         }
     }
 
@@ -806,8 +807,10 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkNode the network node to fill
      */
     private void handleAddAllHosts(NetworkTreeNode networkNode) {
-        networkNode.getNetwork().addAllHosts();
-        hostPanel.reloadHosts();
+        boolean assignIPv6 = networkNode.getNetwork().isIPv6Enabled() &&
+                GuiUtils.confirmationYesNo("Hosts IPv6 zuweisen", "Soll allen Hosts eine zufällige IPv6 Adresse zugewiesen werden?");
+        networkNode.getNetwork().addAllHosts(assignIPv6);
+        hostPanel.reload();
     }
 
     /**
@@ -816,7 +819,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      */
     private void handleClearHosts(NetworkTreeNode networkNode) {
         networkNode.getNetwork().clearHosts();
-        hostPanel.reloadHosts();
+        hostPanel.reload();
     }
 
     /**
