@@ -744,7 +744,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkNode the network to fill.
      */
     private void handleAddHost(NetworkTreeNode networkNode) {
-        if(networkNode.getNetwork().getMaxHosts() >= networkNode.getNetwork().getHostCount()) {
+        if(networkNode.getNetwork().getHostCount() >= networkNode.getNetwork().getMaxHosts()) {
             GuiUtils.error("Zu diesem Netzwerk können keine weiteren Hosts mehr hinzugefügt werden.");
             return;
         }
@@ -757,7 +757,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkNode the network to fill with the host
      */
     private void handleAddHostWithIP(NetworkTreeNode networkNode) {
-        if(networkNode.getNetwork().getMaxHosts() >= networkNode.getNetwork().getHostCount()) {
+        if(networkNode.getNetwork().getHostCount() >= networkNode.getNetwork().getMaxHosts()) {
             GuiUtils.error("Zu diesem Netzwerk können keine weiteren Hosts mehr hinzugefügt werden.");
             return;
         }
@@ -772,8 +772,31 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 null,
                 GuiUtils.getInitialSubnetString(network));
 
-        network.addHost(IPAddress.parseIPv4(input));
-        hostPanel.reloadHosts();
+        IPv4Address address;
+        try {
+            address = IPAddress.parseIPv4(input);
+        } catch (Exception e) {
+            GuiUtils.error("Bitte geben Sie eine gültige IPv4 Addresse an.");
+            handleAddHostWithIP(networkNode);
+            return;
+        }
+
+        if(!NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), address)) {
+            GuiUtils.error("Die eingegebene IPv4 Adresse liegt nicht im übergeordneten Netzwerk.");
+            handleAddHostWithIP(networkNode);
+        } else if(address.equals(network.getNetworkIdV4())) {
+            GuiUtils.error("Die IPv4 Netzwerk ID des Netzwerkes kann nicht benutzt werden.");
+            handleAddHostWithIP(networkNode);
+        } else if(address.equals(network.getBroadcastAddress())) {
+            GuiUtils.error("Die IPv4 Broadcast Adresse des Netzwerkes kann nicht benutzt werden.");
+            handleAddHostWithIP(networkNode);
+        } else if(network.getHost(address) != null) {
+            GuiUtils.error("Die eingegebene IPv4 Adresse wird bereits genutzt.");
+            handleAddHostWithIP(networkNode);
+        } else {
+            network.addHost(IPAddress.parseIPv4(input));
+            hostPanel.reloadHosts();
+        }
     }
 
     /**
