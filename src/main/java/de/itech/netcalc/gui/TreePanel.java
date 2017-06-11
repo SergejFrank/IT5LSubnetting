@@ -1,8 +1,6 @@
 package de.itech.netcalc.gui;
 
-import de.itech.netcalc.Config;
 import de.itech.netcalc.net.*;
-import sun.nio.ch.Net;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -31,7 +29,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     /**
      * Stores the info panel, that displays the information about the currently selected network.
      */
-    private final JSplitPane infoPane;
+    private final InfoPanel infoPanel;
 
     /**
      * Stores the JTree that displays the information from the networkTreeModel.
@@ -49,13 +47,12 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     TreePanel() {
         super(new GridLayout(1,0));
         JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        infoPane = new FixedSplitPanel(JSplitPane.VERTICAL_SPLIT);
+        JPanel infoPane = new JPanel(new BorderLayout());
+        infoPane.setMinimumSize(new Dimension(350,600));
+
         mainPane.setDividerSize(3);
-        infoPane.setDividerSize(3);
         mainPane.setLeftComponent(infoPane);
         mainPane.setRightComponent(hostPanel = new HostPanel());
-        mainPane.setResizeWeight(0.35);
-        infoPane.setResizeWeight(0.5);
 
         networkTree = new JTree(networkTreeModel = new NetworkTreeModel());
         networkTree.addTreeSelectionListener(this);
@@ -71,9 +68,9 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 handleTreeKeyTyped(e);
             }
         });
-        infoPane.setTopComponent(new JScrollPane(networkTree));
+        infoPane.add(infoPanel = new InfoPanel(), BorderLayout.PAGE_END);
+        infoPane.add(new JScrollPane(networkTree), BorderLayout.CENTER);
         add(mainPane);
-
         try {
             initWithLocalInterfaces();
         } catch (SocketException e) {
@@ -156,7 +153,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
         else
         {
-            infoPane.setBottomComponent(null);
+            infoPanel.fill(null);
             hostPanel.setNetwork(null);
         }
     }
@@ -166,36 +163,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
      * @param networkBase the network to display
      */
     private void fillInfoPanel(Network networkBase) {
-        JPanel infoPanel = new JPanel(new GridLayout(networkBase.getNetworkIdV6() == null ? 5 : 8,2));
-        infoPanel.add(new JLabel("Netzwerk"));
-        infoPanel.add(createTextArea(networkBase.getName()));
-        infoPanel.add(new JLabel("IPv4"));
-        infoPanel.add(new JLabel());
-        infoPanel.add(new JLabel("Netzwerk Id:"));
-        infoPanel.add(createTextArea(Format.format(networkBase.getNetworkIdV4(), Config.getIpv4Notation())));
-        infoPanel.add(new JLabel("Subnetzmaske:"));
-        infoPanel.add(createTextArea(Format.format(networkBase.getNetworkIdV4(), Config.getIpv4Notation())));
-        infoPanel.add(new JLabel("Broadcastaddresse:"));
-        infoPanel.add(createTextArea(Format.format(networkBase.getBroadcastAddress(), Config.getIpv4Notation())));
-        if(networkBase.getNetworkIdV6() != null)
-        {
-            infoPanel.add(new JLabel("IPv6"));
-            infoPanel.add(new JLabel());
-            infoPanel.add(new JLabel("Netzwerk Id:"));
-            infoPanel.add(createTextArea(Format.format(networkBase.getNetworkIdV6(),Config.getIpv6Notation())));
-            infoPanel.add(new JLabel("Prefix:"));
-            infoPanel.add(createTextArea(String.valueOf(networkBase.getPrefixV6())));
-        }
-        infoPane.setBottomComponent(infoPanel);
-    }
-
-    private JTextArea createTextArea(String value){
-        JTextArea area = new JTextArea(value);
-        area.setLineWrap(true);
-        area.setEditable(false);
-        area.setOpaque(false);
-        area.setBackground(new Color(0,0,0,0));
-        return area;
+        infoPanel.fill(networkBase);
     }
 
     /**
@@ -212,7 +180,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     void refresh() {
         NetworkTreeNode selected = getSelectedNetworkTreeNode();
         if(selected == null) {
-            infoPane.setBottomComponent(null);
+            infoPanel.fill(null);
             fillHostPanel(null);
         } else {
             fillInfoPanel(selected.getNetwork());
@@ -222,7 +190,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
 
     void clear() {
         networkTreeModel.clear();
-        infoPane.setBottomComponent(null);
+        infoPanel.fill(null);
         fillHostPanel(null);
     }
 
@@ -585,7 +553,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
     private void handleAssignIPv6(NetworkTreeNode networkNode, String initialValue) {
         Network parentNetwork = networkNode.getNetwork().getParent();
         if(parentNetwork != null && !parentNetwork.isIPv6Enabled()) {
-            GuiUtils.error("Biite erst im übergeordneten Netzwerk IPv6 konfigurieren.");
+            GuiUtils.error("Bitte erst im übergeordneten Netzwerk IPv6 konfigurieren.");
             return;
         }
         IPv6Address parentIPv6Address = parentNetwork != null
