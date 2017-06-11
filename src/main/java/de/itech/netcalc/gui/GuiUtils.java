@@ -3,6 +3,7 @@ package de.itech.netcalc.gui;
 import de.itech.netcalc.net.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
@@ -105,5 +106,29 @@ class GuiUtils {
         if(fileName == null) return null;
         Path filePath = Paths.get(dialog.getDirectory(), fileName);
         return filePath.toFile();
+    }
+
+    static JTextField getInfoTextField() {
+        JTextField jTextField = new JTextField();
+        jTextField.setEditable(false);
+        jTextField.setOpaque(false);
+        jTextField.setBackground(new Color(0,0,0,0));
+        jTextField.setBorder(new EmptyBorder(3,10,3,3));
+        return jTextField;
+    }
+
+    static JTextArea getInfoTextArea() {
+        JTextArea jTextArea = new JTextArea();
+        jTextArea.setBorder(new EmptyBorder(3,10,3,10));
+        jTextArea.setOpaque(false);
+        jTextArea.setBackground(new Color(0,0,0,0));
+        jTextArea.setLineWrap(true);
+        return jTextArea;
+    }
+
+    static JLabel getInfoLabel(String text) {
+        JLabel jLabel = new JLabel(text);
+        jLabel.setBorder(new EmptyBorder(3,10,3,3));
+        return jLabel;
     }
 }
