@@ -1,5 +1,7 @@
 package de.itech.netcalc.net;
 
+import sun.nio.ch.Net;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -560,6 +562,13 @@ public class Network {
      * @param prefix the IPv6 network prefix
      */
     public void setIPv6(IPv6Address networkId, int prefix) {
+        if(networkId != null) {
+            long nId = prefix > 64 ? networkId.getNetworkId()
+                    : networkId.getNetworkId() & NetUtils.ipv6PrefixLengthToValue(prefix);
+            long iId = prefix <= 64 ? networkId.getInterfaceId()
+                    : networkId.getInterfaceId() & NetUtils.ipv6PrefixLengthToValue(prefix - 64);
+            networkId = new IPv6Address(nId, iId);
+        }
         setNetworkIdV6(networkId);
         setPrefixV6(networkId == null ? 0 : prefix);
     }

@@ -2,6 +2,7 @@ package de.itech.netcalc.gui;
 
 import de.itech.netcalc.Config;
 import de.itech.netcalc.net.*;
+import sun.nio.ch.Net;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -337,7 +338,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
                 else {
                     menu.add(new AbstractAction("IPv6 ändern") {
                         public void actionPerformed (ActionEvent e) {
-                            handleAssignIPv6(networkNode, networkNode.getNetwork().toString(true));
+                            handleAssignIPv6(networkNode, Format.format(networkNode.getNetwork().getNetworkIdV6(), Format.IPv6Format.SHORTHAND));
                         }
                     });
                     menu.add(new AbstractAction("IPv6 entfernen") {
@@ -520,6 +521,16 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
         IPv6Address address = IPAddress.parseIPv6(input);
         int prefix = IPAddress.parseIPv6Prefix(input);
+
+        Optional<Network> notInSubnet = networkTreeModel.getNetworks().stream()
+                .filter(s -> s.isIPv6Enabled() && !NetUtils.isInSubnet(address, prefix, s.getNetworkIdV6()))
+                .findFirst();
+        if(notInSubnet.isPresent()) {
+            GuiUtils.error("Das Netzwerk " + notInSubnet.get().toString() + " liegt nicht in der neuen IPv6 Konfiguration.");
+            handleAssignGlobalIPv6(input);
+            return;
+        }
+
         networkTreeModel.setRootIPv6Prefix(address, prefix);
     }
 
@@ -605,6 +616,15 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         int prefix = IPAddress.parseIPv6Prefix(input);
         if(!NetUtils.isInSubnet(parentIPv6Address, parentPrefix, address)) {
             GuiUtils.error("Die angegebene Adresse liegt nicht im übergeordneten Nezwerk.");
+            handleAssignIPv6(networkNode, input);
+            return;
+        }
+
+        Optional<Network> notInSubnet = networkNode.getNetwork().getSubnets().stream()
+                .filter(s -> s.isIPv6Enabled() && !NetUtils.isInSubnet(address, prefix, s.getNetworkIdV6()))
+                .findFirst();
+        if(notInSubnet.isPresent()) {
+            GuiUtils.error("Das Subnetzwerk " + notInSubnet.get().toString() + " liegt nicht in der neuen IPv6 Konfiguration.");
             handleAssignIPv6(networkNode, input);
             return;
         }
