@@ -107,15 +107,6 @@ class GuiUtils {
         return filePath.toFile();
     }
 
-    static JTextField getInfoTextField() {
-        JTextField jTextField = new JTextField();
-        jTextField.setEditable(false);
-        jTextField.setOpaque(false);
-        jTextField.setBackground(new Color(0,0,0,0));
-        jTextField.setBorder(new EmptyBorder(3,10,3,3));
-        return jTextField;
-    }
-
     static JTextArea getInfoTextArea() {
         JTextArea jTextArea = new JTextArea();
         jTextArea.setBorder(new EmptyBorder(3,10,3,10));

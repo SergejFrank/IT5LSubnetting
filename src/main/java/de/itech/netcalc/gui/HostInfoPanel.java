@@ -9,7 +9,7 @@ import java.awt.*;
 
 class HostInfoPanel extends JPanel {
     private JTextArea hostName;
-    private JTextField ipv4Address;
+    private JTextArea ipv4Address;
     private JTextArea ipv6Address;
 
     void fill(Host host) {
@@ -48,7 +48,7 @@ class HostInfoPanel extends JPanel {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         add(ipv4Label, gbc);
-        ipv4Address = GuiUtils.getInfoTextField();
+        ipv4Address = GuiUtils.getInfoTextArea();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;

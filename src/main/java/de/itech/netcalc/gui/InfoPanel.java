@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 class InfoPanel extends JPanel {
-    private final JTextField networkName = GuiUtils.getInfoTextField();
+    private final JTextArea networkName = GuiUtils.getInfoTextArea();
     private final JTextArea ipv4NetworkId = GuiUtils.getInfoTextArea();
     private final JTextArea ipv6NetworkId = GuiUtils.getInfoTextArea();
     private final JTextArea ipv6PrefixLength = GuiUtils.getInfoTextArea();
