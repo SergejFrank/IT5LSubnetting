@@ -127,7 +127,7 @@ public class Host {
         else if(subnet.getNetworkIdV6() == null) {
             throw new UnsupportedOperationException("Configure IPv6 on subnet first.");
         }
-        else if(Arrays.stream(subnet.getHosts()).anyMatch(host-> ipv6Address.equals(host.getIPv6Address()))) {
+        else if(Arrays.stream(subnet.getHosts()).anyMatch(host -> host != null && ipv6Address.equals(host.getIPv6Address()))) {
             throw new UnsupportedOperationException("IPv6 already in use.");
         }
         else {
