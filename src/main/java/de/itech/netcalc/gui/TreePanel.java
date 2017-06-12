@@ -406,7 +406,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             Network network = Network.fromXML(file);
             if(network == null) return;
             Network parent = networkTreeNode.getNetwork();
-            if(!NetUtils.isInSubnet(parent.getNetworkIdV4(), parent.getNetworkMaskV4(), network.getNetworkIdV4())) {
+            if(!NetUtils.isInSubnet(parent.getNetworkIdV4(), parent.getSubnetMaskV4(), network.getNetworkIdV4())) {
                 GuiUtils.error("Das Netzwerk liegt nicht im übergeordneten Netzwerk.");
                 return;
             }
@@ -752,7 +752,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
         }
         Network network = networkNode.getNetwork();
         String networkString = network.getNetworkIdV4().toString() + "/" +
-                NetUtils.maskToPrefix(network.getNetworkMaskV4());
+                NetUtils.maskToPrefix(network.getSubnetMaskV4());
         String input = (String) JOptionPane.showInputDialog(null,
                 "IP Adresse (" + networkString + ")",
                 "Host mit IP Adresse hinzufügen",
@@ -772,7 +772,7 @@ class TreePanel extends JPanel implements TreeSelectionListener {
             return;
         }
 
-        if(!NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), address)) {
+        if(!NetUtils.isInSubnet(network.getNetworkIdV4(), network.getSubnetMaskV4(), address)) {
             GuiUtils.error("Die eingegebene IPv4 Adresse liegt nicht im übergeordneten Netzwerk.");
             handleAddHostWithIP(networkNode);
         } else if(address.equals(network.getNetworkIdV4())) {

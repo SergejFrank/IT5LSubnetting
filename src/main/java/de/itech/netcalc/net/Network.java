@@ -52,10 +52,10 @@ public class Network {
     private IPv4Address networkIdV4;
 
     /**
-     * Backing field for the IPv4 network mask
+     * Backing field for the IPv4 subnet mask
      */
     @XmlElement
-    private IPv4Address networkMaskV4;
+    private IPv4Address subnetMaskV4;
 
     /**
      * Backing field for the IPv6 network ID
@@ -73,12 +73,12 @@ public class Network {
      * Creates a new Network with the passed IPv4 details
      * @param parent the parent network, can be null
      * @param networkIdV4 the IPv4 network ID
-     * @param networkMaskV4 the IPv4 network mask
+     * @param subnetMaskV4 the IPv4 network mask
      */
-    public Network(Network parent, IPv4Address networkIdV4, IPv4Address networkMaskV4) {
+    public Network(Network parent, IPv4Address networkIdV4, IPv4Address subnetMaskV4) {
         this.parent = parent;
-        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
-        this.setNetworkMaskV4(networkMaskV4);
+        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & subnetMaskV4.getValue()));
+        this.setSubnetMaskV4(subnetMaskV4);
         hosts = new Host[getMaxHosts()];
     }
 
@@ -92,15 +92,15 @@ public class Network {
      * Creates a new Network with the passed IPv4 and IPv6 details
      * @param parent the parent network, can be null
      * @param networkIdV4 the IPv4 network ID
-     * @param networkMaskV4 the IPv4 network mask
+     * @param subnetMaskV4 the IPv4 network mask
      * @param networkIdV6 the IPv6 network ID
      * @param prefixV6 the IPv6 network prefix
      */
-    public Network(Network parent, IPv4Address networkIdV4, IPv4Address networkMaskV4, IPv6Address networkIdV6, int prefixV6) {
+    public Network(Network parent, IPv4Address networkIdV4, IPv4Address subnetMaskV4, IPv6Address networkIdV6, int prefixV6) {
         this.parent = parent;
         if(prefixV6 < 0 || prefixV6 > 128) throw new IllegalArgumentException(prefixV6 + " is not a valid IPv6 Prefix");
-        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & networkMaskV4.getValue()));
-        this.setNetworkMaskV4(networkMaskV4);
+        this.setNetworkIdV4(new IPv4Address(networkIdV4.getValue() & subnetMaskV4.getValue()));
+        this.setSubnetMaskV4(subnetMaskV4);
         this.setNetworkIdV6(networkIdV6);
         this.setPrefixV6(prefixV6);
         hosts = new Host[getMaxHosts()];
@@ -209,7 +209,7 @@ public class Network {
      */
     public Host addHost(IPv4Address address){
 
-        if(!NetUtils.isInSubnet(networkIdV4, networkMaskV4, address)){
+        if(!NetUtils.isInSubnet(networkIdV4, subnetMaskV4, address)){
             throw new IllegalArgumentException("IP adress must be in the specified network");
         }
 
@@ -225,7 +225,7 @@ public class Network {
                 if(Arrays.stream(hosts).anyMatch(h -> h != null && h.getIPv4Address().equals(address))){
                     throw new UnsupportedOperationException("IPv4 Address is already given in this subnet");
                 }
-                int indexOfAddress = (address.getValue() & ~networkMaskV4.getValue());
+                int indexOfAddress = (address.getValue() & ~subnetMaskV4.getValue());
 
                 Host newHost;
                 if(isIPv6Enabled()){
@@ -256,7 +256,7 @@ public class Network {
         if(getStatus() == SubnetStatus.HAS_HOSTS) throw new UnsupportedOperationException("can't add subnet to network with hosts");
         if(subnets.stream().anyMatch(sub -> sub.getNetworkIdV4().equals(subnet.getNetworkIdV4()) || sub.isColliding(subnet)))
             throw new UnsupportedOperationException("Subnet already exists.");
-        if(!NetUtils.isInSubnet(this.getNetworkIdV4(), this.getNetworkMaskV4(), subnet.getNetworkIdV4()))
+        if(!NetUtils.isInSubnet(this.getNetworkIdV4(), this.getSubnetMaskV4(), subnet.getNetworkIdV4()))
             throw new UnsupportedOperationException("Subnet is not in range of the parent network.");
         Optional<Network> collidingNetwork = getSubnets().stream().filter(other -> other.isColliding(subnet)).findFirst();
         if(collidingNetwork.isPresent())
@@ -384,7 +384,7 @@ public class Network {
         for (int i=0;i < count; i++) {
             IPv4Address nAddress = new IPv4Address(getNetworkIdV4().getValue() + i * realSize);
             int prefixLength = (int)(Math.log( count ) / Math.log( 2.0 ));
-            IPv4Address mask = NetUtils.addPrefixToMask(getNetworkMaskV4(), prefixLength);
+            IPv4Address mask = NetUtils.addPrefixToMask(getSubnetMaskV4(), prefixLength);
             Network subnet = new Network(this, nAddress,mask);
             subnets.add(subnet);
         }
@@ -396,8 +396,8 @@ public class Network {
      * @return true, if the networks collide
      */
     public boolean isColliding(Network network) {
-        return NetUtils.isInSubnet(getNetworkIdV4(), getNetworkMaskV4(), network.getNetworkIdV4())
-                || NetUtils.isInSubnet(network.getNetworkIdV4(), network.getNetworkMaskV4(), getNetworkIdV4());
+        return NetUtils.isInSubnet(getNetworkIdV4(), getSubnetMaskV4(), network.getNetworkIdV4())
+                || NetUtils.isInSubnet(network.getNetworkIdV4(), network.getSubnetMaskV4(), getNetworkIdV4());
     }
 
     /**
@@ -462,7 +462,7 @@ public class Network {
      * @return the amount of IPv4 addresses
      */
     public long getAmountIpAddresses() {
-        return ((~getNetworkMaskV4().getLValue()) & Integer.toUnsignedLong(-1)) + 1;
+        return ((~getSubnetMaskV4().getLValue()) & Integer.toUnsignedLong(-1)) + 1;
     }
 
     /**
@@ -482,11 +482,11 @@ public class Network {
     }
 
     /**
-     * Gets the IPv4 network mask of the network
-     * @return the IPv4 network mask
+     * Gets the IPv4 subnet mask of the network
+     * @return the IPv4 subnet mask
      */
-    public IPv4Address getNetworkMaskV4() {
-        return networkMaskV4.clone();
+    public IPv4Address getSubnetMaskV4() {
+        return subnetMaskV4.clone();
     }
 
     /**
@@ -516,10 +516,10 @@ public class Network {
 
     /**
      * Sets the IPv4 network mask of the network.
-     * @param networkMaskV4 the IPv4 network mask to set
+     * @param subnetMaskV4 the IPv4 network mask to set
      */
-    private void setNetworkMaskV4(IPv4Address networkMaskV4) {
-        this.networkMaskV4 = networkMaskV4;
+    private void setSubnetMaskV4(IPv4Address subnetMaskV4) {
+        this.subnetMaskV4 = subnetMaskV4;
     }
 
     /**
@@ -670,7 +670,7 @@ public class Network {
      */
     @Override
     public String toString(){
-        return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getNetworkMaskV4()) + (networkName == null ? "" : " (" + networkName + ")");
+        return this.getNetworkIdV4().toString()+"/"+NetUtils.maskToPrefix(this.getSubnetMaskV4()) + (networkName == null ? "" : " (" + networkName + ")");
     }
 
     /**
@@ -687,7 +687,7 @@ public class Network {
 
         return prefixV6 == that.prefixV6
                 && networkIdV4.equals(that.networkIdV4)
-                && networkMaskV4.equals(that.networkMaskV4)
+                && subnetMaskV4.equals(that.subnetMaskV4)
                 && (networkIdV6 != null ? networkIdV6.equals(that.networkIdV6) : that.networkIdV6 == null);
     }
 
@@ -698,7 +698,7 @@ public class Network {
     @Override
     public int hashCode() {
         int result = networkIdV4.hashCode();
-        result = 31 * result + networkMaskV4.hashCode();
+        result = 31 * result + subnetMaskV4.hashCode();
         result = 31 * result + (networkIdV6 != null ? networkIdV6.hashCode() : 0);
         result = 31 * result + prefixV6;
         return result;

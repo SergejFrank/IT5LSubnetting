@@ -18,7 +18,7 @@ class GuiUtils {
 
     static String getInitialSubnetString(Network network) {
         IPv4Address networkId = network.getNetworkIdV4();
-        Integer prefix = NetUtils.maskToPrefix(network.getNetworkMaskV4());
+        Integer prefix = NetUtils.maskToPrefix(network.getSubnetMaskV4());
         if(prefix >= 24)
             return networkId.getOct1() + "." + networkId.getOct2() + "." + networkId.getOct3() + ".";
         if(prefix >= 16)

@@ -24,7 +24,7 @@ class InfoPanel extends JPanel {
         else {
             networkName.setText(network.getName());
             ipv4NetworkId.setText(Format.format(network.getNetworkIdV4(), Config.getIpv4Notation()));
-            ipv4Subnetmask.setText(Format.format(network.getNetworkMaskV4(), Config.getIpv4Notation()));
+            ipv4Subnetmask.setText(Format.format(network.getSubnetMaskV4(), Config.getIpv4Notation()));
             ipv4Broadcast.setText(Format.format(network.getBroadcastAddress(), Config.getIpv4Notation()));
             ipv6NetworkId.setText(network.isIPv6Enabled()
                 ? Format.format(network.getNetworkIdV6(), Config.getIpv6Notation())
